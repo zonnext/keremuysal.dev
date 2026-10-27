@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kerem Uysal</title>
+<meta name="description" content="Kerem Uysal — physics student at Bilkent University. Interactive physics projects and other things I build.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fredoka:wght@500;600&family=Instrument+Serif:ital@0;1&family=Nunito:wght@400;600;700&display=swap">
+<style>
+:root{
+  --bg:#0c0717; --panel:#181030; --panel-2:#21173d; --line:#2b2048; --line-2:#3d2f63;
+  --fg:#f1eafc; --muted:#a99bc6; --dim:#796c96;
+  --accent:#b78cff; --accent-hi:#dcc8ff; --accent-deep:#5b2bb5; --mint:#5fe3c4;
+  --f-display:"Fredoka","Nunito",system-ui,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"DM Mono",ui-monospace,Menlo,monospace;
+  --f-math:"Instrument Serif","Times New Roman",serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font-family:var(--f-body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--accent-hi)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:12px}
+.wrap{width:100%;max-width:1040px;margin-inline:auto;padding-inline:max(20px,env(safe-area-inset-left,0px)) max(20px,env(safe-area-inset-right,0px))}
+
+/* slow background glow */
+.glow{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.glow i{position:absolute;width:52vmax;height:52vmax;border-radius:46% 54% 60% 40%/48% 40% 60% 52%;background:radial-gradient(circle at 45% 45%,rgba(120,64,220,.30),rgba(91,43,181,0) 66%);animation:drift 30s ease-in-out infinite alternate;will-change:transform}
+.glow i:nth-child(1){left:-16vmax;top:-18vmax}
+.glow i:nth-child(2){right:-20vmax;bottom:-22vmax;animation-duration:38s;animation-delay:-12s;background:radial-gradient(circle at 50% 50%,rgba(95,227,196,.08),rgba(95,227,196,0) 64%)}
+@keyframes drift{to{transform:translate3d(5vmax,4vmax,0) rotate(40deg) scale(1.1)}}
+@media (prefers-reduced-motion:reduce){.glow i{animation:none}}
+header,main,footer{position:relative;z-index:1}
+
+/* top */
+header .wrap{display:flex;justify-content:space-between;align-items:center;padding-block:26px}
+.mark{font-family:var(--f-math);font-style:italic;font-size:28px;color:var(--accent);text-decoration:none;line-height:1}
+.toplinks{display:flex;gap:6px}
+.toplinks a{font-family:var(--f-display);font-weight:500;font-size:15px;color:var(--muted);text-decoration:none;padding:8px 14px;border-radius:999px}
+.toplinks a:hover{color:var(--fg);background:var(--panel-2)}
+
+/* hero */
+.hero{padding-block:clamp(48px,10vw,120px) clamp(40px,7vw,80px)}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);background:rgba(183,140,255,.1);padding:6px 14px;border-radius:999px}
+h1{margin:20px 0 0;font-family:var(--f-display);font-weight:600;font-size:clamp(2.8rem,8vw,5.2rem);line-height:1;letter-spacing:-.02em}
+h1 em{font-style:normal;color:var(--accent-hi)}
+.lede{margin:22px 0 0;max-width:54ch;color:var(--muted);font-size:clamp(1.05rem,2vw,1.2rem)}
+
+/* projects */
+.shead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:20px}
+h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:clamp(1.6rem,3.4vw,2.2rem)}
+.count{font-family:var(--f-mono);font-size:13px;color:var(--dim)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:18px}
+.card{position:relative;display:grid;grid-template-rows:auto 1fr;background:var(--panel);border:1px solid var(--line);border-radius:28px;overflow:hidden;text-decoration:none;color:inherit;transition:transform .35s cubic-bezier(.3,1.5,.5,1),border-color .25s,box-shadow .25s}
+a.card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 18px 40px rgba(0,0,0,.4),0 0 0 5px rgba(183,140,255,.1)}
+.thumb{aspect-ratio:16/9;background:linear-gradient(160deg,#1c1238,#100a20);border-bottom:1px solid var(--line);display:block}
+.thumb svg{width:100%;height:100%;display:block}
+.body{padding:20px 22px 22px;display:grid;gap:10px;align-content:start}
+.meta{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--muted);border:1px solid var(--line-2);padding:3px 10px;border-radius:999px}
+.chip.hot{color:var(--mint);border-color:rgba(95,227,196,.45)}
+.card h3{margin:0;font-family:var(--f-display);font-weight:600;font-size:1.35rem;line-height:1.2}
+.card p{margin:0;color:var(--muted);font-size:.98rem}
+.go{font-family:var(--f-display);font-weight:500;font-size:15px;color:var(--accent-hi);margin-top:4px}
+a.card:hover .go span{transform:translateX(4px)}
+.go span{display:inline-block;transition:transform .25s}
+.card.soon{border-style:dashed;background:transparent;grid-template-rows:1fr;min-height:200px;place-items:center;text-align:center}
+.card.soon p{max-width:26ch;color:var(--dim)}
+.card.soon b{display:block;font-family:var(--f-math);font-style:italic;font-weight:400;font-size:2.4rem;color:var(--line-2);line-height:1;margin-bottom:8px}
+
+/* about */
+.about{padding-block:clamp(60px,9vw,100px) 20px}
+.about .box{background:var(--panel);border:1px solid var(--line);border-radius:28px;padding:clamp(22px,4vw,36px);display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,4vw,40px)}
+.about p{margin:12px 0 0;color:var(--muted)}
+.facts{list-style:none;margin:0;padding:0;display:grid;gap:10px;align-content:start}
+.facts li{display:flex;justify-content:space-between;gap:16px;padding:12px 16px;background:var(--panel-2);border-radius:16px;font-size:.96rem}
+.facts span{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);align-self:center}
+@media (max-width:760px){.about .box{grid-template-columns:1fr}}
+
+footer{margin-top:auto}
+footer .wrap{padding-block:40px calc(32px + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--f-mono);font-size:12.5px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="glow" aria-hidden="true"><i></i><i></i></div>
+
+<header>
+  <div class="wrap">
+    <a class="mark" href="/" aria-label="Home">ku</a>
+    <nav class="toplinks" aria-label="Main">
+      <a href="#projects">Projects</a>
+      <a href="#about">About</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <span class="tag">Physics · Bilkent University</span>
+      <h1>Kerem <em>Uysal</em></h1>
+      <p class="lede">I'm a first-year physics student. This is where I put the things I build — mostly interactive simulations of the physics I'm learning, so you can poke at it instead of just reading about it.</p>
+    </div>
+  </section>
+
+  <section id="projects" style="scroll-margin-top:24px">
+    <div class="wrap">
+      <div class="shead">
+        <h2>Projects</h2>
+        <span class="count">01</span>
+      </div>
+      <div class="grid">
+
+        <a class="card" href="/friction/">
+          <span class="thumb" aria-hidden="true">
+            <svg viewBox="0 0 320 180">
+              <defs>
+                <linearGradient id="bd" x1="0" x2="1"><stop offset="0" stop-color="#5b2bb5"/><stop offset="1" stop-color="#b78cff"/></linearGradient>
+              </defs>
+              <line x1="40" y1="148" x2="280" y2="148" stroke="#3d2f63" stroke-width="2" stroke-linecap="round"/>
+              <g transform="rotate(-24 60 148)">
+                <rect x="60" y="140" width="210" height="10" rx="5" fill="url(#bd)"/>
+                <rect x="170" y="112" width="38" height="28" rx="9" fill="#dcc8ff"/>
+                <circle cx="182" cy="123" r="2.6" fill="#2b1655"/><circle cx="196" cy="123" r="2.6" fill="#2b1655"/>
+                <line x1="189" y1="126" x2="230" y2="126" stroke="#ffb45e" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M230 126 l-7 -4 v8z" fill="#ffb45e"/>
+              </g>
+              <path d="M110 148 A50 50 0 0 0 105.7 128" fill="none" stroke="#5fe3c4" stroke-width="2"/>
+              <text x="118" y="140" font-family="Georgia,serif" font-style="italic" font-size="16" fill="#5fe3c4">θc</text>
+              <text x="250" y="40" text-anchor="end" font-family="Georgia,serif" font-style="italic" font-size="22" fill="#b78cff">μs = tan θc</text>
+            </svg>
+          </span>
+          <span class="body">
+            <span class="meta"><span class="chip hot">Interactive</span><span class="chip">PHYS 101</span><span class="chip">Mechanics</span></span>
+            <h3>Static Friction Lab</h3>
+            <p>Comparing static friction on two surfaces with the critical-angle method. Tilt the board yourself, watch the forces balance, and see how the uncertainty propagates.</p>
+            <span class="go">Open project <span>→</span></span>
+          </span>
+        </a>
+
+        <div class="card soon">
+          <div class="body">
+            <b>next</b>
+            <p>More simulations on the way.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="about" style="scroll-margin-top:24px">
+    <div class="wrap">
+      <div class="box">
+        <div>
+          <h2>About</h2>
+          <p>I study physics at Bilkent in Ankara. I'm most interested in semiconductors and the hardware side of things, and I like turning course material into something you can interact with in the browser.</p>
+        </div>
+        <ul class="facts">
+          <li><span>Studying</span>Physics, Bilkent University</li>
+          <li><span>Based in</span>Ankara, Türkiye</li>
+          <li><span>Builds with</span>HTML Canvas · JavaScript · Python</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Kerem Uysal</span>
+    <span>keremuysal.dev</span>
+  </div>
+</footer>
+</body>
+</html>

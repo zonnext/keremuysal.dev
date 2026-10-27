@@ -1,0 +1,1436 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Static Friction Lab · Kerem Uysal</title>
+<meta name="description" content="Interactive PHYS 101 lab project: comparing static friction coefficients with the critical-angle method (μs = tan θc).">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fredoka:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: soft, bubbly lab in a dark purple room. A scroll-played intro, then rounded instrument "pods" per stage of the experiment, floating over slow blobs. Single dark look by design. */
+:root{
+  --bg:#0c0717; --bg-2:#130b22; --panel:#181030; --panel-2:#21173d; --line:#2b2048; --line-2:#3d2f63;
+  --fg:#f1eafc; --muted:#a99bc6; --dim:#796c96;
+  --accent:#b78cff; --accent-hi:#dcc8ff; --accent-deep:#5b2bb5;
+  --sa:#b78cff; --sb:#5fe3c4; --fric:#ffb45e; --norm:#7cd3ff; --wt:#f3ecff; --bad:#ff7a9a;
+  --wood:#d8b183; --wood-dk:#9a7249; --steel:#a79dc4; --frog:#dcc8ff; --frog-dk:#2b1655;
+  --r-xl:40px; --r-lg:28px; --r-md:18px; --r-sm:12px;
+  --f-display:"Fredoka","Nunito",system-ui,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"DM Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --f-math:"Instrument Serif","Times New Roman",serif;
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+a{color:var(--accent-hi)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:999px}
+.wrap{max-width:1180px;margin-inline:auto;padding-left:max(clamp(16px,4vw,40px),env(safe-area-inset-left,0px));padding-right:max(clamp(16px,4vw,40px),env(safe-area-inset-right,0px))}
+
+/* ambient blobs */
+.blobs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;contain:strict}
+.blobs i{position:absolute;width:46vmax;height:46vmax;border-radius:42% 58% 63% 37% / 45% 39% 61% 55%;background:radial-gradient(circle at 40% 40%,rgba(120,64,220,.32),rgba(91,43,181,0) 68%);animation:drift 26s ease-in-out infinite alternate;will-change:transform}
+.blobs i:nth-child(1){left:-12vmax;top:-10vmax}
+.blobs i:nth-child(2){right:-14vmax;top:30vh;animation-duration:32s;animation-delay:-8s;background:radial-gradient(circle at 50% 50%,rgba(183,140,255,.18),rgba(183,140,255,0) 66%)}
+.blobs i:nth-child(3){left:20vw;bottom:-20vmax;animation-duration:38s;animation-delay:-16s;background:radial-gradient(circle at 50% 50%,rgba(95,227,196,.08),rgba(95,227,196,0) 64%)}
+@keyframes drift{0%{transform:translate3d(0,0,0) rotate(0deg) scale(1)}50%{transform:translate3d(3vmax,-2vmax,0) rotate(25deg) scale(1.06)}100%{transform:translate3d(6vmax,4vmax,0) rotate(50deg) scale(1.12)}}
+main,header,footer,.intro{position:relative;z-index:1}
+
+/* ---------- Scroll-played intro ---------- */
+.intro{height:100vh;height:100svh;min-height:520px}
+.intro-stage{position:relative;height:100%;overflow:hidden}
+.intro-layer{position:absolute;inset:0;will-change:opacity,transform}
+.intro-layer canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.intro-pow{position:absolute;left:50%;top:0;display:flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:13px;color:var(--muted);letter-spacing:.06em;background:rgba(33,23,61,.7);border:1px solid var(--line-2);padding:8px 16px;border-radius:999px;opacity:0;white-space:nowrap;transform:translateX(-50%)}
+.intro-pow b{color:var(--fg);font-weight:500}
+/* pulse runs on the compositor: a ring that scales and fades, no box-shadow repaints */
+.pulse{width:9px;height:9px;border-radius:50%;background:var(--accent);display:inline-block;position:relative;flex:none}
+.pulse::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--accent);animation:pulse 1.6s ease-out infinite;will-change:transform,opacity}
+@keyframes pulse{from{transform:scale(1);opacity:.6}to{transform:scale(3.2);opacity:0}}
+.cue{position:absolute;bottom:calc(28px + env(safe-area-inset-bottom,0px));left:50%;margin-left:-24px;width:48px;height:60px;border:0;background:none;padding:0;cursor:pointer;display:grid;place-items:center;border-radius:999px;transition:opacity .2s}
+.cue .mouse{width:26px;height:40px;border-radius:999px;border:2px solid var(--line-2);position:relative;display:block}
+.cue .mouse::after{content:"";position:absolute;left:50%;top:7px;width:7px;height:7px;margin-left:-3.5px;border-radius:50%;background:var(--accent)}
+.cue.play .mouse::after{animation:drip 1.2s cubic-bezier(.45,0,.25,1) 1 forwards}
+@keyframes drip{0%{transform:translateY(0) scale(1)}60%{transform:translateY(17px) scale(.8,1.25)}80%{transform:translateY(15px) scale(1.15,.85)}100%{transform:translateY(16px) scale(1)}}
+
+/* sim heading, moved under the experiment */
+#sim{padding-top:clamp(24px,4vw,40px)}
+.sim-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-top:18px;padding:16px 22px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg)}
+.sim-head h3{margin:0;font-family:var(--f-display);font-weight:600;font-size:18px}
+.sim-head p{margin:0;flex-basis:100%;font-size:14px;color:var(--muted);max-width:80ch}
+.sim-head .eyebrow{font-size:11px;padding:4px 10px}
+
+/* ---------- Header ---------- */
+.top{position:sticky;top:calc(env(safe-area-inset-top,0px) + 10px);z-index:20;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px))}
+.bar{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;height:58px;padding:0 8px 0 20px;border-radius:999px;background:rgba(24,16,48,.94);border:1px solid var(--line-2);box-shadow:0 10px 30px rgba(0,0,0,.35);position:relative;overflow:hidden}
+.brand{display:flex;align-items:baseline;gap:10px;text-decoration:none;color:var(--fg);white-space:nowrap}
+.brand .mu{font-family:var(--f-math);font-style:italic;font-size:24px;color:var(--accent)}
+.brand .nm{font-family:var(--f-display);font-weight:600;font-size:16px}
+.nav{display:flex;gap:2px;align-items:center}
+.nav a{font-family:var(--f-display);font-weight:500;font-size:14px;color:var(--muted);text-decoration:none;padding:8px 13px;border-radius:999px}
+.nav a:hover{color:var(--fg);background:var(--panel-2)}
+.progress{position:absolute;left:0;bottom:0;height:3px;width:100%;background:linear-gradient(90deg,var(--accent-deep),var(--accent),var(--accent-hi));transform-origin:0 50%;transform:scaleX(0);border-radius:999px}
+@media (max-width:820px){.nav a{display:none}}
+
+/* ---------- Buttons + blup ---------- */
+.btn{appearance:none;border:1.5px solid var(--line-2);background:var(--panel-2);color:var(--fg);font-family:var(--f-display);font-weight:500;font-size:15px;padding:12px 22px;border-radius:999px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:background .25s,border-color .25s,box-shadow .25s}
+.btn:hover{border-color:var(--accent);box-shadow:0 0 0 5px rgba(183,140,255,.12)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#1d0d3a;font-weight:600}
+.btn.primary:hover{background:var(--accent-hi);border-color:var(--accent-hi)}
+.btn.sm{padding:9px 16px;font-size:13.5px}
+.btn.icon{padding:9px 14px}
+.blup{animation:blup .62s cubic-bezier(.3,1.6,.5,1)}
+@keyframes blup{
+  0%{transform:scale(1);border-radius:999px}
+  18%{transform:scale(1.14,.8);border-radius:46% 46% 50% 50% / 60% 60% 40% 40%}
+  40%{transform:scale(.86,1.16);border-radius:50% 50% 46% 46% / 64% 64% 36% 36%}
+  62%{transform:scale(1.06,.95)}
+  80%{transform:scale(.98,1.02)}
+  100%{transform:scale(1);border-radius:999px}}
+#splash{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:95;visibility:hidden}
+
+/* ---------- Hero ---------- */
+.hero .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(24px,4vw,56px);align-items:center;padding-block:clamp(44px,7vw,96px)}
+.hero-copy{min-width:0;display:grid;gap:22px;justify-items:start}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);background:rgba(183,140,255,.1);padding:6px 14px;border-radius:999px;justify-self:start}
+.hero h1{margin:0;font-family:var(--f-display);font-weight:600;font-size:clamp(2.3rem,5.4vw,4.4rem);line-height:1.02;letter-spacing:-.015em;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--accent-hi)}
+.hero-eq{font-family:var(--f-math);font-style:italic;font-size:clamp(2rem,4.2vw,3.1rem);line-height:1;color:var(--accent)}
+.hero-eq sub{font-size:.5em}
+.hero p{margin:0;color:var(--muted);max-width:56ch;font-size:1.08rem}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--f-mono);font-size:12px;color:var(--dim)}
+.hero-meta b{color:var(--muted);font-weight:500}
+.hero-vis{min-width:0;background:rgba(24,16,48,.55);border:1px solid var(--line);border-radius:var(--r-xl);padding:12px;box-shadow:inset 0 0 60px rgba(91,43,181,.25)}
+.hero-cap{font-family:var(--f-mono);font-size:11px;color:var(--dim);letter-spacing:.06em;text-align:center;padding:4px 0 2px}
+.plan .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding-bottom:clamp(40px,6vw,72px)}
+.plan .wrap>div{padding:18px 22px;border-radius:var(--r-lg);background:var(--panel);border:1px solid var(--line);display:grid;gap:2px}
+.plan .n{font-family:var(--f-display);font-weight:600;font-size:clamp(1.8rem,3vw,2.4rem);line-height:1.1;font-variant-numeric:tabular-nums;color:var(--accent-hi)}
+.plan .l{font-size:14px;color:var(--muted)}
+@media (max-width:860px){.hero .wrap{grid-template-columns:1fr}.plan .wrap{grid-template-columns:repeat(2,1fr)}}
+
+/* ---------- Sections ---------- */
+section.band{padding-block:clamp(60px,8vw,104px);scroll-margin-top:80px}
+section.band.alt{background:var(--bg-2);border-radius:var(--r-xl);margin-inline:clamp(0px,1.6vw,20px);border:1px solid var(--line)}
+.shead{display:grid;gap:12px;max-width:760px;margin-bottom:clamp(28px,4vw,44px);justify-items:start}
+.shead h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:clamp(1.9rem,3.8vw,2.9rem);line-height:1.08;letter-spacing:-.01em;text-wrap:balance}
+.shead p{margin:0;color:var(--muted);font-size:1.06rem;max-width:62ch}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-xl)}
+.cv-wrap{position:relative;min-width:0;border-radius:var(--r-lg);overflow:hidden}
+.cv-wrap canvas{display:block;width:100%}
+.ctl{display:grid;gap:8px}
+.lbl,.ctl label{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.ctl .row{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.ctl output{font-family:var(--f-mono);font-size:13.5px;color:var(--fg);font-variant-numeric:tabular-nums}
+select{width:100%;background:var(--panel-2);color:var(--fg);border:1.5px solid var(--line-2);border-radius:999px;padding:10px 14px;font-family:var(--f-body);font-weight:600;font-size:14px;cursor:pointer}
+select:disabled{opacity:.5}
+
+/* bubbly range */
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:30px;background:transparent;cursor:pointer;--fill:50%}
+input[type=range]::-webkit-slider-runnable-track{height:14px;border-radius:999px;background:linear-gradient(90deg,var(--accent) 0 var(--fill),var(--panel-2) var(--fill) 100%);border:1.5px solid var(--line-2)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;margin-top:-8.5px;border-radius:50%;background:var(--accent-hi);border:0;box-shadow:0 0 0 6px rgba(183,140,255,.2),0 4px 12px rgba(0,0,0,.45);transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+input[type=range]:active::-webkit-slider-thumb{transform:scale(1.22,1.12)}
+input[type=range]::-moz-range-track{height:14px;border-radius:999px;background:var(--panel-2);border:1.5px solid var(--line-2)}
+input[type=range]::-moz-range-progress{height:14px;border-radius:999px;background:var(--accent)}
+input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--accent-hi);border:0;box-shadow:0 0 0 6px rgba(183,140,255,.2)}
+
+/* Theory */
+.th-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(20px,3vw,40px);align-items:start}
+.deriv{display:grid;gap:10px;min-width:0}
+.eqrow{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:center;padding:14px 20px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg)}
+.eqrow .m{font-family:var(--f-math);font-style:italic;font-size:clamp(1.3rem,2.4vw,1.6rem);line-height:1.25;min-width:0;overflow-wrap:anywhere}
+.eqrow .m sub{font-size:.6em}
+.eqrow.final{background:linear-gradient(135deg,rgba(91,43,181,.45),rgba(183,140,255,.18));border-color:var(--accent)}
+.eqrow.final .m{color:var(--accent-hi);font-size:clamp(1.7rem,3.2vw,2.2rem)}
+.x{position:relative;color:var(--dim)}
+.x::after{content:"";position:absolute;left:-3px;right:-3px;top:50%;height:3px;border-radius:3px;background:var(--bad);transform:rotate(-14deg)}
+.note{color:var(--muted);font-size:.97rem;margin:6px 4px 0}
+.th-panel{padding:20px;display:grid;gap:16px;min-width:0}
+.ph{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.ph h3{margin:0;font-family:var(--f-display);font-weight:600;font-size:18px}
+.chip{font-family:var(--f-display);font-weight:500;font-size:13px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--line-2);color:var(--muted);white-space:nowrap;transition:all .3s}
+.chip.ok{color:var(--sb);border-color:rgba(95,227,196,.5);background:rgba(95,227,196,.1)}
+.chip.slip{color:var(--bad);border-color:rgba(255,122,154,.5);background:rgba(255,122,154,.1)}
+.chip.run{color:var(--fric);border-color:rgba(255,180,94,.5);background:rgba(255,180,94,.1)}
+.ctl3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.readouts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.readouts div{background:var(--panel-2);border-radius:var(--r-md);padding:10px 14px;display:grid;gap:2px;min-width:0}
+.readouts .v{font-family:var(--f-mono);font-size:15px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.k-fric{color:var(--fric)!important}.k-norm{color:var(--norm)!important}.k-acc{color:var(--accent-hi)!important}
+@media (max-width:900px){.th-grid{grid-template-columns:1fr}}
+@media (max-width:560px){.ctl3,.readouts{grid-template-columns:1fr 1fr}.eqrow{grid-template-columns:1fr;gap:4px}}
+
+/* Simulation */
+.sim-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;align-items:start}
+.stage{padding:18px;display:grid;gap:12px;min-width:0}
+.stage-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.cond{font-size:14px;color:var(--muted)}
+.cond b{color:var(--fg)}
+.bigang{font-family:var(--f-display);font-weight:600;font-size:clamp(1.8rem,3.6vw,2.6rem);line-height:1;font-variant-numeric:tabular-nums;text-align:right}
+.bigang small{display:block;font-family:var(--f-mono);font-weight:400;font-size:11px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.bigang .last{display:block;font-family:var(--f-mono);font-weight:400;font-size:12px;color:var(--accent-hi);margin-top:6px}
+.knob{position:absolute;left:0;top:0;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;border:0;padding:0;background:radial-gradient(circle at 35% 35%,#f4ecff,var(--accent) 60%,var(--accent-deep));box-shadow:0 0 0 7px rgba(183,140,255,.22),0 6px 16px rgba(0,0,0,.5);cursor:grab;touch-action:none;transition:box-shadow .25s}
+.knob:hover{box-shadow:0 0 0 11px rgba(183,140,255,.28),0 6px 16px rgba(0,0,0,.5)}
+.knob.drag{cursor:grabbing;box-shadow:0 0 0 14px rgba(183,140,255,.3),0 6px 16px rgba(0,0,0,.5)}
+.knob::after{content:"⇕";color:#1d0d3a;font-size:18px;font-weight:700;line-height:46px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:18px;height:5px;border-radius:999px;display:inline-block}
+.side{padding:20px;display:grid;gap:18px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--bg);padding:5px;border-radius:999px;border:1px solid var(--line)}
+.seg.three{grid-template-columns:repeat(3,1fr)}
+.seg button{appearance:none;border:0;background:transparent;color:var(--muted);font-family:var(--f-display);font-weight:500;font-size:14px;padding:8px 6px;border-radius:999px;cursor:pointer;display:grid;gap:0;line-height:1.2;transition:background .25s,color .25s;min-width:0}
+.seg button small{font-family:var(--f-body);font-size:11px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seg button[aria-pressed="true"]{background:var(--panel-2);color:var(--fg)}
+.seg button[aria-pressed="true"].a{background:rgba(183,140,255,.22)}
+.seg button[aria-pressed="true"].b{background:rgba(95,227,196,.18)}
+.mats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mats label{display:grid;gap:5px;min-width:0}
+.angctl{display:grid;gap:10px;padding:14px;border-radius:var(--r-lg);background:var(--panel-2);border:1.5px solid rgba(183,140,255,.45);box-shadow:0 0 0 5px rgba(183,140,255,.06)}
+.angctl input[type=range]::-webkit-slider-runnable-track{background:linear-gradient(90deg,var(--accent) 0 var(--fill),var(--bg) var(--fill) 100%)}
+.nudge{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.nudge .btn{padding:9px 4px;font-size:13.5px;background:var(--panel)}
+.toggles{display:flex;flex-wrap:wrap;gap:8px}
+.toggles label{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-family:var(--f-display);font-weight:500;font-size:14px;color:var(--muted);background:var(--panel-2);padding:8px 14px;border-radius:999px;border:1.5px solid var(--line-2)}
+.toggles label:has(input:checked){color:var(--fg);border-color:var(--accent)}
+.toggles input{accent-color:var(--accent);width:16px;height:16px;margin:0}
+.ro{display:grid;gap:8px;font-family:var(--f-mono);font-size:13px;margin:0}
+.ro div{display:flex;justify-content:space-between;gap:10px;font-variant-numeric:tabular-nums}
+.ro dt{color:var(--muted)} .ro dd{margin:0}
+.grip{height:14px;border-radius:999px;background:var(--bg);border:1px solid var(--line);overflow:hidden;padding:2px}
+.grip i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--sb),var(--fric),var(--bad));transition:width .1s linear}
+.simnote{font-size:13.5px;color:var(--dim);margin:0}
+.sheet{margin-top:18px;padding:20px;display:grid;gap:12px;min-width:0}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:separate;border-spacing:0 6px;font-family:var(--f-mono);font-size:13px;font-variant-numeric:tabular-nums}
+th{font-weight:400;color:var(--dim);font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-align:left;padding:4px 12px;white-space:nowrap}
+td{padding:9px 12px;background:var(--panel-2);white-space:nowrap}
+td:first-child{border-radius:999px 0 0 999px}
+td:last-child{border-radius:0 999px 999px 0}
+td.num,th.num{text-align:right}
+tr.empty td{color:var(--dim);background:rgba(33,23,61,.45)}
+tr.new td{animation:flash 1.2s ease}
+@keyframes flash{from{background:rgba(183,140,255,.35)}to{background:var(--panel-2)}}
+tfoot td{color:var(--accent-hi);background:rgba(183,140,255,.12)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;vertical-align:0}
+.badge{font-family:var(--f-display);font-weight:500;font-size:12px;color:var(--fric);background:rgba(255,180,94,.1);border:1.5px solid rgba(255,180,94,.4);padding:4px 12px;border-radius:999px}
+@media (max-width:980px){.sim-grid{grid-template-columns:1fr}}
+
+/* Results */
+.res-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+.res-chart,.res-side{padding:20px;display:grid;gap:12px;min-width:0}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px}
+@media (max-width:960px){.res-grid{grid-template-columns:1fr}}
+
+/* Uncertainty */
+.un-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:18px;align-items:start}
+.un-panel{padding:20px;display:grid;gap:14px}
+.un-text{display:grid;gap:16px;color:var(--muted)}
+.un-text p{margin:0}
+.formula{font-family:var(--f-math);font-style:italic;font-size:1.6rem;color:var(--fg);padding:14px 24px;border-radius:999px;background:linear-gradient(135deg,rgba(91,43,181,.45),rgba(183,140,255,.15));border:1px solid var(--line-2);justify-self:start}
+.formula sub{font-size:.6em}
+@media (max-width:900px){.un-grid{grid-template-columns:1fr}}
+
+/* Method */
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;counter-reset:st}
+.steps li{counter-increment:st;display:grid;grid-template-columns:52px 1fr;gap:16px;align-items:start;padding:18px 22px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg)}
+.steps li::before{content:counter(st);width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:600;font-size:20px;color:#1d0d3a;background:radial-gradient(circle at 35% 35%,#efe4ff,var(--accent) 70%)}
+.steps h4{margin:2px 0 4px;font-family:var(--f-display);font-weight:600;font-size:17px}
+.steps p{margin:0;color:var(--muted);font-size:.97rem}
+@media (max-width:760px){.steps{grid-template-columns:1fr}}
+
+/* Footer */
+footer{padding-block:56px calc(40px + env(safe-area-inset-bottom,0px))}
+footer .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:end}
+.f-name{font-family:var(--f-display);font-weight:700;font-size:clamp(2rem,5vw,3.6rem);line-height:1}
+.f-name span{display:block;font-family:var(--f-mono);font-weight:400;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.f-meta{font-family:var(--f-mono);font-size:12px;color:var(--dim);display:grid;gap:8px;justify-items:end;text-align:right}
+.f-meta b{color:var(--muted);font-weight:500}
+.f-pow{display:inline-flex;align-items:center;gap:8px;color:var(--muted);background:var(--panel);border:1px solid var(--line-2);padding:7px 14px;border-radius:999px}
+@media (max-width:700px){footer .wrap{grid-template-columns:1fr}.f-meta{justify-items:start;text-align:left}}
+
+@media (prefers-reduced-motion:no-preference){
+  @supports (animation-timeline: view()){
+    .reveal{animation:rv linear both;animation-timeline:view();animation-range:entry 0% entry 35%}
+    @keyframes rv{from{opacity:0;transform:translateY(36px) scale(.97)}to{opacity:1;transform:none}}
+  }
+}
+@media (prefers-reduced-motion:reduce){
+  .blobs i,.pulse::after,.cue .mouse::after{animation:none}
+  .blup{animation:none}
+}
+</style>
+
+<div class="blobs" aria-hidden="true"><i></i><i></i><i></i></div>
+<canvas id="splash" aria-hidden="true"></canvas>
+
+<section class="intro" id="intro" aria-label="Intro: Project by Kerem Uysal">
+  <div class="intro-stage" id="iStage">
+    <div class="intro-layer" id="iLayer">
+      <canvas id="iCv" aria-hidden="true"></canvas>
+    </div>
+    <button type="button" class="cue" id="cue" aria-label="Skip intro"><span class="mouse"></span></button>
+  </div>
+</section>
+
+<header class="top" id="hdr">
+  <div class="bar">
+    <a class="brand" href="/" title="keremuysal.dev"><span class="mu">μ<sub style="font-size:.5em">s</sub></span><span class="nm">Kerem Uysal</span></a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#theory">Theory</a><a href="#experiment">Simulation</a><a href="#results">Results</a><a href="#uncertainty">Uncertainty</a><a href="#method">Method</a>
+      <button type="button" class="btn sm icon" id="soundBtn" aria-pressed="true">♪ Sound on</button>
+    </nav>
+    <div class="progress" id="progress"></div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <div class="eyebrow">PHYS 101 · Lab Project</div>
+        <h1>Comparing static friction on <em>two surfaces</em></h1>
+        <div class="hero-eq">μ<sub>s</sub> = tan θ<sub>c</sub></div>
+        <p>Same block, same loads, two different surfaces. Tilt the board slowly, record the angle where the block first slides, and the coefficient of static friction falls out of one tangent. The mass cancels, so changing the load should change nothing.</p>
+        <div class="cta">
+          <a class="btn primary" href="#experiment">Try the experiment ↓</a>
+          <a class="btn" href="#theory">See the physics</a>
+        </div>
+        <div class="hero-meta"><span><b>Kerem Uysal</b></span><span>Bilkent University · Department of Physics</span></div>
+      </div>
+      <div class="hero-vis">
+        <div class="cv-wrap"><canvas id="heroCv" aria-label="Animated incline: the board tilts until the block slips"></canvas></div>
+        <div class="hero-cap">live · board tilts until the block slips</div>
+      </div>
+    </div>
+    <div class="plan">
+      <div class="wrap">
+        <div><div class="n">2</div><div class="l">surfaces, A and B</div></div>
+        <div><div class="n">3</div><div class="l">total masses M1–M3</div></div>
+        <div><div class="n">5</div><div class="l">trials per condition</div></div>
+        <div><div class="n">30</div><div class="l">angle readings</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt" id="theory">
+    <div class="wrap">
+      <div class="shead reveal">
+        <div class="eyebrow">Theory</div>
+        <h2>Why one angle is all you need</h2>
+        <p>As the board tilts, static friction grows to match the pull of gravity down the slope. It can only grow up to μ<sub>s</sub>N. The angle where it runs out gives μ<sub>s</sub> directly (Giancoli, §4–8).</p>
+      </div>
+      <div class="th-grid">
+        <div class="deriv reveal">
+          <div class="eqrow"><span class="lbl">Along the board</span><span class="m">mg sin θ − f<sub>s</sub> = 0</span></div>
+          <div class="eqrow"><span class="lbl">Perpendicular</span><span class="m">N − mg cos θ = 0</span></div>
+          <div class="eqrow"><span class="lbl">Just before slip</span><span class="m">f<sub>s</sub> = μ<sub>s</sub>N &nbsp;at&nbsp; θ = θ<sub>c</sub></span></div>
+          <div class="eqrow"><span class="lbl">Combine</span><span class="m"><span class="x">mg</span> sin θ<sub>c</sub> = μ<sub>s</sub> <span class="x">mg</span> cos θ<sub>c</sub></span></div>
+          <div class="eqrow final"><span class="lbl">Result</span><span class="m">μ<sub>s</sub> = tan θ<sub>c</sub></span></div>
+          <p class="note">The mass cancels. Move the mass slider on the right: both curves stretch, but the point where they cross stays put.</p>
+        </div>
+        <div class="panel th-panel reveal">
+          <div class="ph"><h3>Force budget on the block</h3><span class="chip ok" id="thChip">Holds</span></div>
+          <div class="cv-wrap"><canvas id="thCv" aria-label="Plot of required friction and maximum static friction against angle"></canvas></div>
+          <div class="ctl3">
+            <div class="ctl"><div class="row"><label for="thTheta">Angle θ</label><output id="thThetaO">20.0°</output></div><input type="range" id="thTheta" min="0" max="60" step="0.1" value="20"></div>
+            <div class="ctl"><div class="row"><label for="thMass">Mass m</label><output id="thMassO">0.40 kg</output></div><input type="range" id="thMass" min="0.1" max="1" step="0.01" value="0.4"></div>
+            <div class="ctl"><label for="thMat">Surface</label><select id="thMat"></select></div>
+          </div>
+          <div class="readouts">
+            <div><span class="lbl">Needed</span><span class="v k-fric" id="thNeed">—</span></div>
+            <div><span class="lbl">Max static</span><span class="v k-norm" id="thMax">—</span></div>
+            <div><span class="lbl">Crossing θ<sub>c</sub></span><span class="v k-acc" id="thCrit">—</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="sim">
+    <div class="wrap">
+      <div class="sim-grid" id="experiment">
+        <div class="panel stage">
+          <div class="stage-top">
+            <div style="display:grid;gap:8px;justify-items:start">
+              <span class="chip ok" id="simChip">Ready · raise slowly</span>
+              <div class="cond" id="simCond"></div>
+            </div>
+            <div class="bigang"><small>Board angle</small><span id="angBig">0.0°</span><span class="last" id="lastTc">last θc: —</span></div>
+          </div>
+          <div class="cv-wrap" id="simWrap">
+            <canvas id="simCv" aria-label="Incline simulation with a block, weights and force arrows"></canvas>
+            <button type="button" class="knob" id="knob" aria-label="Board angle handle. Drag, or use arrow keys."></button>
+          </div>
+          <div class="legend">
+            <span><i style="background:var(--wt)"></i>weight mg</span>
+            <span><i style="background:var(--norm)"></i>normal N</span>
+            <span><i style="background:var(--fric)"></i>friction f</span>
+            <span><i style="background:repeating-linear-gradient(90deg,var(--muted) 0 5px,transparent 5px 9px)"></i>components of mg</span>
+          </div>
+        </div>
+        <aside class="panel side" aria-label="Simulation controls">
+          <div class="angctl">
+            <div class="ctl"><div class="row"><label for="angSlider">Board angle</label><output id="angO">0.0°</output></div>
+              <input type="range" id="angSlider" min="0" max="60" step="0.1" value="0"></div>
+            <div class="nudge">
+              <button type="button" class="btn" data-n="-1">−1°</button>
+              <button type="button" class="btn" data-n="-0.1">−0.1°</button>
+              <button type="button" class="btn" data-n="0.1">+0.1°</button>
+              <button type="button" class="btn" data-n="1">+1°</button>
+            </div>
+            <button type="button" class="btn sm" id="lowerBtn">Reset board and block</button>
+          </div>
+          <div class="ctl">
+            <span class="lbl">Surface</span>
+            <div class="seg">
+              <button type="button" class="a" id="surfA" aria-pressed="true">Surface A<small id="surfAName"></small></button>
+              <button type="button" class="b" id="surfB" aria-pressed="false">Surface B<small id="surfBName"></small></button>
+            </div>
+          </div>
+          <div class="mats">
+            <label><span class="lbl">A material</span><select id="matA"></select></label>
+            <label><span class="lbl">B material</span><select id="matB"></select></label>
+          </div>
+          <div class="ctl">
+            <span class="lbl">Total mass</span>
+            <div class="seg three">
+              <button type="button" id="m0" aria-pressed="true">M1<small>0.20 kg</small></button>
+              <button type="button" id="m1" aria-pressed="false">M2<small>0.40 kg</small></button>
+              <button type="button" id="m2" aria-pressed="false">M3<small>0.60 kg</small></button>
+            </div>
+          </div>
+          <div class="toggles">
+            <label><input type="checkbox" id="tgF" checked>Forces</label>
+            <label><input type="checkbox" id="tgC">Components</label>
+          </div>
+          <dl class="ro">
+            <div><dt>mg sin θ</dt><dd id="roPar">—</dd></div>
+            <div><dt>N = mg cos θ</dt><dd class="k-norm" id="roN">—</dd></div>
+            <div><dt id="roFl">f<sub>s</sub> (static)</dt><dd class="k-fric" id="roF">—</dd></div>
+            <div><dt>f<sub>s,max</sub> = μ<sub>s</sub>N</dt><dd id="roFmax">—</dd></div>
+          </dl>
+          <div class="ctl">
+            <div class="row"><span class="lbl">Grip used</span><output id="gripO">0%</output></div>
+            <div class="grip"><i id="gripBar"></i></div>
+          </div>
+          <p class="simnote" id="simNote">Sample runs are preloaded. A sixth trial on a full condition starts a new set of five.</p>
+        </aside>
+      </div>
+      <div class="sim-head">
+        <span class="eyebrow">Simulation</span><h3>Tilt the board yourself</h3>
+        <p>Grab the purple knob on the raised end, or use the slider. Raise slowly and use the 0.1° nudges near the sliding point, as in step 4 of the procedure. When the block slips, its angle goes onto the sheet. Lower the board to put the block back for the next trial.</p>
+      </div>
+      <div class="panel sheet">
+        <div class="ph"><h3 id="sheetTitle">Measurement sheet</h3><span class="badge">Simulated</span></div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Trial</th><th class="num">θ<sub>c</sub> (°)</th><th class="num">μ<sub>s</sub> = tan θ<sub>c</sub></th><th>Observation</th></tr></thead>
+            <tbody id="logBody"></tbody>
+            <tfoot><tr><td>Mean ± SD</td><td class="num" id="logMT">—</td><td class="num" id="logMM">—</td><td></td></tr></tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt" id="results">
+    <div class="wrap">
+      <div class="shead reveal">
+        <div class="eyebrow">Results</div>
+        <h2>Does mass matter?</h2>
+        <p>Mean μ<sub>s</sub> for each of the six conditions, with error bars of one sample standard deviation. A flat row of points means no mass dependence, which is what μ<sub>s</sub> = tan θ<sub>c</sub> predicts.</p>
+      </div>
+      <div class="res-grid">
+        <div class="panel res-chart">
+          <div class="ph"><h3>Mean μ<sub>s</sub> vs total mass</h3>
+            <div class="legend"><span><i style="background:var(--sa)"></i><span id="lgA">A</span></span><span><i style="background:var(--sb)"></i><span id="lgB">B</span></span></div>
+          </div>
+          <div class="cv-wrap"><canvas id="resCv" aria-label="Chart of mean coefficient of static friction against total mass for both surfaces"></canvas></div>
+        </div>
+        <div class="panel res-side">
+          <div class="ph"><h3>Summary · Appendix C</h3><span class="badge">Simulated</span></div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>Cond.</th><th class="num">n</th><th class="num">θ̄<sub>c</sub> (°)</th><th class="num">μ̄<sub>s</sub></th><th class="num">SD</th></tr></thead>
+              <tbody id="sumBody"></tbody>
+            </table>
+          </div>
+          <p class="simnote">These numbers come from the simulation: typical friction values for each material plus random trial-to-trial scatter. They show how the analysis works. They are not lab data.</p>
+          <div class="btnrow">
+            <button type="button" class="btn sm" id="clearBtn">Clear all trials</button>
+            <button type="button" class="btn sm" id="sampleBtn">Reload sample data</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="uncertainty">
+    <div class="wrap">
+      <div class="shead reveal">
+        <div class="eyebrow">Uncertainty</div>
+        <h2>What does one degree cost?</h2>
+        <p>An angle reading of θ ± Δθ puts μ<sub>s</sub> between tan(θ − Δθ) and tan(θ + Δθ). The same Δθ costs more on a grippy surface, because tan θ gets steeper as θ grows.</p>
+      </div>
+      <div class="un-grid">
+        <div class="panel un-panel">
+          <div class="cv-wrap"><canvas id="unCv" aria-label="Plot of tan theta with the angle uncertainty band"></canvas></div>
+          <div class="ctl3" style="grid-template-columns:1fr 1fr">
+            <div class="ctl"><div class="row"><label for="unTheta">Reading θ</label><output id="unThetaO">30.0°</output></div><input type="range" id="unTheta" min="5" max="60" step="0.1" value="30"></div>
+            <div class="ctl"><div class="row"><label for="unDelta">Uncertainty Δθ</label><output id="unDeltaO">±1.0°</output></div><input type="range" id="unDelta" min="0.1" max="3" step="0.1" value="1"></div>
+          </div>
+          <div class="readouts">
+            <div><span class="lbl">μ low</span><span class="v" id="unLo">—</span></div>
+            <div><span class="lbl">μ = tan θ</span><span class="v k-acc" id="unMid">—</span></div>
+            <div><span class="lbl">μ high</span><span class="v" id="unHi">—</span></div>
+          </div>
+        </div>
+        <div class="un-text">
+          <p>The project's own example, 30° ± 1°, gives a coefficient between tan 29° and tan 31°. Drag the reading to 45° with the same ±1° and the band gets noticeably taller.</p>
+          <div class="formula">Δμ<sub>s</sub> ≈ sec²θ · Δθ</div>
+          <p>Here Δθ is in radians. At 30°, sec²θ is about 1.33; at 45° it is 2. This is why the analysis compares the spread of repeated trials with the spread that the angle device alone would cause: if two surfaces or two masses differ by less than both, the difference means nothing.</p>
+          <p style="font-family:var(--f-mono);font-size:13px;color:var(--dim)">Relative uncertainty here: <span id="unRel" style="color:var(--fg)">—</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt" id="method">
+    <div class="wrap">
+      <div class="shead reveal">
+        <div class="eyebrow">Method</div>
+        <h2>Procedure</h2>
+        <p>Board about 0.5–1.0 m long, a short wide block with extra weights near its centre, two surface materials, a balance, and a protractor or calibrated inclinometer.</p>
+      </div>
+      <ol class="steps">
+        <li><div><h4>Prepare surface A</h4><p>Record the material, check it lies flat on the board, and mark the starting position.</p></div></li>
+        <li><div><h4>Weigh the masses</h4><p>Weigh the block alone and with its added loads. Record M1, M2 and M3 and keep the same totals on both surfaces.</p></div></li>
+        <li><div><h4>Zero the angle device</h4><p>Zero it on a horizontal reference. A phone used as an inclinometer stays clear of the sliding path.</p></div></li>
+        <li><div><h4>Raise the board slowly</h4><p>Start M1 at the mark. Lift without pushing the block, and use only small angle changes near the sliding point.</p></div></li>
+        <li><div><h4>Read θ<sub>c</sub></h4><p>Record the angle at the first continuous slide. A brief jump does not count.</p></div></li>
+        <li><div><h4>Repeat five times</h4><p>Reset and repeat for five readings, then do M2 and M3 with the same contact face and orientation.</p></div></li>
+        <li><div><h4>Switch to surface B</h4><p>Record the new material and repeat all fifteen measurements with the same block, masses and method.</p></div></li>
+        <li><div><h4>Note anything odd</h4><p>Toppling, a moving surface sheet, or any unexpected result goes in the observations column.</p></div></li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-name"><span>Project by</span>Kerem Uysal</div>
+    <div class="f-meta">
+      <span><b>PHYS 101</b> · Section 12 · Bilkent University, Department of Physics</span>
+      <span>Reference: Giancoli, <i>Physics: Principles with Applications</i>, 7th ed., §4–8</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const RAD = Math.PI / 180, DEG = 180 / Math.PI, G = 9.81;
+  const cs = getComputedStyle(document.documentElement);
+  const COL = {};
+  ['bg','panel','panel-2','line','line-2','fg','muted','dim','accent','accent-hi','accent-deep','sa','sb','fric','norm','wt','bad','wood','wood-dk','steel','frog','frog-dk']
+    .forEach(k => COL[k] = cs.getPropertyValue('--' + k).trim());
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = id => document.getElementById(id);
+  // write to the DOM only when a value actually changes (avoids style recalcs every frame)
+  const _dom = {};
+  function setText(id, v) { if (_dom[id] !== v) { _dom[id] = v; $(id).textContent = v; } }
+  function setSt(el, prop, v) { const k = el.id + '.' + prop; if (_dom[k] !== v) { _dom[k] = v; el.style[prop] = v; } }
+  const MONO = '"DM Mono", ui-monospace, monospace';
+  const MATH = '"Instrument Serif", "Times New Roman", serif';
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  const easeOutBack = t => { const c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); };
+
+  /* ---------- range fill ---------- */
+  function setFill(el) { el.style.setProperty('--fill', ((el.value - el.min) / (el.max - el.min) * 100) + '%'); }
+  document.querySelectorAll('input[type=range]').forEach(el => { setFill(el); el.addEventListener('input', () => setFill(el)); });
+
+  /* ---------- Cheap glow + liquid: no SVG filters, no per-frame shadowBlur ---------- */
+  const hexRgb = h => { const n = parseInt(h.replace('#', ''), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; };
+  const BLOB = (() => {
+    const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
+    const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(.5, 'rgba(0,0,0,.55)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 64, 64); return c;
+  })();
+  // Metaballs: soft blobs into a low-res buffer, alpha threshold only inside their bounding box, then scale up.
+  function makeGoo() {
+    const buf = document.createElement('canvas'), out = document.createElement('canvas');
+    const b = buf.getContext('2d', { willReadFrequently: true }), o = out.getContext('2d');
+    return function render(dst, items, W, H, sc, c1, c2, xa, xb) {
+      const bw = Math.max(1, Math.ceil(W * sc)), bh = Math.max(1, Math.ceil(H * sc));
+      if (buf.width !== bw || buf.height !== bh) { buf.width = out.width = bw; buf.height = out.height = bh; }
+      b.clearRect(0, 0, bw, bh);
+      let x0 = bw, y0 = bh, x1 = 0, y1 = 0;
+      for (const it of items) {
+        const R = it[2] * 2.2 * sc; if (R < 0.3) continue;
+        const X = it[0] * sc, Y = it[1] * sc;
+        b.drawImage(BLOB, X - R, Y - R, 2 * R, 2 * R);
+        if (X - R < x0) x0 = X - R; if (Y - R < y0) y0 = Y - R; if (X + R > x1) x1 = X + R; if (Y + R > y1) y1 = Y + R;
+      }
+      x0 = Math.max(0, Math.floor(x0)); y0 = Math.max(0, Math.floor(y0)); x1 = Math.min(bw, Math.ceil(x1)); y1 = Math.min(bh, Math.ceil(y1));
+      const w = x1 - x0, h = y1 - y0; if (w <= 0 || h <= 0) return;
+      const img = b.getImageData(x0, y0, w, h), d = img.data;
+      const A = hexRgb(c1), B = hexRgb(c2), span = Math.max(1, xb - xa), rgb = new Uint32Array(w);
+      for (let x = 0; x < w; x++) {
+        const t = clamp(((x0 + x) / sc - xa) / span, 0, 1);
+        rgb[x] = ((A[2] + (B[2] - A[2]) * t) << 16 | (A[1] + (B[1] - A[1]) * t) << 8 | (A[0] + (B[0] - A[0]) * t)) >>> 0;
+      }
+      const d32 = new Uint32Array(d.buffer);
+      for (let y = 0, j = 0; y < h; y++) for (let x = 0; x < w; x++, j++) {
+        const a = d[j * 4 + 3];
+        d32[j] = a > 175 ? (0xff000000 | rgb[x]) >>> 0 : a > 140 ? (((a - 140) * 7.3 | 0) << 24 | rgb[x]) >>> 0 : 0;
+      }
+      o.putImageData(img, x0, y0);
+      dst.drawImage(out, x0, y0, w, h, x0 / sc, y0 / sc, w / sc, h / sc);
+    };
+  }
+  // Glow drawn once into a sprite, then stamped each frame.
+  function glowSprite(w, h, r, color, blur) {
+    const pad = blur * 2, d = 2, c = document.createElement('canvas');
+    c.width = Math.ceil((w + pad * 2) * d); c.height = Math.ceil((h + pad * 2) * d);
+    const g = c.getContext('2d'); g.scale(d, d); g.shadowColor = color; g.shadowBlur = blur; g.fillStyle = color;
+    rr(g, pad, pad, w, h, r); g.fill();
+    return { c, pad, w, h };
+  }
+  const drawGlow = (ctx, s) => ctx.drawImage(s.c, -s.w / 2 - s.pad, -s.h / 2 - s.pad, s.w + 2 * s.pad, s.h + 2 * s.pad);
+  function glowLine(ctx, ax, ay, bx, by, color, w) {
+    ctx.save(); ctx.strokeStyle = color; ctx.lineCap = 'round';
+    [[w * 3.4, .06], [w * 2.3, .11], [w * 1.6, .2], [w, 1]].forEach(([lw, a]) => { ctx.globalAlpha = a; ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke(); });
+    ctx.restore();
+  }
+
+  /* ---------- Blup: squish + droplets + sound ---------- */
+  const splash = $('splash'), sctx = splash.getContext('2d');
+  const drops = []; let splashRaf = 0, splashLast = 0, splashColor = '#b78cff';
+  function sizeSplash() {
+    const w = innerWidth, h = innerHeight, d = Math.min(devicePixelRatio || 1, 2);
+    if (splash._w === w && splash._h === h && splash._d === d) return;
+    splash.width = Math.round(w * d); splash.height = Math.round(h * d); splash._w = w; splash._h = h; splash._d = d;
+    sctx.setTransform(d, 0, 0, d, 0, 0);
+  }
+  // tiny frog faces, drawn once per color and stamped each frame
+  const frogCache = {};
+  function frogSprite(color) {
+    if (frogCache[color]) return frogCache[color];
+    const S = 96, c = document.createElement('canvas'); c.width = c.height = S;
+    const g = c.getContext('2d'), bw = 64, bh = 40, cx = S / 2, cy = S / 2 + 8, dk = COL['frog-dk'];
+    g.translate(cx, cy); g.fillStyle = color;
+    for (const sx of [-1, 1]) { g.beginPath(); g.arc(sx * bw * 0.26, -bh * 0.45, bh * 0.32, 0, 7); g.fill(); }
+    rr(g, -bw / 2, -bh / 2, bw, bh, bh * 0.42); g.fill();
+    for (const sx of [-1, 1]) {
+      const ex = sx * bw * 0.26, ey = -bh * 0.45;
+      g.fillStyle = '#ffffff'; g.beginPath(); g.arc(ex, ey, bh * 0.21, 0, 7); g.fill();
+      g.fillStyle = dk; g.beginPath(); g.arc(ex + 1.5, ey + 1.5, bh * 0.1, 0, 7); g.fill();
+      g.fillStyle = 'rgba(255,140,170,.6)'; g.beginPath(); g.ellipse(sx * bw * 0.33, bh * 0.14, bh * 0.12, bh * 0.07, 0, 0, 7); g.fill();
+    }
+    g.strokeStyle = dk; g.lineWidth = 3.2; g.lineCap = 'round';
+    g.beginPath(); g.arc(0, -bh * 0.02, bw * 0.2, 0.18 * Math.PI, 0.82 * Math.PI); g.stroke();
+    return (frogCache[color] = c);
+  }
+  function burst(x, y, color) {
+    if (reduce) return;
+    sizeSplash(); splashColor = color; splash.style.visibility = 'visible';
+    const n = 4;
+    for (let i = 0; i < n; i++) {
+      const main = i === 0;
+      const ang = -Math.PI / 2 + (i - (n - 1) / 2 - 0.5) * 0.55 + (Math.random() - .5) * 0.35, sp = main ? 0 : 150 + Math.random() * 120;
+      drops.push({
+        x, y, size: main ? 30 : 16 + Math.random() * 6, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp,
+        rot: (Math.random() - .5) * 0.5, vr: main ? 0 : (Math.random() - .5) * 6,
+        life: 0, max: main ? .55 : .7 + Math.random() * .25, main, color
+      });
+    }
+    if (!splashRaf) { splashLast = performance.now(); splashRaf = requestAnimationFrame(tickSplash); }
+  }
+  // pop in with a wobble, then squish and shrink away like a blob
+  function blobScale(k, main) {
+    const inT = main ? 0.22 : 0.16;
+    if (k < inT) { const u = k / inT; return [easeOutBack(u), easeOutBack(u)]; }
+    const u = (k - inT) / (1 - inT), base = 1 - u * u * u;
+    const wob = Math.sin(u * Math.PI * 3) * 0.14 * (1 - u);
+    return [Math.max(0, base * (1 + wob)), Math.max(0, base * (1 - wob))];
+  }
+  function tickSplash(now) {
+    const dt = Math.min(.04, (now - splashLast) / 1000); splashLast = now;
+    sctx.clearRect(0, 0, splash._w, splash._h);
+    for (let i = drops.length - 1; i >= 0; i--) {
+      const d = drops[i]; d.life += dt;
+      if (!d.main) { d.vy += 900 * dt; d.x += d.vx * dt; d.y += d.vy * dt; d.rot += d.vr * dt; }
+      const k = d.life / d.max;
+      if (k >= 1) { drops.splice(i, 1); continue; }
+      const [sx, sy] = blobScale(k, d.main);
+      if (sx <= 0.01) continue;
+      const img = frogSprite(d.color), s = d.size * 1.5;
+      sctx.save(); sctx.translate(d.x, d.y); sctx.rotate(d.rot); sctx.scale(sx, sy);
+      sctx.globalAlpha = k > 0.85 ? (1 - k) / 0.15 : 1;
+      sctx.drawImage(img, -s / 2, -s / 2, s, s);
+      sctx.restore();
+    }
+    splashRaf = drops.length ? requestAnimationFrame(tickSplash) : 0;
+    if (!splashRaf) { sctx.clearRect(0, 0, splash._w, splash._h); splash.style.visibility = 'hidden'; }
+  }
+  let soundOn = true;
+  try { soundOn = localStorage.getItem('fl-sound') !== 'off'; } catch (e) {}
+  let actx = null;
+  function blupSound() {
+    if (!soundOn) return;
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === 'suspended') actx.resume();
+      const t = actx.currentTime;
+      [[0, 280, 760], [0.095, 360, 980]].forEach(([d, f0, f1]) => {
+        const o = actx.createOscillator(), g = actx.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(f0, t + d);
+        o.frequency.exponentialRampToValueAtTime(f1, t + d + 0.07);
+        g.gain.setValueAtTime(0.0001, t + d);
+        g.gain.exponentialRampToValueAtTime(0.14, t + d + 0.012);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + d + 0.11);
+        o.connect(g).connect(actx.destination); o.start(t + d); o.stop(t + d + 0.13);
+      });
+    } catch (e) {}
+  }
+  function renderSound() { const b = $('soundBtn'); b.setAttribute('aria-pressed', soundOn); b.textContent = soundOn ? '♪ Sound on' : '♪ Sound off'; }
+  renderSound();
+  let lastBlup = 0;
+  document.addEventListener('click', e => {
+    const el = e.target.closest('button, .btn, .toggles label');
+    if (!el || el.id === 'knob' || el.disabled) return;
+    const now = performance.now(); if (now - lastBlup < 80) return; lastBlup = now;
+    el.classList.remove('blup'); void el.offsetWidth; el.classList.add('blup');
+    const r = el.getBoundingClientRect();
+    const x = e.clientX || r.left + r.width / 2, y = e.clientY || r.top + r.height / 2;
+    const color = el.classList.contains('b') ? COL.sb : el.classList.contains('primary') ? COL.frog : COL['accent-hi'];
+    burst(x, y, color);
+    if (el.id !== 'soundBtn') blupSound();
+  });
+  document.addEventListener('animationend', e => { if (e.animationName === 'blup') e.target.classList.remove('blup'); });
+  $('soundBtn').addEventListener('click', () => { soundOn = !soundOn; try { localStorage.setItem('fl-sound', soundOn ? 'on' : 'off'); } catch (e) {} renderSound(); if (soundOn) blupSound(); });
+
+  /* ---------- Scroll-played intro: the block slides off the board and splashes into the name ---------- */
+  const track = $('intro'), iStage = $('iStage'), iLayer = $('iLayer'), iCv = $('iCv'), cue = $('cue');
+  const I = { w: 0, h: 0, lay: null, parts: [], hi: false };
+  const gooIntro = makeGoo();
+  const ezio = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const FONT = '"Fredoka","Nunito",system-ui,sans-serif';
+  /* the intro plays by itself on load; scrolling simply moves on to the page */
+  const PLAY_KEYS = [[0, 0], [0.6, 0], [1.4, 0.14], [1.6, 0.16], [2.7, 0.36], [3.6, 0.46], [5.4, 0.84], [6.2, 0.94]];
+  let playing = false, autoScroll = false;
+  I.p = 0;
+  function playIntro() {
+    if (reduce) { I.p = 0.94; I.hi = true; setIntroRes(); introUpdate(); return; }
+    playing = true;
+    const t0 = performance.now(), end = PLAY_KEYS[PLAY_KEYS.length - 1][0];
+    const tick = now => {
+      const t = (now - t0) / 1000; let p = 0.94;
+      for (let i = 1; i < PLAY_KEYS.length; i++) if (t <= PLAY_KEYS[i][0]) { const [ta, pa] = PLAY_KEYS[i - 1], [tb, pb] = PLAY_KEYS[i]; p = pa + (pb - pa) * (t - ta) / (tb - ta); break; }
+      I.p = p; introUpdate();
+      if (t < end) requestAnimationFrame(tick);
+      else { playing = false; I.hi = true; setIntroRes(); introUpdate(); }
+    };
+    requestAnimationFrame(tick);
+  }
+  function sizeIntro(force) {
+    const w = iStage.clientWidth, h = iStage.clientHeight;
+    if (!force && w === I.w && h === I.h && I.lay) return;
+    I.w = w; I.h = h;
+    setIntroRes();
+    buildIntro();
+  }
+  // full sharpness only once the animation has finished; 1x while it plays
+  function setIntroRes() {
+    const d = I.hi ? Math.min(devicePixelRatio || 1, 2) : 1;
+    [iCv].forEach(c => { c.width = Math.round(I.w * d); c.height = Math.round(I.h * d); c.getContext('2d').setTransform(d, 0, 0, d, 0, 0); });
+  }
+  function buildIntro() {
+    const w = I.w, h = I.h; if (!w || !h) return;
+    const Lb = Math.min(w * 0.42, h * 0.4), th = 26 * RAD;
+    const px = w * 0.5 + Lb * 0.14, py = h * 0.32;
+    const bw = Lb * 0.18, bh = Lb * 0.11;
+    const off = document.createElement('canvas'); off.width = w; off.height = h;
+    const x = off.getContext('2d', { willReadFrequently: true });
+    x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = '#fff';
+    let big = clamp(w * 0.12, 40, 132);
+    x.font = `700 ${big}px ${FONT}`;
+    const tw = x.measureText('Kerem Uysal').width; if (tw > w * 0.88) big *= w * 0.88 / tw;
+    const small = clamp(big * 0.2, 12, 22);
+    const nameY = Math.max(h * 0.68, py + Lb * 0.4 + big);
+    const byY = nameY - big * 0.8;
+    const lay = I.lay = { Lb, th, px, py, bw, bh, big, small, nameY, byY, powY: nameY + big * 0.6 + 14, x0: w / 2 - Math.min(tw, w * 0.88) / 2, x1: w / 2 + Math.min(tw, w * 0.88) / 2 };
+    const sample = (draw, gap) => {
+      x.clearRect(0, 0, w, h); draw();
+      const dt = x.getImageData(0, 0, w, h).data, pts = [];
+      for (let yy = 0; yy < h; yy += gap) for (let xx = 0; xx < w; xx += gap) if (dt[(yy * w + xx) * 4 + 3] > 140) pts.push([xx, yy]);
+      return pts;
+    };
+    const drawName = c => { c.font = `700 ${big}px ${FONT}`; c.fillText('Kerem Uysal', w / 2, nameY); };
+    const drawBy = c => { c.font = `600 ${small}px ${FONT}`; try { c.letterSpacing = (small * 0.28) + 'px'; } catch (e) {} c.fillText('PROJECT BY', w / 2, byY); try { c.letterSpacing = '0px'; } catch (e) {} };
+    lay.drawName = drawName; lay.drawBy = drawBy;
+    const gB = Math.max(3, Math.round(big / 21)), gS = Math.max(2, Math.round(small / 7));
+    const nPts = sample(() => drawName(x), gB), bPts = sample(() => drawBy(x), gS);
+    // block trajectory: slide, leave the low end, fall under the board
+    const s0 = Lb * 0.78, nOff = bh / 2 + 6, c = Math.cos(th), sn = Math.sin(th);
+    const E = [px + sn * nOff, py - c * nOff];
+    // the frog leaves the end along the slope and flips once on the way down
+    const C = [E[0] + c * s0 * 0.5, E[1] + sn * s0 * 0.5];
+    const M = [Math.min(w * 0.8, C[0] + (C[0] - E[0]) * 0.6), nameY - big * 0.15];
+    Object.assign(lay, { s0, nOff, E, C, M });
+    I.glow = glowSprite(bw, bh, bh * 0.4, COL.frog, 22);
+    const rnd = mulberry32(99), parts = [];
+    let mnX = Infinity, mxX = -Infinity; nPts.forEach(p => { mnX = Math.min(mnX, p[0]); mxX = Math.max(mxX, p[0]); });
+    // droplets start inside the frog's silhouette (body + eye bumps), squashed and turned as it lands
+    const rot = 0, cr = Math.cos(rot), sr = Math.sin(rot), sq = 0.35;
+    const frogPt = () => {
+      for (let t = 0; t < 40; t++) {
+        const x = (rnd() - .5) * bw, y = -bh * 0.75 + rnd() * bh * 1.25;
+        const inBody = y >= -bh / 2;
+        const inEye = (x + bw * 0.26) ** 2 + (y + bh * 0.45) ** 2 <= (bh * 0.3) ** 2 || (x - bw * 0.26) ** 2 + (y + bh * 0.45) ** 2 <= (bh * 0.3) ** 2;
+        if (inBody || inEye) { const X = x * (1 + sq), Y = y * (1 - sq); return [M[0] + X * cr - Y * sr, M[1] + X * sr + Y * cr]; }
+      }
+      return [M[0], M[1]];
+    };
+    const mk = (pt, gap, d) => {
+      const a = -Math.PI * rnd(), R = (0.08 + 0.24 * rnd()) * Math.min(w, h);
+      const st = frogPt();
+      return {
+        sx: st[0], sy: st[1],
+        cx: (M[0] + Math.cos(a) * R) * 0.6 + pt[0] * 0.4, cy: (M[1] + Math.sin(a) * R) * 0.7 + pt[1] * 0.3,
+        tx: pt[0], ty: pt[1], r: gap * 0.74, d: 0.025 + d + rnd() * 0.03
+      };
+    };
+    nPts.forEach(p => parts.push(mk(p, gB, 0.03 + 0.1 * (p[0] - mnX) / Math.max(1, mxX - mnX))));
+    bPts.forEach(p => parts.push(mk(p, gS, 0.01 * rnd())));
+    I.parts = parts;
+    introUpdate();
+  }
+  function blockPos(p) {
+    const L = I.lay, seg = (a, b) => clamp((p - a) / (b - a), 0, 1);
+    const th = L.th * ease(seg(0.02, 0.14)), c = Math.cos(th), s = Math.sin(th);
+    const on = sv => [L.px - sv * c + s * L.nOff, L.py - sv * s - c * L.nOff, th];
+    if (p < 0.16) return on(L.s0);
+    if (p < 0.36) { const u = seg(0.16, 0.36); return on(L.s0 * (1 - u * u)); }
+    const u = seg(0.36, 0.46), a = 1 - u;
+    return [a * a * L.E[0] + 2 * a * u * L.C[0] + u * u * L.M[0], a * a * L.E[1] + 2 * a * u * L.C[1] + u * u * L.M[1], L.th + (Math.PI * 2 - L.th) * ease(u)];
+  }
+  function introUpdate() {
+    const L = I.lay; if (!L) return;
+    const p = I.p || 0;
+    const seg = (a, b) => clamp((p - a) / (b - a), 0, 1);
+    const w = I.w, h = I.h, ctx = iCv.getContext('2d');
+    ctx.clearRect(0, 0, w, h);
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    // stand + board
+    const th = L.th * ease(seg(0.02, 0.14)), c = Math.cos(th), s = Math.sin(th);
+    const Rx = L.px - L.Lb * c, Ry = L.py - L.Lb * s, baseY = L.py + L.Lb * 0.16;
+    ctx.strokeStyle = COL['line-2']; ctx.lineWidth = 5;
+    ctx.beginPath(); ctx.moveTo(Rx - 8, baseY); ctx.lineTo(L.px + 12, baseY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(Rx + 12, baseY); ctx.lineTo(Rx + 12, Ry + 8); ctx.moveTo(L.px, baseY); ctx.lineTo(L.px, L.py); ctx.stroke();
+    glowLine(ctx, L.px, L.py, Rx, Ry, COL.accent, 9);
+    ctx.fillStyle = COL['panel-2']; ctx.strokeStyle = COL['line-2']; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(L.px, L.py, 8, 0, 7); ctx.fill(); ctx.stroke();
+    // block with speed ghosts
+    // the block is a little frog: face 1 = calm smile, face 2 = falling (wide eyes, open mouth)
+    const drawBlock = (bp, alpha, glow, squash, face) => {
+      const bw = L.bw, bh = L.bh;
+      ctx.save(); ctx.globalAlpha = alpha; ctx.translate(bp[0], bp[1]); ctx.rotate(bp[2]); ctx.scale(1 + squash, 1 - squash);
+      if (glow > 0) { ctx.globalAlpha = alpha * glow; drawGlow(ctx, I.glow); ctx.globalAlpha = alpha; }
+      ctx.fillStyle = COL.frog;
+      for (const sx of [-1, 1]) { ctx.beginPath(); ctx.arc(sx * bw * 0.26, -bh * 0.45, bh * 0.3, 0, 7); ctx.fill(); }
+      rr(ctx, -bw / 2, -bh / 2, bw, bh, bh * 0.4); ctx.fill();
+      if (face) {
+        const wide = face === 2;
+        for (const sx of [-1, 1]) {
+          const ex = sx * bw * 0.26, ey = -bh * 0.45;
+          ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(ex, ey, bh * (wide ? 0.23 : 0.2), 0, 7); ctx.fill();
+          ctx.fillStyle = COL['frog-dk']; ctx.beginPath(); ctx.arc(ex + bh * 0.04, ey + (wide ? 0 : bh * 0.03), bh * (wide ? 0.07 : 0.1), 0, 7); ctx.fill();
+          ctx.fillStyle = 'rgba(255,140,170,.55)'; ctx.beginPath(); ctx.ellipse(sx * bw * 0.33, bh * 0.14, bh * 0.12, bh * 0.07, 0, 0, 7); ctx.fill();
+          ctx.fillStyle = COL['frog-dk']; ctx.beginPath(); ctx.arc(sx * bh * 0.09, -bh * 0.12, bh * 0.035, 0, 7); ctx.fill();
+        }
+        ctx.fillStyle = COL['frog-dk']; ctx.strokeStyle = COL['frog-dk']; ctx.lineWidth = Math.max(1.2, bh * 0.07); ctx.lineCap = 'round';
+        if (wide) { ctx.beginPath(); ctx.ellipse(0, bh * 0.16, bh * 0.1, bh * 0.13, 0, 0, 7); ctx.fill(); }
+        else { ctx.beginPath(); ctx.arc(0, -bh * 0.02, bw * 0.2, 0.18 * Math.PI, 0.82 * Math.PI); ctx.stroke(); }
+      }
+      ctx.restore();
+    };
+    if (p < 0.46) {
+      if (p > 0.22) for (let k = 4; k >= 1; k--) drawBlock(blockPos(p - 0.007 * k), 0.07 * (5 - k) * seg(0.22, 0.3), 0, 0);
+      drawBlock(blockPos(p), 1, 0.45 + 0.55 * seg(0.2, 0.42), 0.35 * seg(0.445, 0.46), p >= 0.33 ? 2 : 1);
+    }
+    // splash ring
+    if (p > 0.455 && p < 0.58) {
+      const e = seg(0.455, 0.58);
+      ctx.strokeStyle = COL['accent-hi']; ctx.globalAlpha = (1 - e) * 0.6; ctx.lineWidth = 3 * (1 - e) + 1;
+      ctx.beginPath(); ctx.ellipse(L.M[0], L.M[1], 12 + e * 160, (12 + e * 160) * 0.45, 0, 0, 7); ctx.stroke(); ctx.globalAlpha = 1;
+    }
+    // liquid particles become the name
+    const grad = (g) => { const gr = g.createLinearGradient(L.x0, 0, L.x1, 0); gr.addColorStop(0, COL['accent-hi']); gr.addColorStop(1, COL.accent); return gr; };
+    if (p >= 0.455) {
+      const items = new Array(I.parts.length);
+      for (let n = 0; n < I.parts.length; n++) {
+        const q = I.parts[n], k = ezio(clamp((p - 0.46 - q.d) / 0.26, 0, 1)), a = 1 - k;
+        items[n] = [a * a * q.sx + 2 * a * k * q.cx + k * k * q.tx, a * a * q.sy + 2 * a * k * q.cy + k * k * q.ty, q.r * (0.5 + 0.5 * k + 0.6 * Math.sin(Math.PI * k))];
+      }
+      ctx.save(); ctx.globalAlpha = 1 - 0.75 * seg(0.84, 0.9);
+      gooIntro(ctx, items, w, h, clamp(600 / w, 0.42, 1), COL['accent-hi'], COL.accent, L.x0, L.x1);
+      ctx.restore();
+      // the frog's face melts away as its droplets start to leave
+      if (p < 0.53) drawBlock(blockPos(p), 1 - seg(0.47, 0.53), 0, 0.35, 2);
+    }
+    // crisp text fades in over the liquid
+    const ca = seg(0.84, 0.9);
+    if (ca > 0) {
+      ctx.save(); ctx.globalAlpha = ca; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = grad(ctx); L.drawName(ctx); ctx.fillStyle = COL.accent; L.drawBy(ctx); ctx.restore();
+    }
+    const pk = seg(0.88, 0.95);
+    const co = seg(0.88, 0.94); setSt(cue, 'opacity', co.toFixed(3)); setSt(cue, 'pointerEvents', co > 0.1 ? 'auto' : 'none');
+    if (co >= 1 && !cue.classList.contains('play')) cue.classList.add('play');
+  }
+  addEventListener('resize', () => sizeIntro());
+  // open at the very top so the intro is what the visitor sees first
+  try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+  let touched = false;
+  ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(ev => addEventListener(ev, () => { touched = true; }, { passive: true, once: true }));
+  const toTop = () => { if (!touched && scrollY > 0) scrollTo(0, 0); };
+  toTop(); addEventListener('load', toTop); [120, 400, 900].forEach(ms => setTimeout(toTop, ms));
+  sizeIntro(true);
+  // wait (briefly) for the name font so the letters are sampled once, before anything moves
+  const fontsFirst = document.fonts
+    ? Promise.race([Promise.all([document.fonts.load(`700 80px ${FONT}`), document.fonts.load(`600 20px ${FONT}`)]), new Promise(r => setTimeout(r, 1200))]).catch(() => {})
+    : Promise.resolve();
+  fontsFirst.then(() => { sizeIntro(true); playIntro(); });
+  if (document.fonts) document.fonts.ready.then(() => { if (I.p < 0.4) sizeIntro(true); else if (!playing) introUpdate(); });
+
+  /* smooth, eased scrolling for in-page links and the skip button */
+  let scrollAnim = 0;
+  const ezScroll = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  function smoothTo(y, dur) {
+    cancelAnimationFrame(scrollAnim);
+    y = clamp(y, 0, document.documentElement.scrollHeight - innerHeight);
+    const y0 = scrollY, dy = y - y0; if (Math.abs(dy) < 2) return;
+    if (reduce) { scrollTo(0, y); return; }
+    dur = dur || clamp(600 + Math.abs(dy) * 0.3, 900, 1800);
+    const t0 = performance.now(); autoScroll = true;
+    const tick = now => { const k = Math.min(1, (now - t0) / dur); scrollTo(0, y0 + dy * ezScroll(k)); if (k < 1) scrollAnim = requestAnimationFrame(tick); else setTimeout(() => { autoScroll = false; }, 60); };
+    scrollAnim = requestAnimationFrame(tick);
+  }
+  ['wheel', 'touchstart'].forEach(ev => addEventListener(ev, () => { if (!playing) { cancelAnimationFrame(scrollAnim); autoScroll = false; } }, { passive: true }));
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]'); if (!a) return;
+    const el = document.getElementById(a.getAttribute('href').slice(1)); if (!el) return;
+    e.preventDefault();
+    smoothTo(el.getBoundingClientRect().top + scrollY - 84);
+  });
+  cue.addEventListener('click', () => smoothTo(track.offsetTop + track.offsetHeight, 1400));
+
+  /* ---------- Scroll progress ---------- */
+  const prog = $('progress');
+  let scrollQueued = false;
+  function onScroll() {
+    if (scrollQueued) return; scrollQueued = true;
+    requestAnimationFrame(() => {
+      scrollQueued = false;
+      const max = document.documentElement.scrollHeight - innerHeight;
+      prog.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
+    });
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  introUpdate(); onScroll();
+
+  /* ---------- Model ---------- */
+  const MATS = [
+    { id: 'acrylic', name: 'Acrylic sheet', mu: 0.30 },
+    { id: 'wood', name: 'Pine board', mu: 0.40 },
+    { id: 'felt', name: 'Felt', mu: 0.52 },
+    { id: 'sand', name: 'Sandpaper P120', mu: 0.68 },
+    { id: 'rubber', name: 'Rubber mat', mu: 0.85 },
+  ];
+  const MASSES = [0.20, 0.40, 0.60], MLBL = ['M1', 'M2', 'M3'];
+  const mat = id => MATS.find(m => m.id === id);
+  function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function gauss(r) { let u = 0, v = 0; while (!u) u = r(); while (!v) v = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+  const r1 = x => Math.round(x * 10) / 10;
+  const state = { surf: 'A', mats: { A: 'wood', B: 'sand' }, mi: 0, data: { A: [[], [], []], B: [[], [], []] } };
+  function loadSample() {
+    const r = mulberry32(22601);
+    ['A', 'B'].forEach(sf => {
+      const mu = mat(state.mats[sf]).mu;
+      state.data[sf] = [0, 1, 2].map(() => Array.from({ length: 5 }, () => {
+        const th = r1(Math.atan(mu * (1 + 0.035 * gauss(r))) * DEG + 0.25 * gauss(r));
+        return { th, mu: Math.tan(th * RAD), obs: 'Sample run' };
+      }));
+    });
+  }
+  function stats(arr) {
+    const n = arr.length; if (!n) return null;
+    const mt = arr.reduce((a, b) => a + b.th, 0) / n, mm = arr.reduce((a, b) => a + b.mu, 0) / n;
+    const sd = n > 1 ? Math.sqrt(arr.reduce((a, b) => a + (b.mu - mm) ** 2, 0) / (n - 1)) : 0;
+    const sdt = n > 1 ? Math.sqrt(arr.reduce((a, b) => a + (b.th - mt) ** 2, 0) / (n - 1)) : 0;
+    return { n, mt, mm, sd, sdt };
+  }
+
+  /* ---------- Canvas helpers ---------- */
+  function fit(cv, aspect, minH, maxH, maxD) {
+    const w = cv.parentElement.clientWidth; if (!w) return;
+    const h = Math.round(Math.max(minH, Math.min(maxH, w * aspect)));
+    if (cv._w === w && cv._h === h) return;
+    const d = Math.min(devicePixelRatio || 1, maxD || 2);
+    cv.style.height = h + 'px'; cv.width = Math.round(w * d); cv.height = Math.round(h * d);
+    cv._w = w; cv._h = h; cv.getContext('2d').setTransform(d, 0, 0, d, 0, 0);
+  }
+  function rr(ctx, x, y, w, h, r) {
+    r = Math.max(0, Math.min(r, Math.abs(w) / 2, Math.abs(h) / 2));
+    ctx.beginPath(); ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+  const dotCache = {};
+  function dots(ctx, w, h) {
+    const k = w + 'x' + h; let c = dotCache[k];
+    if (!c) {
+      c = document.createElement('canvas'); c.width = w * 2; c.height = h * 2;
+      const g = c.getContext('2d'); g.scale(2, 2); g.fillStyle = COL.line;
+      for (let x = 12; x < w; x += 24) for (let y = 12; y < h; y += 24) g.fillRect(x - 1, y - 1, 2, 2);
+      dotCache[k] = c;
+    }
+    ctx.drawImage(c, 0, 0, w, h);
+  }
+  function arrow(ctx, x, y, dx, dy, color, dashed, label) {
+    const len = Math.hypot(dx, dy); if (len < 4) return;
+    const ux = dx / len, uy = dy / len, hl = Math.min(12, len * 0.5);
+    const hx = x + dx - ux * hl, hy = y + dy - uy * hl;
+    ctx.save();
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = dashed ? 2 : 3.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    if (dashed) ctx.setLineDash([2, 6]);
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(hx, hy); ctx.stroke(); ctx.setLineDash([]);
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(x + dx, y + dy); ctx.lineTo(hx - uy * 6, hy + ux * 6); ctx.lineTo(hx + uy * 6, hy - ux * 6); ctx.closePath(); ctx.fill(); ctx.stroke();
+    if (label && len > 24) {
+      ctx.font = `500 12px ${MONO}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const lx = x + dx + ux * 20, ly = y + dy + uy * 16, tw = ctx.measureText(label).width;
+      ctx.fillStyle = 'rgba(12,7,23,.8)'; rr(ctx, lx - tw / 2 - 7, ly - 10, tw + 14, 20, 10); ctx.fill();
+      ctx.fillStyle = color; ctx.fillText(label, lx, ly);
+    }
+    ctx.restore();
+  }
+  function frame(ctx, w, h, pad, xd, yd, xt, yt, xf, yf, xl, yl) {
+    const x0 = pad.l, x1 = w - pad.r, y0 = h - pad.b, y1 = pad.t;
+    const X = v => x0 + (v - xd[0]) / (xd[1] - xd[0]) * (x1 - x0);
+    const Y = v => y0 - (v - yd[0]) / (yd[1] - yd[0]) * (y0 - y1);
+    ctx.font = `400 11px ${MONO}`; ctx.lineWidth = 1; ctx.lineCap = 'round';
+    yt.forEach(v => {
+      ctx.strokeStyle = COL['line-2']; ctx.setLineDash([1, 6]); ctx.beginPath(); ctx.moveTo(x0, Y(v)); ctx.lineTo(x1, Y(v)); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = COL.dim; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(yf(v), x0 - 8, Y(v));
+    });
+    xt.forEach(v => { ctx.fillStyle = COL.dim; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(xf(v), X(v), y0 + 9); });
+    ctx.strokeStyle = COL['line-2']; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y0); ctx.moveTo(x0, y0); ctx.lineTo(x0, y1); ctx.stroke();
+    ctx.fillStyle = COL.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(xl, (x0 + x1) / 2, h - 2);
+    ctx.save(); ctx.translate(12, (y0 + y1) / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = 'middle'; ctx.fillText(yl, 0, 0); ctx.restore();
+    return { X, Y, x0, x1, y0, y1 };
+  }
+  const range = (a, b, s) => { const o = []; for (let v = a; v <= b + 1e-9; v += s) o.push(Math.round(v * 1000) / 1000); return o; };
+  function curve(ctx, f, fn, a0, a1, col, lw) { ctx.strokeStyle = col; ctx.lineWidth = lw || 3; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.beginPath(); for (let a = a0; a <= a1 + 1e-9; a += 0.5) { const y = f.Y(fn(a)); a === a0 ? ctx.moveTo(f.X(a), y) : ctx.lineTo(f.X(a), y); } ctx.stroke(); }
+
+  /* ---------- Hero animation ---------- */
+  const heroCv = $('heroCv');
+  const dust = Array.from({ length: 30 }, (_, i) => { const r = mulberry32(i + 7); return { x: r(), y: r(), s: 0.01 + r() * 0.025, a: 0.15 + r() * 0.4, z: 1 + r() * 2 }; });
+  function drawHero(ms) {
+    if (!heroCv._w) return;
+    const ctx = heroCv.getContext('2d'), w = heroCv._w, h = heroCv._h, t = ms / 1000;
+    ctx.clearRect(0, 0, w, h); dots(ctx, w, h);
+    dust.forEach(d => { const y = ((d.y - (reduce ? 0 : t * d.s)) % 1 + 1) % 1; ctx.globalAlpha = d.a; ctx.fillStyle = COL.accent; ctx.beginPath(); ctx.arc(d.x * w, y * h, d.z, 0, 7); ctx.fill(); });
+    ctx.globalAlpha = 1;
+    const P = 8, p = reduce ? 4 : t % P, thc = 27 * RAD;
+    const th = p < 2.8 ? thc * ease(p / 2.8) : p < 6.45 ? thc : p < 7.35 ? thc * (1 - ease((p - 6.45) / 0.9)) : 0;
+    const gy = h * 0.86, L = Math.min(w * 0.76, (gy - 40) / 0.62);
+    const px = Math.min(w - 24, w / 2 + L * 0.46), py = gy - 10;
+    const s0 = L * 0.72, s1 = L * 0.14;
+    let sb = s0, sc = 1;
+    if (p >= 2.8 && p < 3.45) sb = s0 - (s0 - s1) * Math.pow((p - 2.8) / 0.65, 2);
+    else if (p >= 3.45 && p < 7.35) sb = s1;
+    else if (p >= 7.35) sc = Math.max(0.01, easeOutBack(Math.min(1, (p - 7.35) / 0.5)));
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = COL['line-2']; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(w * .08, gy); ctx.lineTo(w * .92, gy); ctx.stroke();
+    const ex = px - L * Math.cos(th), ey = py - L * Math.sin(th);
+    ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(ex + 8, gy); ctx.lineTo(ex + 8, ey + 6); ctx.stroke();
+    glowLine(ctx, px, py, ex, ey, COL.accent, 8);
+    if (th > 0.02) {
+      ctx.fillStyle = 'rgba(183,140,255,.14)'; ctx.beginPath(); ctx.moveTo(px, py); ctx.arc(px, py, 64, Math.PI, Math.PI + th); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = COL['accent-hi']; ctx.font = `italic 20px ${MATH}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const ma = Math.PI + th / 2; ctx.fillText('θ', px + 86 * Math.cos(ma), py + 86 * Math.sin(ma));
+    }
+    const bw = L * 0.13, bh = L * 0.08;
+    ctx.save(); ctx.translate(px, py); ctx.rotate(Math.PI + th);
+    ctx.translate(sb, 4 + bh / 2); ctx.scale(sc, sc);
+    const gk = Math.round(bw) + 'x' + Math.round(bh);
+    if (!heroCv._glow || heroCv._glow.k !== gk) { heroCv._glow = glowSprite(bw, bh, bh * 0.38, COL['accent-hi'], 22); heroCv._glow.k = gk; }
+    ctx.globalAlpha = (p >= 2.8 && p < 3.6) ? 1 : 0.5; drawGlow(ctx, heroCv._glow); ctx.globalAlpha = 1;
+    ctx.fillStyle = COL['accent-hi']; rr(ctx, -bw / 2, -bh / 2, bw, bh, bh * 0.38); ctx.fill();
+    ctx.restore();
+    const shown = p >= 2.8 && p < 7.35;
+    ctx.globalAlpha = shown ? Math.min(1, (p - 2.8) / 0.4, (7.35 - p) / 0.4) : 0;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.font = `500 12px ${MONO}`; ctx.fillStyle = COL.muted; ctx.fillText('SLIP DETECTED', 18, 18);
+    ctx.font = `italic 30px ${MATH}`; ctx.fillStyle = COL.fg; ctx.fillText('θc = 27.0°', 18, 38);
+    ctx.font = `italic 22px ${MATH}`; ctx.fillStyle = COL.accent; ctx.fillText('μs = tan θc ≈ 0.51', 18, 76);
+    ctx.globalAlpha = 1;
+  }
+
+  /* ---------- Theory widget ---------- */
+  const thCv = $('thCv');
+  function drawTheory() {
+    if (!thCv._w) return;
+    const ctx = thCv.getContext('2d'), w = thCv._w, h = thCv._h;
+    const th = +$('thTheta').value, m = +$('thMass').value, mu = mat($('thMat').value).mu, W = m * G;
+    const tc = Math.atan(mu) * DEG;
+    ctx.clearRect(0, 0, w, h);
+    const f = frame(ctx, w, h, { l: 46, r: 16, t: 16, b: 40 }, [0, 60], [0, 10], range(0, 60, 10), range(0, 10, 2), v => v + '°', v => v, 'Board angle θ', 'Force (N)');
+    ctx.fillStyle = 'rgba(255,122,154,.08)'; rr(ctx, f.X(tc), f.y1, f.x1 - f.X(tc), f.y0 - f.y1, 14); ctx.fill();
+    ctx.fillStyle = 'rgba(95,227,196,.06)'; rr(ctx, f.x0 + 2, f.y1, f.X(tc) - f.x0 - 4, f.y0 - f.y1, 14); ctx.fill();
+    ctx.font = `500 10px ${MONO}`; ctx.textBaseline = 'top';
+    ctx.fillStyle = COL.bad; ctx.textAlign = 'right'; ctx.fillText('BLOCK SLIDES', f.x1 - 10, f.y1 + 10);
+    ctx.fillStyle = COL.sb; ctx.textAlign = 'left'; ctx.fillText('BLOCK HOLDS', f.x0 + 10, f.y1 + 10);
+    curve(ctx, f, a => W * Math.sin(a * RAD), 0, 60, COL.fric);
+    curve(ctx, f, a => mu * W * Math.cos(a * RAD), 0, 60, COL.norm);
+    const yc = f.Y(W * Math.sin(tc * RAD));
+    ctx.setLineDash([2, 6]); ctx.strokeStyle = COL['accent-hi']; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(f.X(tc), f.y0); ctx.lineTo(f.X(tc), yc); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = COL['accent-hi']; ctx.beginPath(); ctx.arc(f.X(tc), yc, 6, 0, 7); ctx.fill();
+    ctx.strokeStyle = 'rgba(241,234,252,.4)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(f.X(th), f.y0); ctx.lineTo(f.X(th), f.y1); ctx.stroke();
+    [[W * Math.sin(th * RAD), COL.fric], [mu * W * Math.cos(th * RAD), COL.norm]].forEach(([v, c]) => { ctx.fillStyle = COL.panel; ctx.strokeStyle = c; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(f.X(th), f.Y(v), 6, 0, 7); ctx.fill(); ctx.stroke(); });
+    ctx.font = `italic 15px ${MATH}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillStyle = COL.fric; ctx.fillText('mg sin θ', f.X(51), f.Y(W * Math.sin(51 * RAD)) - 8);
+    ctx.fillStyle = COL.norm; ctx.fillText('μs mg cos θ', f.X(3), f.Y(mu * W * Math.cos(3 * RAD)) - 8);
+    const need = W * Math.sin(th * RAD), max = mu * W * Math.cos(th * RAD);
+    $('thThetaO').textContent = th.toFixed(1) + '°'; $('thMassO').textContent = m.toFixed(2) + ' kg';
+    $('thNeed').textContent = need.toFixed(2) + ' N'; $('thMax').textContent = max.toFixed(2) + ' N'; $('thCrit').textContent = tc.toFixed(1) + '°';
+    const chip = $('thChip'), slides = need > max;
+    chip.textContent = slides ? 'Slides' : 'Holds'; chip.className = 'chip ' + (slides ? 'slip' : 'ok');
+  }
+
+  /* ---------- Simulation (manual angle) ---------- */
+  const simCv = $('simCv'), knob = $('knob');
+  const BOARD = 0.8, S0 = 0.62, BL = 0.10, BH = 0.05, SMIN = 0.03 + BL / 2;
+  const sim = { phase: 'ready', theta: 0, target: 0, s: S0, v: 0, muT: 0, rate: 0, trail: [], ret: null, geo: null, flatT: 0 };
+  const curMu = () => mat(state.mats[state.surf]).mu;
+  function newTrial() { sim.muT = curMu() * (1 + 0.035 * gauss(Math.random)); }
+  newTrial();
+  function setTarget(v) {
+    sim.target = clamp(Math.round(v * 10) / 10, 0, 60);
+    const sl = $('angSlider'); sl.value = sim.target; setFill(sl);
+    $('angO').textContent = sim.target.toFixed(1) + '°';
+  }
+  function setChip(text, cls) { const c = $('simChip'); if (c.textContent !== text) c.textContent = text; const k = 'chip ' + (cls || ''); if (c.className !== k) c.className = k; }
+
+  function slip() {
+    const rec = r1(sim.theta + 0.15 * gauss(Math.random));
+    const fast = sim.rate > 3;
+    const arr = state.data[state.surf][state.mi];
+    if (arr.length >= 5) { arr.length = 0; $('simNote').textContent = `${MLBL[state.mi]} on surface ${state.surf} already had five trials, so a new set started.`; }
+    arr.push({ th: rec, mu: Math.tan(rec * RAD), obs: fast ? `Raised fast (${sim.rate.toFixed(1)}°/s), may overshoot` : 'Slow tilt, clean slide' });
+    $('lastTc').textContent = `last θc: ${rec.toFixed(1)}°`;
+    sim.phase = 'sliding'; sim.v = 0;
+    setChip(`Slip · θc = ${rec.toFixed(1)}° recorded`, 'slip');
+    renderLog(true); renderResults();
+  }
+  function step(dt) {
+    const prev = sim.theta;
+    sim.theta += (sim.target - sim.theta) * Math.min(1, dt * 10);
+    if (Math.abs(sim.target - sim.theta) < 0.01) sim.theta = sim.target;
+    sim.rate += (Math.abs(sim.theta - prev) / Math.max(dt, 1e-3) - sim.rate) * Math.min(1, dt * 6);
+    const th = sim.theta * RAD;
+    switch (sim.phase) {
+      case 'ready': {
+        if (sim.theta > 0.5 && Math.tan(th) >= sim.muT) { slip(); break; }
+        const grip = Math.tan(th) / sim.muT;
+        if (sim.theta < 0.05) setChip('Ready · raise slowly', 'ok');
+        else if (grip > 0.88) setChip('Close · nudge by 0.1°', 'run');
+        else setChip('Holding · static friction', 'ok');
+        break;
+      }
+      case 'sliding': {
+        const a = G * (Math.sin(th) - 0.78 * sim.muT * Math.cos(th));
+        sim.v = Math.max(0, sim.v + a * dt); sim.s -= sim.v * dt;
+        sim.trail.push(sim.s); if (sim.trail.length > 8) sim.trail.shift();
+        if (sim.s <= SMIN) { sim.s = SMIN; sim.v = 0; sim.phase = 'rest'; setChip('Stopped · lower the board to reset', ''); }
+        else if (sim.v === 0 && a < 0) { sim.phase = 'rest'; setChip('Kinetic friction stopped it · lower to reset', ''); }
+        break;
+      }
+      case 'rest':
+        if (sim.trail.length) sim.trail.shift();
+        if (sim.s > SMIN + 0.001 && Math.tan(th) >= sim.muT) { sim.phase = 'sliding'; sim.v = 0; }
+        else if (sim.theta < 1.5) {
+          sim.flatT += dt; const left = 2 - sim.flatT;
+          if (left <= 0) { sim.flatT = 0; sim.phase = 'returning'; sim.ret = { from: sim.s, t: 0 }; setChip('Putting the block back', ''); }
+          else setChip(`Board down · block resets in ${left.toFixed(1)} s`, 'run');
+        } else if (sim.flatT > 0 && sim.flatT < 2) sim.flatT = 0;
+        break;
+      case 'returning': {
+        sim.ret.t += dt / 0.6;
+        const k = Math.min(1, sim.ret.t);
+        sim.s = sim.ret.from + (S0 - sim.ret.from) * easeOutBack(k);
+        if (k >= 1) { sim.s = S0; sim.trail = []; newTrial(); sim.phase = 'ready'; }
+        break;
+      }
+    }
+  }
+  function conditionChanged() {
+    if (sim.phase === 'ready' && sim.theta < 1.5 && sim.target < 1.5) newTrial();
+    else { setTarget(0); if (sim.phase === 'ready') { sim.phase = 'rest'; sim.flatT = 3; } }
+  }
+
+  function drawSim() {
+    if (!simCv._w) return;
+    const ctx = simCv.getContext('2d'), w = simCv._w, h = simCv._h;
+    ctx.clearRect(0, 0, w, h); dots(ctx, w, h);
+    const gy = h - 26, L = Math.min(w * 0.8, (gy - 34) / 0.98);
+    const px = Math.min(w - 30, w / 2 + L * 0.44), py = gy - 16, ppm = L / BOARD;
+    sim.geo = { px, py, L };
+    const th = sim.theta * RAD, c = Math.cos(th), s = Math.sin(th);
+    const ux = -c, uy = -s, nx = s, ny = -c;
+    const P = (a, b) => [px + a * ux + b * nx, py + a * uy + b * ny];
+    const sfCol = state.surf === 'A' ? COL.sa : COL.sb;
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+
+    ctx.strokeStyle = COL['line-2']; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(14, gy); ctx.lineTo(w - 14, gy); ctx.stroke();
+    const E = P(L - 14, -16);
+    ctx.fillStyle = COL['panel-2']; rr(ctx, E[0] - 22, gy - 12, 44, 12, 6); ctx.fill();
+    ctx.strokeStyle = COL.steel; ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(E[0], gy - 10); ctx.lineTo(E[0], E[1]); ctx.stroke();
+    ctx.fillStyle = COL['panel-2']; rr(ctx, px - 12, py, 24, gy - py, 6); ctx.fill();
+    ctx.beginPath(); ctx.arc(px, py, 13, 0, 7); ctx.fill();
+    ctx.strokeStyle = COL['line-2']; ctx.lineWidth = 2; ctx.stroke();
+    if (th > 0.004) {
+      const R = Math.min(72, L * 0.17);
+      ctx.fillStyle = 'rgba(183,140,255,.12)'; ctx.beginPath(); ctx.moveTo(px, py); ctx.arc(px, py, R, Math.PI, Math.PI + th); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = COL['accent-hi']; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(px, py, R, Math.PI, Math.PI + th); ctx.stroke();
+      ctx.font = `italic 19px ${MATH}`; ctx.fillStyle = COL['accent-hi']; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      ctx.fillText('θ', px - R - 8, py - Math.max(10, R * Math.sin(th / 2) * 1.1));
+    }
+
+    const bl = BL * ppm, bh = BH * ppm, sp = sim.s * ppm, base = 6;
+    ctx.save(); ctx.translate(px, py); ctx.rotate(Math.PI + th);
+    ctx.fillStyle = COL['panel-2']; rr(ctx, -8, -16, L + 16, 16, 8); ctx.fill();
+    ctx.strokeStyle = COL['line-2']; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = sfCol; ctx.globalAlpha = .85; rr(ctx, 12, 0, L - 20, base, base / 2); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.fillStyle = COL.steel; rr(ctx, 0.008 * ppm, 0, 0.02 * ppm, base + 0.035 * ppm, 5); ctx.fill();
+    ctx.fillStyle = COL['accent-hi']; ctx.beginPath(); ctx.arc((S0 - BL / 2) * ppm, -8, 3.5, 0, 7); ctx.fill();
+    sim.trail.forEach((tr, i) => { ctx.globalAlpha = 0.06 + 0.2 * (i / sim.trail.length); ctx.strokeStyle = COL.accent; ctx.lineWidth = 2; rr(ctx, tr * ppm - bl / 2, base, bl, bh, bh * .32); ctx.stroke(); });
+    ctx.globalAlpha = 1;
+    if (sim.phase === 'sliding') { ctx.save(); ctx.strokeStyle = COL.accent; [[16, .07], [9, .16]].forEach(([lw, a]) => { ctx.globalAlpha = a; ctx.lineWidth = lw; rr(ctx, sp - bl / 2, base, bl, bh, bh * .32); ctx.stroke(); }); ctx.restore(); }
+    const wg = ctx.createLinearGradient(0, base, 0, base + bh); wg.addColorStop(0, COL['wood-dk']); wg.addColorStop(1, COL.wood);
+    ctx.fillStyle = wg; rr(ctx, sp - bl / 2, base, bl, bh, bh * .32); ctx.fill();
+    ctx.strokeStyle = 'rgba(110,70,35,.4)'; ctx.lineWidth = 1.2;
+    [0.32, 0.55, 0.76].forEach((f, k) => { ctx.beginPath(); ctx.moveTo(sp - bl / 2 + 6, base + bh * f); ctx.quadraticCurveTo(sp, base + bh * f + (k % 2 ? 3 : -3), sp + bl / 2 - 6, base + bh * f); ctx.stroke(); });
+    const ww = 0.066 * ppm, wh = 0.021 * ppm;
+    for (let i = 0; i < state.mi; i++) {
+      const y0 = base + bh + 2 + i * (wh + 2.5);
+      ctx.fillStyle = COL.steel; rr(ctx, sp - ww / 2, y0, ww, wh, wh / 2); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,.3)'; rr(ctx, sp - ww / 2 + 5, y0 + wh * .55, ww - 10, wh * .22, wh * .11); ctx.fill();
+    }
+    ctx.restore();
+    const sml = P((S0 - BL / 2) * ppm, -30);
+    ctx.font = `400 10px ${MONO}`; ctx.fillStyle = COL.dim; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('start', sml[0], sml[1]);
+
+    const K = P(L - 4, 26);
+    setSt(knob, 'transform', `translate(${K[0].toFixed(1)}px,${K[1].toFixed(1)}px)`);
+
+    const m = MASSES[state.mi], W = m * G, k = (L * 0.30) / (MASSES[2] * G);
+    const C = P(sp, base + bh / 2), F0 = P(sp, base - 1), N = W * c;
+    const kinetic = sim.phase === 'sliding';
+    const fr = kinetic ? 0.78 * sim.muT * N : sim.phase === 'ready' ? W * s : Math.min(W * s, sim.muT * N);
+    if ($('tgC').checked) {
+      arrow(ctx, C[0], C[1], -ux * W * s * k, -uy * W * s * k, COL.muted, true, 'mg sinθ');
+      arrow(ctx, C[0], C[1], -nx * N * k, -ny * N * k, COL.muted, true, 'mg cosθ');
+    }
+    if ($('tgF').checked) {
+      arrow(ctx, C[0], C[1], 0, W * k, COL.wt, false, 'mg');
+      arrow(ctx, C[0], C[1], nx * N * k, ny * N * k, COL.norm, false, 'N');
+      arrow(ctx, F0[0], F0[1], ux * fr * k, uy * fr * k, COL.fric, false, kinetic ? 'fk' : 'fs');
+    }
+
+    const fmax = sim.muT * N;
+    setText('angBig', sim.theta.toFixed(1) + '°');
+    setText('roPar', (W * s).toFixed(2) + ' N');
+    setText('roN', N.toFixed(2) + ' N');
+    const fl = kinetic ? 'f<sub>k</sub> (kinetic)' : 'f<sub>s</sub> (static)';
+    if ($('roFl').innerHTML !== fl) $('roFl').innerHTML = fl;
+    setText('roF', fr.toFixed(2) + ' N');
+    setText('roFmax', fmax.toFixed(2) + ' N');
+    const grip = sim.phase === 'ready' ? Math.min(100, (W * s) / fmax * 100) : 100;
+    setText('gripO', grip.toFixed(0) + '%'); setSt($('gripBar'), 'width', grip.toFixed(1) + '%');
+  }
+
+  // knob + canvas dragging
+  let dragging = false;
+  function angleFromPointer(e) {
+    const r = simCv.getBoundingClientRect(), g = sim.geo; if (!g) return;
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    setTarget(Math.atan2(g.py - y, Math.max(1, g.px - x)) * DEG);
+  }
+  knob.addEventListener('pointerdown', e => { dragging = true; knob.classList.add('drag'); knob.setPointerCapture(e.pointerId); e.preventDefault(); });
+  knob.addEventListener('pointermove', e => { if (dragging) angleFromPointer(e); });
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(ev => knob.addEventListener(ev, () => { dragging = false; knob.classList.remove('drag'); }));
+  simCv.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; dragging = true; simCv.setPointerCapture(e.pointerId); angleFromPointer(e); });
+  simCv.addEventListener('pointermove', e => { if (dragging && e.pointerType === 'mouse') angleFromPointer(e); });
+  ['pointerup', 'pointercancel'].forEach(ev => simCv.addEventListener(ev, () => { dragging = false; }));
+  simCv.style.cursor = 'ns-resize';
+  knob.addEventListener('keydown', e => {
+    const big = e.shiftKey ? 1 : 0.1;
+    if (e.key === 'ArrowUp' || e.key === 'ArrowRight') { setTarget(sim.target + big); e.preventDefault(); }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') { setTarget(sim.target - big); e.preventDefault(); }
+  });
+  $('angSlider').addEventListener('input', e => setTarget(+e.target.value));
+  document.querySelectorAll('.nudge [data-n]').forEach(b => b.addEventListener('click', () => setTarget(sim.target + +b.dataset.n)));
+  // reset: board back to flat, block straight back to the start mark (no countdown)
+  $('lowerBtn').addEventListener('click', () => {
+    setTarget(0);
+    if (sim.phase === 'sliding') { sim.phase = 'rest'; sim.v = 0; }
+    if (sim.phase === 'rest') sim.flatT = 2;
+  });
+
+  /* ---------- Sheet + results ---------- */
+  function renderCond() {
+    const mA = mat(state.mats.A), mB = mat(state.mats.B), cur = mat(state.mats[state.surf]);
+    $('surfAName').textContent = mA.name; $('surfBName').textContent = mB.name;
+    $('lgA').textContent = 'A · ' + mA.name; $('lgB').textContent = 'B · ' + mB.name;
+    $('simCond').innerHTML = `<b>Surface ${state.surf}</b> · ${cur.name} · <b>${MLBL[state.mi]}</b> = ${MASSES[state.mi].toFixed(2)} kg`;
+    $('sheetTitle').textContent = `Measurement sheet · Surface ${state.surf} (${cur.name}) · ${MLBL[state.mi]} = ${MASSES[state.mi].toFixed(2)} kg`;
+    $('surfA').setAttribute('aria-pressed', state.surf === 'A'); $('surfB').setAttribute('aria-pressed', state.surf === 'B');
+    [0, 1, 2].forEach(i => $('m' + i).setAttribute('aria-pressed', state.mi === i));
+  }
+  function renderLog(flashLast) {
+    const arr = state.data[state.surf][state.mi];
+    let html = '';
+    for (let i = 0; i < 5; i++) {
+      const r = arr[i];
+      html += r ? `<tr${flashLast && i === arr.length - 1 ? ' class="new"' : ''}><td>${i + 1}</td><td class="num">${r.th.toFixed(1)}</td><td class="num">${r.mu.toFixed(3)}</td><td style="color:var(--muted)">${r.obs}</td></tr>`
+        : `<tr class="empty"><td>${i + 1}</td><td class="num">—</td><td class="num">—</td><td></td></tr>`;
+    }
+    $('logBody').innerHTML = html;
+    const st = stats(arr);
+    $('logMT').textContent = st && st.n > 1 ? `${st.mt.toFixed(1)} ± ${st.sdt.toFixed(1)}` : '—';
+    $('logMM').textContent = st && st.n > 1 ? `${st.mm.toFixed(3)} ± ${st.sd.toFixed(3)}` : '—';
+  }
+  const resCv = $('resCv');
+  function drawResults() {
+    if (!resCv._w) return;
+    const ctx = resCv.getContext('2d'), w = resCv._w, h = resCv._h;
+    ctx.clearRect(0, 0, w, h);
+    let top = 0.5, any = false;
+    ['A', 'B'].forEach(sf => { top = Math.max(top, mat(state.mats[sf]).mu); state.data[sf].forEach(a => { const st = stats(a); if (st) { any = true; top = Math.max(top, st.mm + st.sd); } }); });
+    const ymax = Math.ceil((top + 0.08) * 10) / 10, step = ymax > 1 ? 0.2 : 0.1;
+    const f = frame(ctx, w, h, { l: 50, r: 16, t: 16, b: 40 }, [0, 0.7], [0, ymax], range(0, 0.7, 0.1), range(0, ymax, step), v => v.toFixed(1), v => v.toFixed(1), 'Total mass (kg)', 'Mean μs');
+    ['A', 'B'].forEach((sf, si) => {
+      const col = sf === 'A' ? COL.sa : COL.sb, mu = mat(state.mats[sf]).mu, off = si ? 0.012 : -0.012;
+      ctx.setLineDash([2, 7]); ctx.strokeStyle = col; ctx.globalAlpha = .4; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(f.x0, f.Y(mu)); ctx.lineTo(f.x1, f.Y(mu)); ctx.stroke(); ctx.setLineDash([]);
+      ctx.font = `400 10px ${MONO}`; ctx.fillStyle = col; ctx.globalAlpha = .75; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+      ctx.fillText(`model ${mu.toFixed(2)}`, f.x1 - 2, f.Y(mu) - 4); ctx.globalAlpha = 1;
+      const pts = [];
+      state.data[sf].forEach((a, i) => { const st = stats(a); if (st) pts.push([MASSES[i] + off, st]); });
+      if (pts.length > 1) { ctx.strokeStyle = col; ctx.globalAlpha = .45; ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.beginPath(); pts.forEach(([x, st], i) => i ? ctx.lineTo(f.X(x), f.Y(st.mm)) : ctx.moveTo(f.X(x), f.Y(st.mm))); ctx.stroke(); ctx.globalAlpha = 1; }
+      pts.forEach(([x, st]) => {
+        const X = f.X(x);
+        ctx.strokeStyle = col; ctx.lineWidth = 2.4; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(X, f.Y(st.mm - st.sd)); ctx.lineTo(X, f.Y(st.mm + st.sd));
+        ctx.moveTo(X - 5, f.Y(st.mm - st.sd)); ctx.lineTo(X + 5, f.Y(st.mm - st.sd));
+        ctx.moveTo(X - 5, f.Y(st.mm + st.sd)); ctx.lineTo(X + 5, f.Y(st.mm + st.sd)); ctx.stroke();
+        ctx.fillStyle = col; ctx.strokeStyle = COL.panel; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(X, f.Y(st.mm), 7, 0, 7); ctx.fill(); ctx.stroke();
+      });
+    });
+    if (!any) { ctx.fillStyle = COL.muted; ctx.font = `400 13px ${MONO}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('No trials yet. Tilt the board above.', (f.x0 + f.x1) / 2, (f.y0 + f.y1) / 2); }
+  }
+  function renderResults() {
+    let html = '';
+    ['A', 'B'].forEach(sf => {
+      const col = sf === 'A' ? 'var(--sa)' : 'var(--sb)';
+      state.data[sf].forEach((a, i) => {
+        const st = stats(a);
+        html += `<tr><td><span class="dot" style="background:${col}"></span>${sf} · ${MLBL[i]}</td><td class="num">${st ? st.n : 0}</td><td class="num">${st ? st.mt.toFixed(1) : '—'}</td><td class="num">${st ? st.mm.toFixed(3) : '—'}</td><td class="num">${st && st.n > 1 ? st.sd.toFixed(3) : '—'}</td></tr>`;
+      });
+    });
+    $('sumBody').innerHTML = html;
+    drawResults();
+  }
+
+  /* ---------- Uncertainty ---------- */
+  const unCv = $('unCv');
+  function drawUnc() {
+    if (!unCv._w) return;
+    const ctx = unCv.getContext('2d'), w = unCv._w, h = unCv._h;
+    const th = +$('unTheta').value, d = +$('unDelta').value;
+    const lo = Math.tan((th - d) * RAD), mid = Math.tan(th * RAD), hi = Math.tan((th + d) * RAD);
+    ctx.clearRect(0, 0, w, h);
+    const f = frame(ctx, w, h, { l: 46, r: 16, t: 16, b: 40 }, [0, 64], [0, 2.2], range(0, 60, 10), range(0, 2.2, 0.4), v => v + '°', v => v.toFixed(1), 'Critical angle θc', 'μs = tan θc');
+    ctx.fillStyle = 'rgba(183,140,255,.18)'; rr(ctx, f.X(th - d), f.Y(hi), f.X(th + d) - f.X(th - d), f.y0 - f.Y(hi), 6); ctx.fill();
+    ctx.fillStyle = 'rgba(95,227,196,.16)'; rr(ctx, f.x0 + 2, f.Y(hi), f.X(th + d) - f.x0 - 2, Math.max(4, f.Y(lo) - f.Y(hi)), 6); ctx.fill();
+    curve(ctx, f, a => Math.tan(a * RAD), 0, 64, COL.accent, 3.4);
+    ctx.fillStyle = COL['accent-hi']; ctx.strokeStyle = COL.panel; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(f.X(th), f.Y(mid), 7, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.font = `500 11px ${MONO}`; ctx.fillStyle = COL.sb; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(`Δμ = ±${((hi - lo) / 2).toFixed(3)}`, f.x0 + 10, f.Y(hi) - 14 < f.y1 + 10 ? f.Y(lo) + 14 : f.Y(hi) - 14);
+    $('unThetaO').textContent = th.toFixed(1) + '°'; $('unDeltaO').textContent = '±' + d.toFixed(1) + '°';
+    $('unLo').textContent = lo.toFixed(3); $('unMid').textContent = mid.toFixed(3); $('unHi').textContent = hi.toFixed(3);
+    $('unRel').textContent = `±${(((hi - lo) / 2) / mid * 100).toFixed(1)}% of μs (sec²θ = ${(1 / Math.cos(th * RAD) ** 2).toFixed(2)})`;
+  }
+
+  /* ---------- Wiring ---------- */
+  ['thMat', 'matA', 'matB'].forEach(id => { $(id).innerHTML = MATS.map(m => `<option value="${m.id}">${m.name} · μs ≈ ${m.mu.toFixed(2)}</option>`).join(''); });
+  $('thMat').value = 'wood'; $('matA').value = state.mats.A; $('matB').value = state.mats.B;
+  ['thTheta', 'thMass', 'thMat'].forEach(id => $(id).addEventListener('input', drawTheory));
+  ['unTheta', 'unDelta'].forEach(id => $(id).addEventListener('input', drawUnc));
+  function selectSurf(sf) { if (state.surf === sf) return; state.surf = sf; conditionChanged(); renderCond(); renderLog(); }
+  $('surfA').onclick = () => selectSurf('A');
+  $('surfB').onclick = () => selectSurf('B');
+  [0, 1, 2].forEach(i => $('m' + i).onclick = () => { if (state.mi === i) return; state.mi = i; conditionChanged(); renderCond(); renderLog(); });
+  ['A', 'B'].forEach(sf => $('mat' + sf).addEventListener('change', e => {
+    state.mats[sf] = e.target.value; state.data[sf] = [[], [], []];
+    if (state.surf === sf) conditionChanged();
+    $('simNote').textContent = `Surface ${sf} changed to ${mat(e.target.value).name}. Its old trials were cleared.`;
+    renderCond(); renderLog(); renderResults();
+  }));
+  $('clearBtn').onclick = () => { state.data = { A: [[], [], []], B: [[], [], []] }; renderLog(); renderResults(); $('simNote').textContent = 'All trials cleared. Tilt the board to fill the sheet and chart.'; };
+  $('sampleBtn').onclick = () => { loadSample(); renderLog(); renderResults(); $('simNote').textContent = 'Sample runs reloaded.'; };
+  ['tgF', 'tgC'].forEach(id => $(id).addEventListener('change', drawSim));
+
+  const visible = new Set();
+  const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? visible.add(e.target.id) : visible.delete(e.target.id)), { threshold: 0 });
+  [heroCv, simCv].forEach(c => io.observe(c));
+
+  function layout() {
+    fit(heroCv, 0.78, 260, 500, 1.5); fit(simCv, 0.64, 320, 540); fit(thCv, 0.56, 230, 360); fit(resCv, 0.62, 260, 400); fit(unCv, 0.56, 230, 360);
+    drawHero(performance.now()); drawSim(); drawTheory(); drawResults(); drawUnc();
+  }
+  const ro = new ResizeObserver(layout);
+  [heroCv, simCv, thCv, resCv, unCv].forEach(c => ro.observe(c.parentElement));
+  loadSample(); renderCond(); renderLog(); renderResults(); setTarget(0); layout();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+
+  let last = performance.now(), lastSig = '';
+  function loop(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    step(dt);
+    if (visible.has('heroCv') && !reduce) drawHero(now);
+    const sig = sim.theta.toFixed(3) + '|' + sim.s.toFixed(4) + '|' + sim.phase + '|' + sim.trail.length + '|' + state.mi + '|' + state.surf + '|' + sim.muT;
+    if (visible.has('simCv') && sig !== lastSig) { drawSim(); lastSig = sig; }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+
+</body></html>
