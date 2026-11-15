@@ -188,12 +188,15 @@ section.dimbg { background: #0E0C0B; animation: bgdim 4200ms ease both; animatio
 .lk-u a { color: var(--red); text-decoration: underline; }
 
 /* ---------- questions ---------- */
-.qa-spot { position: absolute; left: 1210px; top: 20px; width: 600px; height: 720px; opacity: 1; animation: qaspot 24s ease-in-out infinite; }
-@keyframes qaspot { 0%, 12% { opacity: 1; } 58%, 80% { opacity: 0.25; } 96%, 100% { opacity: 1; } }
-.qa-sil { position: absolute; left: 1300px; top: 100px; width: 420px; height: 562px; object-fit: contain; filter: brightness(1); animation: qasil 24s ease-in-out infinite; }
-@keyframes qasil { 0%, 12% { filter: brightness(1); } 58%, 80% { filter: brightness(0.55); } 96%, 100% { filter: brightness(1); } }
+.qa-spot { position: absolute; left: 1210px; top: 20px; width: 600px; height: 720px; opacity: 1; animation: qaspot 20s ease-in-out both; }
+@keyframes qaspot { 0%, 62% { opacity: 1; } 72%, 84% { opacity: 0.2; } 94%, 100% { opacity: 1; } }
+.qa-sh { position: absolute; left: 1300px; top: 100px; width: 420px; height: 562px; object-fit: contain; opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--r)); animation: qafall 2.6s linear both; }
+@keyframes qafall { 0% { opacity: 1; transform: translate(0px, 0px) rotate(0deg); animation-timing-function: cubic-bezier(.2,.7,.2,1); } 30% { opacity: 1; transform: translate(var(--gx), var(--gy)) rotate(0deg); } 42% { opacity: 1; transform: translate(var(--gx), var(--gy)) rotate(0deg); animation-timing-function: cubic-bezier(.55,0,1,.45); } 82% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--r)); } }
+.qa-pole { position: absolute; left: 1506px; top: 150px; width: 8px; height: 460px; background: #C9C0AE; border-radius: 4px; transform-origin: center bottom; opacity: 1; transform: scaleY(1); animation: qapole 17.4s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes qapole { 0%, 92% { opacity: 0; transform: scaleY(0); } 92.5% { opacity: 1; } 100% { opacity: 1; transform: scaleY(1); } }
+.qa-flag { position: absolute; left: 1514px; top: 154px; width: 240px; height: 176px; transform-origin: left center; opacity: 1; transform: scaleX(1); animation: qaflag 18.6s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes qaflag { 0%, 93.5% { opacity: 0; transform: scaleX(0); } 100% { opacity: 1; transform: scaleX(1); } }
 .qa-balc { position: absolute; left: 1210px; top: 590px; width: 600px; height: 170px; }
-.qa-lead { color: var(--ochre); }
 
 /* ===== player ===== */
 html, body { margin: 0; height: 100%; background: #0E0C0B; overflow: hidden; }
@@ -538,59 +541,99 @@ requestAnimationFrame(frame);
 const W=1920,H=1080,cv=document.getElementById(&#x27;c&#x27;),dp=Math.min(1.5,window.devicePixelRatio||1);
 cv.width=W*dp;cv.height=H*dp;const g=cv.getContext(&#x27;2d&#x27;);g.scale(dp,dp);
 let sd=11;const rnd=()=&gt;(sd=sd*16807%2147483647)/2147483647;
-const T=24,cl=v=&gt;v&lt;0?0:v&gt;1?1:v,ez=u=&gt;u&lt;.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
+const END=22.5,cl=v=&gt;v&lt;0?0:v&gt;1?1:v,ez=u=&gt;u&lt;.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
 const GOLD=[233,196,106],ROW=[[94,86,80],[70,64,59],[46,41,38]];
 const mix=(a,b,k)=&gt;&#x27;rgb(&#x27;+a.map((v,i)=&gt;Math.round(v+(b[i]-v)*k))+&#x27;)&#x27;;
 /* the crowd: three ranks seen from behind, facing the balcony */
 const F=[];
-for(let r=0;r&lt;3;r++){const y=800+r*72,o=r%2?32:0;for(let x=44+o;x&lt;W-24;x+=64)F.push({x,y,r,t:3+rnd()*12,dx:(rnd()-.5)*230,dy:(rnd()-.5)*44,ph:rnd()*6.3});}
-function fig(x,y,s,col,glow){g.save();g.translate(x,y);g.scale(s,s);g.fillStyle=col;
+for(let r=0;r&lt;3;r++){const y=800+r*72,o=r%2?32:0;for(let x=44+o;x&lt;W-24;x+=64)F.push({x,y,r,t:3+rnd()*8,dx:(rnd()-.5)*230,dy:(rnd()-.5)*44,bt:18.6+rnd()*1.2,jx:(rnd()-.5)*22,jy:(rnd()-.5)*12});}
+function fig(x,y,col,glow){g.save();g.translate(x,y);g.fillStyle=col;
 if(glow&gt;0){g.shadowColor=&#x27;rgba(233,196,106,&#x27;+(.8*glow)+&#x27;)&#x27;;g.shadowBlur=16;}
 g.beginPath();g.arc(0,21,13,0,7);g.fill();g.beginPath();g.moveTo(-24,72);g.quadraticCurveTo(-24,37,0,37);g.quadraticCurveTo(24,37,24,72);g.closePath();g.fill();g.restore();}
-/* the slogan on the wall, letter by letter */
+/* the slogan on the wall, letter by letter, fitted to the space left of the balcony */
 const TXT=&#x27;MUSSOLINI HA SEMPRE RAGIONE&#x27;,X0=128,Y0=168,FONT=&#x27; Impact, &quot;Arial Narrow&quot;, &quot;Helvetica Neue&quot;, sans-serif&#x27;;
 g.font=&#x27;700 74px&#x27;+FONT;let tw=0;for(const ch of TXT)tw+=g.measureText(ch).width+6;
 const FS=Math.min(74,Math.floor(74*1040/tw));g.font=&#x27;700 &#x27;+FS+&#x27;px&#x27;+FONT;
 const L=[];let x=X0,n=0;
-for(const ch of TXT){const w=g.measureText(ch).width+6;if(ch!==&#x27; &#x27;){const fl=[];for(let k=0;k&lt;7;k++)fl.push([rnd()*w,-rnd()*FS*.8,.6+rnd()*.8,2+rnd()*4]);L.push({ch,x,w,t:3.5+rnd()*11,q:n%3===1,fl});n++;}x+=w;}
+for(const ch of TXT){const w=g.measureText(ch).width+6;if(ch!==&#x27; &#x27;){const fl=[];for(let k=0;k&lt;7;k++)fl.push([rnd()*w,-rnd()*FS*.8,.6+rnd()*.8,2+rnd()*4]);L.push({ch,x,w,t:2.5+rnd()*8.5,q:n%3===1,fl});n++;}x+=w;}
+let t0=null;
 function frame(now){
-const t=(now/1000)%T,back=ez(cl((t-19.5)/3.5));
+if(t0===null)t0=now;const t=(now-t0)/1000;
 g.clearRect(0,0,W,H);
-/* plaster band behind the slogan */
 g.fillStyle=&#x27;rgba(237,230,214,0.035)&#x27;;g.fillRect(0,64,x+80,138);
 g.textBaseline=&#x27;alphabetic&#x27;;g.font=&#x27;700 &#x27;+FS+&#x27;px&#x27;+FONT;
 for(const l of L){
- const u=cl((t-l.t)/1.4),la=Math.max(1-u,back);
+ const la=1-cl((t-l.t)/1.4);
  if(la&gt;0){g.fillStyle=&#x27;rgba(168,35,28,&#x27;+(.62*la)+&#x27;)&#x27;;g.fillText(l.ch,l.x,Y0);}
  const v=cl((t-l.t)/2.6);
- if(v&gt;0&amp;&amp;v&lt;1&amp;&amp;back&lt;1){for(const f of l.fl){g.fillStyle=&#x27;rgba(168,35,28,&#x27;+(.55*(1-v)*(1-back))+&#x27;)&#x27;;g.fillRect(l.x+f[0],Y0+f[1]+300*f[2]*v*v,f[3],f[3]);}}
- if(l.q){const qa=ez(cl((t-l.t-1)/1.6))*(1-back);if(qa&gt;0){g.fillStyle=&#x27;rgba(201,162,74,&#x27;+(.8*qa)+&#x27;)&#x27;;g.fillText(&#x27;?&#x27;,l.x,Y0);}}
+ if(v&gt;0&amp;&amp;v&lt;1){for(const f of l.fl){g.fillStyle=&#x27;rgba(168,35,28,&#x27;+(.55*(1-v))+&#x27;)&#x27;;g.fillRect(l.x+f[0],Y0+f[1]+300*f[2]*v*v,f[3],f[3]);}}
+ if(l.q){const qa=ez(cl((t-l.t-1)/1.6));if(qa&gt;0){g.fillStyle=&#x27;rgba(201,162,74,&#x27;+(.8*qa)+&#x27;)&#x27;;g.fillText(&#x27;?&#x27;,l.x,Y0);}}
 }
-/* figures: grey ranks; one by one they turn gold and step out, then the ranks re-form */
-const P=F.map(f=&gt;{const a=ez(cl((t-f.t)/1.2))*(1-back),m=ez(cl((t-f.t-.5)/4))*(1-back);
- return{x:f.x+f.dx*m+Math.sin(t*1.2+f.ph)*4*m,y:f.y+f.dy*m,r:f.r,a};}).sort((p,q)=&gt;p.y-q.y);
-for(const p of P)fig(p.x,p.y,1,mix(ROW[p.r],GOLD,p.a),p.a);
-requestAnimationFrame(frame);}
+/* once: grey ranks turn gold and step out; after the flag goes up they gather again, as individuals */
+const P=F.map(f=&gt;{const a=ez(cl((t-f.t)/1.2)),out=ez(cl((t-f.t-.5)/4)),bk=ez(cl((t-f.bt)/2.6));
+ return{x:f.x+f.dx*out*(1-bk)+f.jx*bk,y:f.y+f.dy*out*(1-bk)+f.jy*bk,r:f.r,a};}).sort((p,q)=&gt;p.y-q.y);
+for(const p of P)fig(p.x,p.y,mix(ROW[p.r],GOLD,p.a),p.a);
+if(t&lt;END)requestAnimationFrame(frame);}
 requestAnimationFrame(frame);
 })();
 &lt;/script&gt;"></div>
 <svg class="qa-spot" aria-label="Spotlight on the balcony" width="600" height="720" viewBox="0 0 600 720" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="qsp" cx="300" cy="300" r="320" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#EDE6D6" stop-opacity="0.55"/><stop offset="0.6" stop-color="#EDE6D6" stop-opacity="0.14"/><stop offset="1" stop-color="#EDE6D6" stop-opacity="0"/></radialGradient></defs><ellipse cx="300" cy="320" rx="300" ry="360" fill="url(#qsp)"/></svg>
-<img class="qa-sil" src="portrait.png" onerror="this.remove()" alt="Stylised portrait of Mussolini standing on a balcony">
+<div class="qa-pole"></div>
+<svg class="qa-flag" aria-label="The flag of the Italian Republic, waving" width="240" height="176" viewBox="0 0 240 176" xmlns="http://www.w3.org/2000/svg"><path fill="#009246" d="M0 8.0 L20 8.4 L40 9.2 L60 9.2 L80 8.0 L80 168.0 L60 169.2 L40 169.2 L20 168.4 L0 168.0 Z"><animate attributeName="d" values="M0 8.0 L20 8.4 L40 9.2 L60 9.2 L80 8.0 L80 168.0 L60 169.2 L40 169.2 L20 168.4 L0 168.0 Z;M0 8.0 L20 7.4 L40 7.4 L60 8.5 L80 10.0 L80 170.0 L60 168.5 L40 167.4 L20 167.4 L0 168.0 Z;M0 8.0 L20 8.2 L40 7.4 L60 6.3 L80 6.0 L80 166.0 L60 166.3 L40 167.4 L20 168.2 L0 168.0 Z;M0 8.0 L20 8.4 L40 9.2 L60 9.2 L80 8.0 L80 168.0 L60 169.2 L40 169.2 L20 168.4 L0 168.0 Z" dur="2.4s" repeatCount="indefinite"/></path><path fill="#F1F2F1" d="M80 8.0 L100 5.9 L120 4.5 L140 5.1 L160 8.0 L160 168.0 L140 165.1 L120 164.5 L100 165.9 L80 168.0 Z"><animate attributeName="d" values="M80 8.0 L100 5.9 L120 4.5 L140 5.1 L160 8.0 L160 168.0 L140 165.1 L120 164.5 L100 165.9 L80 168.0 Z;M80 10.0 L100 10.8 L120 9.8 L140 6.9 L160 4.0 L160 164.0 L140 166.9 L120 169.8 L100 170.8 L80 170.0 Z;M80 6.0 L100 7.2 L120 9.8 L140 11.9 L160 12.0 L160 172.0 L140 171.9 L120 169.8 L100 167.2 L80 166.0 Z;M80 8.0 L100 5.9 L120 4.5 L140 5.1 L160 8.0 L160 168.0 L140 165.1 L120 164.5 L100 165.9 L80 168.0 Z" dur="2.4s" repeatCount="indefinite"/></path><path fill="#CE2B37" d="M160 8.0 L180 11.7 L200 13.8 L220 12.5 L240 8.0 L240 168.0 L220 172.5 L200 173.8 L180 171.7 L160 168.0 Z"><animate attributeName="d" values="M160 8.0 L180 11.7 L200 13.8 L220 12.5 L240 8.0 L240 168.0 L220 172.5 L200 173.8 L180 171.7 L160 168.0 Z;M160 4.0 L180 2.9 L200 5.1 L220 9.7 L240 14.1 L240 174.1 L220 169.7 L200 165.1 L180 162.9 L160 164.0 Z;M160 12.0 L180 9.4 L200 5.1 L220 1.8 L240 1.9 L240 161.9 L220 161.8 L200 165.1 L180 169.4 L160 172.0 Z;M160 8.0 L180 11.7 L200 13.8 L220 12.5 L240 8.0 L240 168.0 L220 172.5 L200 173.8 L180 171.7 L160 168.0 Z" dur="2.4s" repeatCount="indefinite"/></path></svg>
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(0.0% 0.0%, 22.9% 0.0%, 25.4% 18.7%); --gx:-4.7px; --gy:-6.1px; --dx:12px; --dy:393px; --r:-13deg; animation-delay:13.19s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(0.0% 0.0%, 25.4% 18.7%, 0.0% 15.7%); --gx:-5.8px; --gy:-5.4px; --dx:28px; --dy:364px; --r:5deg; animation-delay:13.36s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(22.9% 0.0%, 45.8% 0.0%, 25.4% 18.7%); --gx:-2.6px; --gy:-6.1px; --dx:53px; --dy:432px; --r:-14deg; animation-delay:13.26s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(45.8% 0.0%, 44.7% 20.1%, 25.4% 18.7%); --gx:-1.6px; --gy:-5.2px; --dx:-53px; --dy:389px; --r:16deg; animation-delay:13.42s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(45.8% 0.0%, 76.8% 0.0%, 69.4% 19.3%); --gx:2.0px; --gy:-6.1px; --dx:-2px; --dy:335px; --r:11deg; animation-delay:13.13s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(45.8% 0.0%, 69.4% 19.3%, 44.7% 20.1%); --gx:0.5px; --gy:-5.2px; --dx:10px; --dy:453px; --r:-12deg; animation-delay:13.35s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(76.8% 0.0%, 100.0% 0.0%, 69.4% 19.3%); --gx:4.5px; --gy:-6.1px; --dx:13px; --dy:411px; --r:-3deg; animation-delay:13.32s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(100.0% 0.0%, 100.0% 15.7%, 69.4% 19.3%); --gx:5.6px; --gy:-5.4px; --dx:62px; --dy:396px; --r:11deg; animation-delay:13.37s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(0.0% 15.7%, 25.4% 18.7%, 0.0% 35.9%); --gx:-5.8px; --gy:-3.7px; --dx:28px; --dy:421px; --r:32deg; animation-delay:12.98s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(25.4% 18.7%, 24.1% 43.3%, 0.0% 35.9%); --gx:-4.7px; --gy:-2.4px; --dx:-30px; --dy:384px; --r:11deg; animation-delay:13.25s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(25.4% 18.7%, 44.7% 20.1%, 45.5% 37.2%); --gx:-1.6px; --gy:-3.5px; --dx:-5px; --dy:354px; --r:-25deg; animation-delay:12.97s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(25.4% 18.7%, 45.5% 37.2%, 24.1% 43.3%); --gx:-2.6px; --gy:-2.4px; --dx:38px; --dy:348px; --r:-16deg; animation-delay:12.98s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(44.7% 20.1%, 69.4% 19.3%, 45.5% 37.2%); --gx:0.4px; --gy:-3.4px; --dx:52px; --dy:341px; --r:-3deg; animation-delay:13.10s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(69.4% 19.3%, 76.5% 44.5%, 45.5% 37.2%); --gx:1.9px; --gy:-2.3px; --dx:54px; --dy:445px; --r:23deg; animation-delay:13.15s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(69.4% 19.3%, 100.0% 15.7%, 100.0% 40.8%); --gx:5.6px; --gy:-3.5px; --dx:-12px; --dy:380px; --r:25deg; animation-delay:13.06s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(69.4% 19.3%, 100.0% 40.8%, 76.5% 44.5%); --gx:4.5px; --gy:-2.1px; --dx:-49px; --dy:355px; --r:-17deg; animation-delay:13.30s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(0.0% 35.9%, 24.1% 43.3%, 30.7% 55.5%); --gx:-4.4px; --gy:-0.7px; --dx:-2px; --dy:412px; --r:-15deg; animation-delay:12.92s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(0.0% 35.9%, 30.7% 55.5%, 0.0% 59.0%); --gx:-5.6px; --gy:0.0px; --dx:-11px; --dy:382px; --r:4deg; animation-delay:12.84s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(24.1% 43.3%, 45.5% 37.2%, 30.7% 55.5%); --gx:-2.3px; --gy:-0.7px; --dx:27px; --dy:402px; --r:8deg; animation-delay:13.17s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(45.5% 37.2%, 54.3% 57.9%, 30.7% 55.5%); --gx:-0.9px; --gy:0.0px; --dx:-62px; --dy:456px; --r:18deg; animation-delay:13.08s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(45.5% 37.2%, 76.5% 44.5%, 70.7% 56.2%); --gx:2.0px; --gy:-0.6px; --dx:42px; --dy:385px; --r:-6deg; animation-delay:13.15s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(45.5% 37.2%, 70.7% 56.2%, 54.3% 57.9%); --gx:1.0px; --gy:0.1px; --dx:19px; --dy:339px; --r:-28deg; animation-delay:12.88s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(76.5% 44.5%, 100.0% 40.8%, 70.7% 56.2%); --gx:4.5px; --gy:-0.4px; --dx:-47px; --dy:378px; --r:-29deg; animation-delay:12.91s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(100.0% 40.8%, 100.0% 58.1%, 70.7% 56.2%); --gx:5.6px; --gy:0.2px; --dx:-49px; --dy:344px; --r:-9deg; animation-delay:12.84s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(0.0% 59.0%, 30.7% 55.5%, 0.0% 83.2%); --gx:-5.6px; --gy:2.2px; --dx:52px; --dy:416px; --r:-22deg; animation-delay:12.73s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(30.7% 55.5%, 21.2% 80.8%, 0.0% 83.2%); --gx:-4.6px; --gy:3.2px; --dx:-21px; --dy:381px; --r:-24deg; animation-delay:12.81s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(30.7% 55.5%, 54.3% 57.9%, 51.7% 78.7%); --gx:-0.6px; --gy:2.0px; --dx:69px; --dy:395px; --r:-1deg; animation-delay:13.02s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(30.7% 55.5%, 51.7% 78.7%, 21.2% 80.8%); --gx:-2.2px; --gy:3.0px; --dx:-56px; --dy:378px; --r:-15deg; animation-delay:12.75s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(54.3% 57.9%, 70.7% 56.2%, 51.7% 78.7%); --gx:1.2px; --gy:2.0px; --dx:-47px; --dy:333px; --r:29deg; animation-delay:13.01s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(70.7% 56.2%, 75.6% 75.6%, 51.7% 78.7%); --gx:2.2px; --gy:2.8px; --dx:-49px; --dy:406px; --r:-30deg; animation-delay:12.90s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(70.7% 56.2%, 100.0% 58.1%, 100.0% 75.6%); --gx:5.6px; --gy:1.9px; --dx:67px; --dy:451px; --r:13deg; animation-delay:12.90s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(70.7% 56.2%, 100.0% 75.6%, 75.6% 75.6%); --gx:4.5px; --gy:2.7px; --dx:-19px; --dy:353px; --r:17deg; animation-delay:12.81s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(0.0% 83.2%, 21.2% 80.8%, 21.5% 100.0%); --gx:-5.0px; --gy:5.3px; --dx:39px; --dy:376px; --r:-18deg; animation-delay:12.79s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(0.0% 83.2%, 21.5% 100.0%, 0.0% 100.0%); --gx:-6.0px; --gy:6.2px; --dx:68px; --dy:449px; --r:20deg; animation-delay:12.88s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(21.2% 80.8%, 51.7% 78.7%, 21.5% 100.0%); --gx:-2.6px; --gy:5.1px; --dx:34px; --dy:362px; --r:1deg; animation-delay:12.89s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(51.7% 78.7%, 52.2% 100.0%, 21.5% 100.0%); --gx:-1.1px; --gy:6.0px; --dx:-66px; --dy:334px; --r:-14deg; animation-delay:12.72s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(51.7% 78.7%, 75.6% 75.6%, 74.1% 100.0%); --gx:2.4px; --gy:4.9px; --dx:27px; --dy:464px; --r:-3deg; animation-delay:12.69s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(51.7% 78.7%, 74.1% 100.0%, 52.2% 100.0%); --gx:1.3px; --gy:6.0px; --dx:68px; --dy:464px; --r:-9deg; animation-delay:12.93s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(75.6% 75.6%, 100.0% 75.6%, 74.1% 100.0%); --gx:4.7px; --gy:4.7px; --dx:-38px; --dy:358px; --r:-19deg; animation-delay:12.68s;">
+<img class="qa-sh" src="portrait.png" onerror="this.remove()" alt="" style="clip-path:polygon(100.0% 75.6%, 100.0% 100.0%, 74.1% 100.0%); --gx:5.8px; --gy:5.9px; --dx:56px; --dy:448px; --r:-1deg; animation-delay:12.82s;">
 <svg class="qa-balc" aria-label="Stone balcony" width="600" height="170" viewBox="0 0 600 170" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="600" height="24" fill="#3B3430"/><rect x="0" y="0" width="600" height="4" fill="#5E5650"/><g fill="#2A2522"><rect x="18" y="24" width="24" height="104" rx="9"/><rect x="66" y="24" width="24" height="104" rx="9"/><rect x="114" y="24" width="24" height="104" rx="9"/><rect x="162" y="24" width="24" height="104" rx="9"/><rect x="210" y="24" width="24" height="104" rx="9"/><rect x="258" y="24" width="24" height="104" rx="9"/><rect x="306" y="24" width="24" height="104" rx="9"/><rect x="354" y="24" width="24" height="104" rx="9"/><rect x="402" y="24" width="24" height="104" rx="9"/><rect x="450" y="24" width="24" height="104" rx="9"/><rect x="498" y="24" width="24" height="104" rx="9"/><rect x="546" y="24" width="24" height="104" rx="9"/></g><rect x="0" y="128" width="600" height="20" fill="#3B3430"/><rect x="0" y="148" width="600" height="22" fill="#221E1C"/></svg>
 <div class="spacer"></div>
 <p class="eyebrow rise" style="--i:0">Q &amp; A</p>
 <h1 class="rise" style="--i:1">Questions?</h1>
-<p class="lead qa-lead rise" style="--i:2">Think. Question. Choose.</p>
 <div class="spacer"></div>
 <div style="height:200px;"></div>
-<aside>Q&amp;A slide. It loops on its own, so leave it up while you take questions: the slogan on the wall flakes away into question marks, the spotlight on the balcony dims, and the grey crowd turns gold one by one and steps out of the ranks; then the ranks re-form and it starts again. “Think. Question. Choose.” are the verbs the motto left out (slide 5). If the instructor asks about sources, click once for Works Cited and once more for the links.</aside>
+<aside>Q&amp;A slide. It plays once, in about 22 seconds, and then holds: the slogan on the wall flakes away into question marks; the grey crowd turns gold, steps out of the ranks and stands still; the portrait on the balcony cracks apart and crumbles like a statue; in its place the flag of today’s Italian Republic is raised and keeps waving; the crowd gathers again in front of it. If asked: today’s flag, without the Savoy arms, is the flag of the Republic founded by the 1946 referendum, so the scene stands for what came after Fascism, not for 1945 itself. If the instructor asks about sources, click once for Works Cited and once more for the links.</aside>
 </section>
 <section id="works">
 <h2>Works Cited</h2>
 <div class="wc">
 <p class="wc-i">American Humanist Association. <i>Humanist Manifesto II</i>. 1973.</p>
 <p class="wc-i">Britannica, The Editors of Encyclopaedia. “Giacomo Matteotti.” <i>Encyclopædia Britannica</i>, www.britannica.com/biography/Giacomo-Matteotti.</p>
-<p class="wc-i">---. “March on Rome.” <i>Encyclopædia Britannica</i>, www.britannica.com/event/March-on-Rome.</p>
+<p class="wc-i">---. “March on Rome.” <i>Encyclopædia Britannica</i>, 29 Oct. 2026, www.britannica.com/event/March-on-Rome. Accessed 15 Nov. 2026.</p>
 <p class="wc-i">Clark, Martin, et al. “Fascist Party.” <i>Encyclopædia Britannica</i>, www.britannica.com/topic/Fascist-Party.</p>
 <p class="wc-i">Foot, John, and Christopher Hibbert. “Benito Mussolini.” <i>Encyclopædia Britannica</i>, 26 Sept. 2026, www.britannica.com/biography/Benito-Mussolini. Accessed 15 Nov. 2026.</p>
 <p class="wc-i">Forster, E. M. “What I Believe.” 1939. Course text.</p>
