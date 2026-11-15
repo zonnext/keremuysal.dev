@@ -169,7 +169,7 @@ section.dimbg { background: #0E0C0B; animation: bgdim 4200ms ease both; animatio
 
 /* ---------- works cited ---------- */
 .wc { display: flex; flex-direction: column; gap: 12px; }
-.wc-i { font-size: 24px; line-height: 1.38; padding-left: 48px; }
+.wc-i { font-size: 24px; line-height: 1.38; padding-left: 48px; text-indent: -48px; }
 
 /* ---------- manifesto mapping ---------- */
 .map4 { display: flex; flex-direction: column; gap: 0px; }
@@ -179,6 +179,13 @@ section.dimbg { background: #0E0C0B; animation: bgdim 4200ms ease both; animatio
 .m4.d1 { transition-delay: 150ms; }
 .m4.d2 { transition-delay: 300ms; }
 .m4.d3 { transition-delay: 450ms; }
+
+/* ---------- source links ---------- */
+.links { display: flex; flex-direction: column; gap: 0px; }
+.lk { display: grid; grid-template-columns: 620px 1fr; gap: 32px; align-items: baseline; border-top: 2px solid #B8AE9C; padding: 14px 0px 14px 0px; }
+.lk-t { font-size: 28px; line-height: 1.3; font-weight: 600; color: var(--ink); }
+.lk-u { font-size: 28px; line-height: 1.3; }
+.lk-u a { color: var(--red); text-decoration: underline; }
 
 /* ===== player ===== */
 html, body { margin: 0; height: 100%; background: #0E0C0B; overflow: hidden; }
@@ -251,7 +258,7 @@ body { font-family: 'Public Sans', Arial, sans-serif; -webkit-font-smoothing: an
 <div class="step rise" style="--i:4"><p class="step-y">1914</p><p class="step-t">Breaks with the Socialists over the war: leaves <i>Avanti!</i>, is expelled from the party and takes over <i>Il Popolo d’Italia</i></p></div>
 </div>
 <div class="spacer"></div>
-<p class="src">Britannica, “Benito Mussolini”</p>
+<p class="src">Foot and Hibbert</p>
 <aside>~25 s. Short: context only. One idea: he started on the left, as a Socialist journalist, and in 1914 he turned around. What stayed constant was not an idea but the man. Frame it as the first hint of the thesis: loyalty would go to a person, not to a set of beliefs.</aside>
 </section>
 <section id="rome" class="stone" data-transition="fade">
@@ -501,7 +508,7 @@ requestAnimationFrame(frame);
 </div>
 <div class="spacer"></div>
 <p class="lead rise" style="--i:8">One vote in his own Grand Council, and within a day the man who was “always right” was under arrest.</p>
-<p class="src">Britannica, “Benito Mussolini”, “Giacomo Matteotti”</p>
+<p class="src">Foot and Hibbert; Britannica, “Giacomo Matteotti”</p>
 <aside>~20 s. Do not read the boxes. The two red years carry the story: 1925, the dictatorship begins; 1943, it ends. Put the weight on 1943: his own Grand Council voted against him and the king had him arrested. Twenty years of “always right” ended without a fight; the obedience turned out to be thinner than the slogans claimed. That supports Forster’s sentence and is the bridge to the conclusion. One spoken sentence for 1943–45: rescued by the Germans, Mussolini headed a puppet state in the north until the end.</aside>
 </section>
 <section id="close" class="char" data-transition="fade">
@@ -521,10 +528,10 @@ requestAnimationFrame(frame);
 <h2>Works Cited</h2>
 <div class="wc">
 <p class="wc-i">American Humanist Association. <i>Humanist Manifesto II</i>. 1973.</p>
-<p class="wc-i">Britannica, The Editors of Encyclopaedia. “Benito Mussolini.” <i>Encyclopædia Britannica</i>, www.britannica.com/biography/Benito-Mussolini.</p>
-<p class="wc-i">---. “Giacomo Matteotti.” <i>Encyclopædia Britannica</i>, www.britannica.com/biography/Giacomo-Matteotti.</p>
+<p class="wc-i">Britannica, The Editors of Encyclopaedia. “Giacomo Matteotti.” <i>Encyclopædia Britannica</i>, www.britannica.com/biography/Giacomo-Matteotti.</p>
 <p class="wc-i">---. “March on Rome.” <i>Encyclopædia Britannica</i>, www.britannica.com/event/March-on-Rome.</p>
 <p class="wc-i">Clark, Martin, et al. “Fascist Party.” <i>Encyclopædia Britannica</i>, www.britannica.com/topic/Fascist-Party.</p>
+<p class="wc-i">Foot, John, and Christopher Hibbert. “Benito Mussolini.” <i>Encyclopædia Britannica</i>, 26 Sept. 2026, www.britannica.com/biography/Benito-Mussolini. Accessed 15 Nov. 2026.</p>
 <p class="wc-i">Forster, E. M. “What I Believe.” 1939. Course text.</p>
 <p class="wc-i">Fromm, Erich. “Humanistic Ethics.” <i>Man for Himself</i>, 1947. Abridged course text.</p>
 <p class="wc-i">“Italy: The Fascist Era.” <i>Encyclopædia Britannica</i>, www.britannica.com/place/Italy/The-Fascist-era.</p>
@@ -533,6 +540,22 @@ requestAnimationFrame(frame);
 <p class="wc-i">“Stylised Portrait of Mussolini in a Peaked Cap and Uniform.” <i>Gemini</i>, Hydrogen 4 model, Google, 13 Nov. 2026, gemini.google.com.</p>
 </div>
 <aside>Leave on screen during Q&amp;A. The Manifesto is cited with the American Humanist Association as author. The cover portrait was generated with Gemini on 13 November 2026.</aside>
+</section>
+<section id="links" class="stone" data-transition="fade">
+<p class="eyebrow rise" style="--i:0">Sources online</p>
+<h2 class="rise" style="--i:1">Read them yourself</h2>
+<div class="links rise" style="--i:2">
+<div class="lk"><p class="lk-t">Britannica · Benito Mussolini</p><p class="lk-u"><a target="_blank" rel="noopener" href="https://www.britannica.com/biography/Benito-Mussolini">britannica.com/biography/Benito-Mussolini</a></p></div>
+<div class="lk"><p class="lk-t">Britannica · Giacomo Matteotti</p><p class="lk-u"><a target="_blank" rel="noopener" href="https://www.britannica.com/biography/Giacomo-Matteotti">britannica.com/biography/Giacomo-Matteotti</a></p></div>
+<div class="lk"><p class="lk-t">Britannica · March on Rome</p><p class="lk-u"><a target="_blank" rel="noopener" href="https://www.britannica.com/event/March-on-Rome">britannica.com/event/March-on-Rome</a></p></div>
+<div class="lk"><p class="lk-t">Britannica · Fascist Party</p><p class="lk-u"><a target="_blank" rel="noopener" href="https://www.britannica.com/topic/Fascist-Party">britannica.com/topic/Fascist-Party</a></p></div>
+<div class="lk"><p class="lk-t">Britannica · Italy: The Fascist era</p><p class="lk-u"><a target="_blank" rel="noopener" href="https://www.britannica.com/place/Italy/The-Fascist-era">britannica.com/place/Italy/The-Fascist-era</a></p></div>
+<div class="lk"><p class="lk-t">The Doctrine of Fascism</p><p class="lk-u"><a target="_blank" rel="noopener" href="https://www.gutenberg.org/ebooks/14058">gutenberg.org/ebooks/14058</a></p></div>
+<div class="lk"><p class="lk-t">Humanist Manifesto II</p><p class="lk-u"><a target="_blank" rel="noopener" href="https://americanhumanist.org/?p=372">americanhumanist.org/?p=372</a></p></div>
+</div>
+<div class="spacer"></div>
+<p class="note rise" style="--i:3">Forster and Fromm: ENG 101 course texts · Koon: print book, ISBN 978-0-8078-1652-3</p>
+<aside>Optional slide after Works Cited: every source that can be read online, as clickable links. Forster and Fromm are course texts and Koon is a print book, so they have no link.</aside>
 </section>
 </main>
 <div id="notes" role="note"></div>
