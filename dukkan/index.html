@@ -79,7 +79,6 @@ h2 { font-size: 15px; margin: 0 0 10px; }
 .sub { margin: 2px 0 0; font-size: 14px; color: var(--muted); }
 .wrap { display: grid; gap: 14px; grid-template-columns: 1fr; min-width: 0; }
 @media (min-width: 820px) { .wrap { grid-template-columns: 300px minmax(0, 1fr); align-items: start; } }
-.readonly .wrap { grid-template-columns: minmax(0, 1fr) !important; }
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; min-width: 0; }
 label { display: grid; gap: 4px; font-size: 13px; color: var(--muted); }
 input {
@@ -136,23 +135,73 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
 .pause3 { position: absolute; z-index: 3; top: calc(10px + env(safe-area-inset-top, 0px)); right: calc(10px + env(safe-area-inset-right, 0px)); width: 46px; height: 46px; padding: 0; border-radius: 50%; border: 0; background: rgba(0,0,0,0.5); color: #fff; font-weight: 700; font-size: 15px; }
 .menu3 { position: absolute; inset: 0; z-index: 4; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(0,0,0,0.5); }
 .menu3[hidden], .game3[hidden] { display: none; }
+.gamecard { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; border-color: var(--accent); }
+.gametext { flex: 1 1 320px; min-width: 0; }
+.gametext h2 { margin: 0 0 4px; font-size: 17px; }
+.sub2 { margin: 0; font-size: 14px; color: var(--muted); max-width: 70ch; }
+.warnnote { color: var(--bad); margin-top: 6px; }
+.playbtn { font-size: 16px; padding: 12px 22px; }
+.playbtn:disabled { opacity: 0.55; cursor: default; }
+.hud3 { position: absolute; z-index: 2; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; gap: 6px; }
+.hud3 span { padding: 5px 10px; border-radius: 8px; background: rgba(0,0,0,0.45); color: #fff; font-size: 13px; opacity: 0.75; cursor: pointer; white-space: nowrap; }
+.flash3 { position: absolute; inset: 0; z-index: 3; background: #fff; opacity: 0; pointer-events: none; }
+.drive3 { position: absolute; z-index: 2; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); margin: 0; padding: 7px 14px; border-radius: 8px; background: rgba(0,0,0,0.55); color: #fff; font-size: 14px; white-space: nowrap; pointer-events: none; }
+.game3:not(.driving) .drive3 { bottom: calc(56px + env(safe-area-inset-bottom, 0px)); }
+.msg3 { position: absolute; z-index: 2; left: 50%; top: 38%; transform: translateX(-50%); margin: 0; padding: 8px 16px; border-radius: 8px; background: rgba(0,0,0,0.6); color: #fff; font-size: 15px; pointer-events: none; }
+.drive3[hidden], .msg3[hidden] { display: none; }
+.game3.driving .hud3, .game3.driving .cross3 { display: none; }
+.audio3 { margin: 10px 0 0; font-size: 13px; color: var(--muted); }
+.hurt3 { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; background: radial-gradient(ellipse at center, rgba(180,0,0,0) 40%, rgba(170,0,0,0.75) 100%); }
+.hp3 { position: absolute; z-index: 2; left: 16px; top: 66px; width: 200px; height: 22px; border-radius: 6px; background: rgba(0,0,0,0.5); overflow: hidden; pointer-events: none; }
+.hpfill3 { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; background: #3fbf5f; transition: width .15s; }
+.hpnum3 { position: relative; display: block; padding: 0 8px; line-height: 22px; color: #fff; font-size: 13px; font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
+.dead3 { position: absolute; z-index: 3; left: 50%; top: 40%; transform: translate(-50%,-50%); margin: 0; color: #fff; font-size: 44px; font-weight: 800; text-align: center; text-shadow: 0 2px 8px rgba(0,0,0,0.7); pointer-events: none; }
+.dead3 small { font-size: 15px; font-weight: 500; }
+.dead3[hidden] { display: none; }
+.hud3 span.on { background: rgba(242,200,15,0.95); color: #111; opacity: 1; font-weight: 700; }
+.act3 { display: none; position: absolute; z-index: 3; border-radius: 50%; border: 2px solid rgba(255,255,255,0.7); color: #fff; font-weight: 700; font-size: 14px; padding: 0; touch-action: none; }
+.game3.touch .act3 { display: block; }
+.fire3 { right: calc(22px + env(safe-area-inset-right, 0px)); bottom: calc(26px + env(safe-area-inset-bottom, 0px)); width: 84px; height: 84px; background: rgba(200,40,40,0.55); }
+.jump3 { right: calc(118px + env(safe-area-inset-right, 0px)); bottom: calc(22px + env(safe-area-inset-bottom, 0px)); width: 64px; height: 64px; background: rgba(0,0,0,0.45); }
 .menucard3 { width: 100%; max-width: 440px; display: grid; gap: 10px; padding: 18px; border-radius: 14px; background: var(--surface); color: var(--ink); }
 .menucard3 h2 { margin: 0; font-size: 18px; }
 .menucard3 ul { margin: 0; padding-left: 18px; font-size: 14px; display: grid; gap: 6px; color: var(--muted); }
 .stage3 canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .posrow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
 .posrow[hidden] { display: none; }
-.readonly section[aria-labelledby="h-add"], .readonly #posrow, .readonly #btn-rot, .readonly #btn-del { display: none !important; }
+.readonly section[aria-labelledby="h-add"], .readonly #posrow, .readonly #sizebox, .readonly #hdl, .readonly #btn-rot, .readonly #btn-del, .readonly #btn-copy, .readonly #btn-paste, .readonly #clipnote { display: none !important; }
+.readonly .wrap { grid-template-columns: minmax(0, 1fr); }
 .readonly .plan svg g.it, .readonly #door-rect { cursor: default !important; }
 .plan { touch-action: pan-y; }
 .plan svg, .plan svg g.it { touch-action: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.sizebox { display: grid; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+.sizebox[hidden] { display: none; }
+.sizebox h3 { margin: 0; font-size: 13px; font-weight: 600; color: var(--ink); }
+.sizebox .row3, .sizebox .posrow { margin-top: 0; }
+select {
+  font: inherit; font-size: 15px; color: var(--ink);
+  background: var(--field); border: 1px solid var(--line);
+  border-radius: 8px; padding: 8px 10px; width: 100%; box-sizing: border-box; min-width: 0;
+}
+select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input:disabled { opacity: 0.45; }
+.note { font-size: 13px; color: var(--muted); margin: 8px 0 0; min-height: 1em; }
+.linkbtn { display: inline-flex; align-items: center; text-decoration: none; border-radius: 10px; }
 </style>
 
 <main>
   <header>
     <h1>Dükkan yerleşim planı</h1>
-    <p class="sub">Ölçüleri gir, kutuyu oluştur, planda istediğin yere sürükle. Sorunlu yerler kırmızı ya da sarı çıkar.</p>
+    <p class="sub">Ölçüleri gir, kutuyu oluştur, planda istediğin yere sürükle. Seçtiğin kutuyu köşelerinden ya da kenarlarından çekerek büyütüp küçültebilirsin, <span id="kb-copy">⌘C</span> ile kopyalayıp <span id="kb-paste">⌘V</span> ile yapıştırabilirsin. Sorunlu yerler kırmızı ya da sarı çıkar.</p>
   </header>
+
+  <section class="card gamecard" aria-labelledby="h-game">
+    <div class="gametext">
+      <h2 id="h-game">Dükkan oyunu</h2>
+      <p class="sub2">Oyun artık ayrı bir sayfada ve arkadaşlarınla birlikte oynanabiliyor.</p>
+    </div>
+    <a class="primary playbtn linkbtn" href="https://claude.ai/artifact/4y7ZGhW5d43gYm6kiAekuG" target="_blank" rel="noopener">Oyun sayfasını aç</a>
+  </section>
 
   <div class="wrap">
     <section class="card" aria-labelledby="h-add">
@@ -183,7 +232,6 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
       <div class="viewtog" role="group" aria-label="Görünüm">
         <button type="button" id="v-2d" aria-pressed="true">2D plan</button>
         <button type="button" id="v-3d" aria-pressed="false">3D görünüm</button>
-        <button type="button" id="v-game" class="gamebtn">Oyun: dükkanı gez</button>
       </div>
       <section class="card plan" id="plan-card" aria-label="Yerleşim planı">
         <svg id="plan" viewBox="0 0 700 660" role="application" tabindex="0" aria-label="Kat planı. Seçili kutuyu ok tuşlarıyla taşıyabilirsin, R ile döndürürsün, Delete ile silersin.">
@@ -206,12 +254,12 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
           <button type="button" data-view3="door" aria-pressed="false">Kapıdan giriş</button>
           <button type="button" data-view3="counter" aria-pressed="false">Tezgah arkası</button>
           <button type="button" data-view3="fridges" aria-pressed="false">Buzdolapları</button>
-          <button type="button" data-view3="depot" aria-pressed="false">Depo tarafı</button>
+          <button type="button" data-view3="depot" aria-pressed="false">Çerez dolabı</button>
+          <button type="button" data-view3="pcs" aria-pressed="false">Bilgisayarlar</button>
           <button type="button" data-view3="kasa" aria-pressed="false">Kasa</button>
-          <button type="button" data-view3="passage" aria-pressed="false">Arka oda geçişi</button>
         </div>
         <div class="stage3" id="stage3"></div>
-        <p class="summary">Sürükleyerek döndür, tekerlek ya da iki parmakla yaklaş. Kapılara ve buzdolabı kapaklarına tıklayınca açılır. İçinde yürümek için üstteki "Oyun: dükkanı gez" düğmesini kullan. Ölçüler 2D plandan, görünüm dükkan fotoğraflarından. Kapı yüksekliği 2.10 m varsayıldı.</p>
+        <p class="summary">Sürükleyerek döndür, tekerlek ya da iki parmakla yaklaş. Kapılara ve buzdolabı kapaklarına tıklayınca açılır. İçinde yürümek için sayfanın başındaki "Oyunu oyna" düğmesini kullan. Ölçüler 2D plandan, görünüm dükkan fotoğraflarından. Kapı yüksekliği 2.10 m varsayıldı.</p>
       </section>
 
       <section class="card" style="margin-top:14px" aria-labelledby="h-list">
@@ -221,8 +269,33 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
           <label>Konum X (cm)<input id="pos-x" type="number" step="1"></label>
           <label>Konum Z (cm)<input id="pos-z" type="number" step="1"></label>
         </div>
+        <div class="sizebox" id="sizebox" hidden>
+          <h3 id="sz-title">Seçili kutunun ölçüleri</h3>
+          <div class="row3">
+            <label>En (cm)<input id="sz-w" type="number" inputmode="numeric" min="5" max="1000" step="1"></label>
+            <label>Derinlik (cm)<input id="sz-d" type="number" inputmode="numeric" min="5" max="1000" step="1"></label>
+            <label>Yükseklik (cm)<input id="sz-h" type="number" inputmode="numeric" min="1" max="400" step="1"></label>
+          </div>
+          <div class="posrow">
+            <label>Dışa raf (çerez, çikolata)
+              <select id="sh-side">
+                <option value="none">Yok</option>
+                <option value="auto">Dükkanın ortasına bakan yüz</option>
+                <option value="zmin">Üst yüz (arka duvar tarafı)</option>
+                <option value="zmax">Alt yüz (kapı duvarı tarafı)</option>
+                <option value="xmin">Sol yüz</option>
+                <option value="xmax">Sağ yüz</option>
+              </select>
+            </label>
+            <label>Raf derinliği (cm)<input id="sh-d" type="number" inputmode="numeric" min="5" max="100" step="1"></label>
+          </div>
+          <p class="msg" id="msg2" role="status"></p>
+        </div>
+        <p class="note" id="clipnote" role="status"></p>
         <div class="btns" style="margin-top:12px">
           <button type="button" id="btn-rot" disabled>Döndür (R)</button>
+          <button type="button" id="btn-copy" disabled>Kopyala</button>
+          <button type="button" id="btn-paste" disabled>Yapıştır</button>
           <button type="button" id="btn-del" disabled>Sil</button>
         </div>
       </section>
@@ -235,12 +308,14 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
   <p class="hint3" id="hint3"></p>
   <div class="joy3" id="joy3" aria-hidden="true"><div class="knob3" id="knob3"></div></div>
   <button type="button" class="pause3" id="pause3" aria-label="Menü">II</button>
+  <button type="button" class="act3 fire3" id="fire3" aria-label="Ateş et">Ateş</button>
+  <button type="button" class="act3 jump3" id="jump3" aria-label="Zıpla">Zıpla</button>
   <div class="menu3" id="menu3" hidden>
     <div class="menucard3">
       <h2>Oyun duraklatıldı</h2>
       <ul>
-        <li>Bilgisayar: fare oyuna kilitli, etrafa bakmak için fareyi oynat. W A S D ya da oklar ile yürü. Tıkla ya da E'ye bas: ortadaki kapı / dolap açılır, kapanır. ESC: bu menü.</li>
-        <li>Telefon: ekranın sol üçte birine dokunup sürükle: o yöne yürürsün. Kalan alanda sürükle: etrafa bak. Kapıya ya da dolaba dokun: açılır, kapanır.</li>
+        <li>Bilgisayar: fare oyuna kilitli, etrafa bakmak için fareyi oynat. W A S D ya da oklar ile yürü. Sol tık (ya da F): ateş. Boşluk: zıpla. E: ortadaki kapı / dolap açılır, kapanır. ESC: bu menü.</li>
+        <li>Telefon: ekranın sol üçte birine dokunup sürükle: o yöne yürürsün. Kalan alanda sürükle: etrafa bak. Kapıya ya da dolaba dokun: açılır, kapanır. Sağ alttaki düğmeler: ateş ve zıpla.</li>
       </ul>
       <div class="btns">
         <button type="button" class="primary" id="resume3">Devam et</button>
@@ -267,7 +342,7 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
   var layer = document.getElementById('layer');
   var NS = 'http://www.w3.org/2000/svg';
   // Planın kaydedilmiş hali: giriş yapmamış ziyaretçiler bunu görür (giriş yapanlar canlı kaydı görür)
-  var DEFAULT_PLAN = {"items": [{"d": 0.75, "h": 220, "id": 1, "name": "Kutu 1", "rot": true, "w": 1.2, "x": 0, "z": 6.1}, {"d": 0.75, "h": 220, "id": 2, "name": "Kutu 2", "rot": true, "w": 1.2, "x": 0, "z": 4.85}, {"d": 0.75, "h": 220, "id": 3, "name": "Kutu 3", "rot": true, "w": 2.5, "x": 0, "z": 2.3}, {"d": 0.4, "h": 240, "id": 4, "name": "Kutu 4", "rot": false, "w": 0.65, "x": 7.25, "z": -2}, {"d": 0.4, "h": 240, "id": 5, "name": "Kutu 5", "rot": false, "w": 0.65, "x": 6.2, "z": 1.2}, {"d": 0.4, "h": 240, "id": 6, "name": "Kutu 6", "rot": false, "w": 0.65, "x": 5.55, "z": 1.2}, {"d": 0.4, "h": 240, "id": 7, "name": "Kutu 7", "rot": false, "w": 0.65, "x": 4.9, "z": 1.2}, {"d": 0.4, "h": 240, "id": 8, "name": "Kutu 8", "rot": false, "w": 0.65, "x": 4.25, "z": 1.2}, {"d": 0.4, "h": 240, "id": 9, "name": "Kutu 9", "rot": false, "w": 0.65, "x": 3.6, "z": 1.2}, {"d": 0.4, "h": 240, "id": 10, "name": "Kutu 10", "rot": false, "w": 0.65, "x": 2.95, "z": 1.2}, {"d": 0.4, "h": 240, "id": 11, "name": "Kutu 11", "rot": false, "w": 0.65, "x": 2.3, "z": 1.2}, {"d": 0.4, "h": 240, "id": 12, "name": "Kutu 12", "rot": false, "w": 0.65, "x": 1.65, "z": 1.2}, {"d": 0.4, "h": 240, "id": 13, "name": "Kutu 13", "rot": false, "w": 0.65, "x": 1, "z": 1.2}, {"d": 0.6, "h": 110, "id": 15, "name": "tezgah", "rot": false, "w": 3, "x": 2.65, "z": 2.15}, {"d": 0.4, "h": 100, "id": 18, "name": "iddaa dolabı", "rot": false, "w": 3.05, "x": 4.4, "z": 6.85}, {"d": 0.5, "h": 240, "id": 20, "name": "gardrop", "rot": true, "w": 3, "x": 7, "z": 3}, {"d": 0.4, "h": 240, "id": 21, "name": "Kutu 21", "rot": false, "w": 0.65, "x": 0.35, "z": 1.2}], "nextId": 22, "doorX": 2.85};
+  var DEFAULT_PLAN = {"doorX": 2.85, "items": [{"d": 0.75, "h": 220, "id": 1, "name": "Kutu 1", "rot": false, "w": 1.2, "x": 5.5, "z": 1.3}, {"d": 0.75, "h": 220, "id": 2, "name": "Kutu 2", "rot": false, "w": 1.2, "x": 3, "z": 1.3}, {"d": 0.75, "h": 220, "id": 3, "name": "Kutu 3", "rot": false, "w": 1.2, "x": 4.25, "z": 1.3}, {"d": 0.4, "h": 240, "id": 7, "name": "Kutu 7", "rot": true, "w": 0.65, "x": 0, "z": 6.65}, {"d": 0.4, "h": 240, "id": 8, "name": "Kutu 8", "rot": true, "w": 0.65, "x": 0, "z": 2.1}, {"d": 0.4, "h": 240, "id": 9, "name": "Kutu 9", "rot": true, "w": 0.65, "x": 0, "z": 2.75}, {"d": 0.4, "h": 240, "id": 10, "name": "Kutu 10", "rot": true, "w": 0.65, "x": 0, "z": 3.4}, {"d": 0.4, "h": 240, "id": 11, "name": "Kutu 11", "rot": true, "w": 0.65, "x": 0, "z": 4.05}, {"d": 0.4, "h": 240, "id": 12, "name": "Kutu 12", "rot": true, "w": 0.65, "x": 0, "z": 4.7}, {"d": 0.4, "h": 240, "id": 13, "name": "Kutu 13", "rot": true, "w": 0.65, "x": 0, "z": 5.35}, {"d": 0.5, "h": 110, "id": 15, "name": "tezgah", "rot": true, "w": 4, "x": 0.95, "z": 3.3}, {"d": 0.4, "h": 240, "id": 21, "name": "Kutu 21", "rot": true, "w": 0.65, "x": 0, "z": 6}, {"d": 0.4, "h": 240, "id": 31, "like": 29, "name": "Kutu 31", "rot": false, "w": 0.65, "x": 1, "z": 1.65}, {"d": 0.4, "h": 240, "id": 35, "like": 29, "name": "Kutu 35", "rot": false, "w": 0.65, "x": 1.65, "z": 1.65}, {"d": 0.4, "h": 240, "id": 36, "like": 29, "name": "Kutu 36", "rot": false, "w": 0.65, "x": 2.3, "z": 1.65}, {"d": 0.8, "h": 210, "id": 37, "name": "meşrubat dolabı", "rot": true, "w": 2.4, "x": 6.7, "z": 2.75}, {"d": 0.7, "h": 210, "id": 38, "name": "çerezlik", "rot": false, "w": 3.05, "x": 4.45, "z": 6.6}], "nextId": 39};
   var items = JSON.parse(JSON.stringify(DEFAULT_PLAN.items)), selId = null, nextId = DEFAULT_PLAN.nextId, drag = null;
 
   // Kayıt: yalnızca bu tarayıcıda, hata olursa sessizce geç
@@ -300,16 +375,25 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
 
   // Depo (gardrop): dükkanın ortasına bakan yüzünde 30 cm derinliğinde askılı raf bölümü var
   var SHELF_D = 0.30;
-  function isDepot(it) { return /gardrop|depo/i.test(it.name); }
+  function isDepot(it) { return /gardrop|depo|çerez/i.test(it.name); }
+  // Ön yüz: dolabın uzun kenarı, dükkanın ortasına bakan taraf (kareye yakın kutularda merkeze göre)
   function frontOf(r) {
-    var cx = (r.x0 + r.x1) / 2, cz = (r.z0 + r.z1) / 2;
-    var alongX = Math.abs(cx - 3.75) > Math.abs(cz - 3.65);
+    var cx = (r.x0 + r.x1) / 2, cz = (r.z0 + r.z1) / 2, wx = r.x1 - r.x0, wz = r.z1 - r.z0;
+    var alongX = Math.abs(wx - wz) > 0.05 ? wz > wx : Math.abs(cx - 3.75) > Math.abs(cz - 3.65);
     var rd = alongX ? (cx < 3.75 ? 1 : -1) : (cz < 3.65 ? 1 : -1);
     return { alongX: alongX, rd: rd, front: alongX ? (rd > 0 ? 'xmax' : 'xmin') : (rd > 0 ? 'zmax' : 'zmin') };
   }
+  // Dışa doğru raf: gardropta varsayılan olarak var; her kutuya istenen yüze, istenen derinlikte eklenebilir
+  function shelfOf(it) {
+    var s = it.shelf;
+    if (!s) return isDepot(it) ? { front: frontOf(rectOf(it)).front, d: SHELF_D } : null;
+    if (!s.side || s.side === 'none') return null;
+    return { front: s.side === 'auto' ? frontOf(rectOf(it)).front : s.side, d: s.d > 0 ? s.d : SHELF_D };
+  }
   function shelfRect(it) {
-    if (!isDepot(it)) return null;
-    var r = rectOf(it), f = frontOf(r).front, s = SHELF_D;
+    var sh = shelfOf(it);
+    if (!sh) return null;
+    var r = rectOf(it), f = sh.front, s = sh.d;
     if (f === 'xmin') return { x0: r.x0 - s, x1: r.x0, z0: r.z0, z1: r.z1 };
     if (f === 'xmax') return { x0: r.x1, x1: r.x1 + s, z0: r.z0, z1: r.z1 };
     if (f === 'zmin') return { x0: r.x0, x1: r.x1, z0: r.z0 - s, z1: r.z0 };
@@ -400,11 +484,20 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
 
     // Kutular
     items.forEach(function (it) {
+      drawItem(it, el('g', { 'class': 'it', 'data-id': it.id, style: 'cursor:grab' }));
+    });
+    drawHandles();
+
+    // Sağ üst köşedeki ölçek çubuğu
+    el('line', { x1: px(5.5), y1: pz(0) - 12, x2: px(6.5), y2: pz(0) - 12, stroke: 'var(--muted)', 'stroke-width': 2 });
+    text('1 m', px(6.0), pz(0) - 16, { 'text-anchor': 'middle', 'font-size': 11, fill: 'var(--muted)' });
+  }
+
+  function drawItem(it, grp) {
       var st = status(it);
       var r = rectOf(it);
       var bad = st === 'out' || st === 'block' || st === 'overlap';
       var color = bad ? 'var(--bad)' : (st === 'door' ? 'var(--warn)' : 'var(--accent)');
-      var grp = el('g', { 'class': 'it', 'data-id': it.id, style: 'cursor:grab' });
       var sz = shelfRect(it);
       if (sz) {
         el('rect', {
@@ -413,7 +506,7 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
         }, grp);
         var scx = px((sz.x0 + sz.x1) / 2), scy = pz((sz.z0 + sz.z1) / 2);
         var tall = (sz.z1 - sz.z0) > (sz.x1 - sz.x0);
-        text('raflar ' + Math.round(SHELF_D * 100) + ' cm', scx, scy + 4, {
+        text('raflar ' + Math.round(shelfOf(it).d * 100) + ' cm', scx, scy + 4, {
           'text-anchor': 'middle', 'font-size': 10, fill: 'var(--muted)', 'pointer-events': 'none',
           transform: tall ? 'rotate(-90 ' + scx + ' ' + scy + ')' : ''
         }, grp);
@@ -428,11 +521,62 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
       var f = fp(it);
       text(it.name, cx, cy - 3, { 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 600, fill: 'var(--ink)', 'pointer-events': 'none' }, grp);
       text((it.w * 100).toFixed(0) + '×' + (it.d * 100).toFixed(0) + ' cm', cx, cy + 14, { 'text-anchor': 'middle', 'font-size': 11, fill: 'var(--ink)', 'pointer-events': 'none' }, grp);
-    });
+  }
 
-    // Sağ üst köşedeki ölçek çubuğu
-    el('line', { x1: px(5.5), y1: pz(0) - 12, x2: px(6.5), y2: pz(0) - 12, stroke: 'var(--muted)', 'stroke-width': 2 });
-    text('1 m', px(6.0), pz(0) - 16, { 'text-anchor': 'middle', 'font-size': 11, fill: 'var(--muted)' });
+  // Boyutlandırma tutamakları: seçili kutunun köşeleri ve kenar ortaları
+  var HANDLES = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
+  var HCUR = { nw: 'nwse-resize', se: 'nwse-resize', ne: 'nesw-resize', sw: 'nesw-resize', n: 'ns-resize', s: 'ns-resize', e: 'ew-resize', w: 'ew-resize' };
+  var MIN_SIZE = 0.10;
+  function selItem() { for (var i = 0; i < items.length; i++) if (items[i].id === selId) return items[i]; return null; }
+  function hpos(r, h) {
+    var x = h.indexOf('w') >= 0 ? r.x0 : h.indexOf('e') >= 0 ? r.x1 : (r.x0 + r.x1) / 2;
+    var z = h.indexOf('n') >= 0 ? r.z0 : h.indexOf('s') >= 0 ? r.z1 : (r.z0 + r.z1) / 2;
+    return { x: px(x), y: pz(z) };
+  }
+  function handleList(r) {
+    // Küçük kutularda kenar ortası tutamakları köşelerle üst üste biner, onları atla
+    return HANDLES.filter(function (h) {
+      if ((h === 'n' || h === 's') && r.x1 - r.x0 < 0.45) return false;
+      if ((h === 'e' || h === 'w') && r.z1 - r.z0 < 0.45) return false;
+      return true;
+    });
+  }
+  function drawHandles() {
+    if (readOnly) return;
+    var it = selItem();
+    if (!it) return;
+    var r = rectOf(it);
+    var hg = el('g', { id: 'hdl' });
+    handleList(r).forEach(function (h) {
+      var p = hpos(r, h);
+      var g = el('g', { 'data-hg': h, style: 'cursor:' + HCUR[h] + ';touch-action:none' }, hg);
+      el('circle', { cx: p.x, cy: p.y, r: 13, fill: 'transparent', 'data-h': h }, g);
+      el('rect', { x: p.x - 5.5, y: p.y - 5.5, width: 11, height: 11, rx: 2, fill: 'var(--surface)', stroke: 'var(--accent)', 'stroke-width': 2, 'pointer-events': 'none' }, g);
+    });
+  }
+  function updateHandles(it) {
+    var hg = document.getElementById('hdl');
+    if (!hg) return;
+    var r = rectOf(it);
+    Array.prototype.forEach.call(hg.children, function (g) {
+      var p = hpos(r, g.getAttribute('data-hg'));
+      var c = g.querySelector('circle'), q = g.querySelector('rect');
+      c.setAttribute('cx', p.x); c.setAttribute('cy', p.y);
+      q.setAttribute('x', p.x - 5.5); q.setAttribute('y', p.y - 5.5);
+    });
+  }
+  function r2(v) { return Math.round(v * 100) / 100; }
+  function snapV(v, max) {
+    v = Math.round(v / SNAP) * SNAP;
+    if (Math.abs(v) < WALL_SNAP) v = 0;
+    if (Math.abs(v - max) < WALL_SNAP) v = max;
+    return r2(v);
+  }
+  // Plandaki taban dikdörtgenini kutuya yaz (döndürülmüş kutuda en ve derinlik yer değiştirir)
+  function setFootprint(it, r) {
+    it.x = r2(r.x0); it.z = r2(r.z0);
+    var fw = r2(r.x1 - r.x0), fd = r2(r.z1 - r.z0);
+    if (it.rot) { it.d = fw; it.w = fd; } else { it.w = fw; it.d = fd; }
   }
 
   function renderList() {
@@ -454,6 +598,8 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
       var meta = document.createElement('span'); meta.className = 'item-meta';
       var f = fp(it);
       meta.textContent = (f.w * 100).toFixed(0) + ' × ' + (f.d * 100).toFixed(0) + ' × ' + it.h + ' cm';
+      var shm = shelfOf(it);
+      if (shm) meta.textContent += ' · dışa raf ' + Math.round(shm.d * 100) + ' cm';
       var stt = document.createElement('span'); stt.className = 'st ' + LABEL[st][1]; stt.textContent = LABEL[st][0];
       b.appendChild(name); b.appendChild(meta); b.appendChild(stt);
       li.appendChild(b);
@@ -462,12 +608,28 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     var hasSel = items.some(function (i) { return i.id === selId; });
     document.getElementById('btn-rot').disabled = !hasSel;
     document.getElementById('btn-del').disabled = !hasSel;
+    document.getElementById('btn-copy').disabled = !hasSel;
+    document.getElementById('btn-paste').disabled = !clip;
     var sel = items.find(function (i) { return i.id === selId; });
     document.getElementById('posrow').hidden = !sel;
     if (sel) {
       document.getElementById('pos-x').value = Math.round(sel.x * 100);
       document.getElementById('pos-z').value = Math.round(sel.z * 100);
     }
+    document.getElementById('sizebox').hidden = !sel;
+    if (sel) fillSize(sel);
+  }
+
+  function fillSize(it) {
+    document.getElementById('sz-title').textContent = it.name + ' · ölçüler';
+    document.getElementById('sz-w').value = Math.round(it.w * 100);
+    document.getElementById('sz-d').value = Math.round(it.d * 100);
+    document.getElementById('sz-h').value = Math.round(it.h);
+    var side = it.shelf ? (it.shelf.side || 'none') : (isDepot(it) ? 'auto' : 'none');
+    var sd = it.shelf && it.shelf.d > 0 ? it.shelf.d : SHELF_D;
+    document.getElementById('sh-side').value = side;
+    document.getElementById('sh-d').value = Math.round(sd * 100);
+    document.getElementById('sh-d').disabled = side === 'none';
   }
 
   function renderSummary() {
@@ -566,6 +728,15 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     var tgt = e.target;
     var g = tgt.closest ? tgt.closest('g.it') : null;
     try { svg.focus({ preventScroll: true }); } catch (err) {}
+    var hk = tgt.getAttribute ? tgt.getAttribute('data-h') : null;
+    if (hk) {
+      var ri = selItem();
+      if (!ri) return;
+      e.preventDefault();
+      resize = { id: ri.id, h: hk, r0: rectOf(ri) };
+      try { svg.setPointerCapture(e.pointerId); } catch (err) {}
+      return;
+    }
     if (tgt.getAttribute && tgt.getAttribute('data-door')) {
       e.preventDefault();
       doorDrag = svgPt(e).x - DOOR.x0;
@@ -580,6 +751,8 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     var p = svgPt(e);
     drag = { id: id, dx: p.x - it.x, dz: p.z - it.z, sx: it.x, sz: it.z };
     dragEl = g;
+    var hgOld = document.getElementById('hdl');
+    if (hgOld) hgOld.style.display = 'none';
     try { svg.setPointerCapture(e.pointerId); } catch (err) {}
     if (selId !== id) {
       selId = id;
@@ -590,7 +763,26 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
       renderList();
     }
   });
+  var resize = null;
   function onMove(e) {
+    if (resize) {
+      e.preventDefault();
+      var rit = selItem();
+      if (!rit || rit.id !== resize.id) return;
+      var q = svgPt(e), h = resize.h, b = resize.r0;
+      var nr = { x0: b.x0, x1: b.x1, z0: b.z0, z1: b.z1 };
+      var vx = snapV(q.x, BOX_W), vz = snapV(q.z, BOX_H);
+      if (h.indexOf('w') >= 0) nr.x0 = Math.min(vx, b.x1 - MIN_SIZE);
+      if (h.indexOf('e') >= 0) nr.x1 = Math.max(vx, b.x0 + MIN_SIZE);
+      if (h.indexOf('n') >= 0) nr.z0 = Math.min(vz, b.z1 - MIN_SIZE);
+      if (h.indexOf('s') >= 0) nr.z1 = Math.max(vz, b.z0 + MIN_SIZE);
+      setFootprint(rit, nr);
+      // Sadece bu kutunun çizimini yenile; parmağın altındaki tutamak yerinde kalır
+      var grp = layer.querySelector('g.it[data-id="' + rit.id + '"]');
+      if (grp) { while (grp.firstChild) grp.removeChild(grp.firstChild); drawItem(rit, grp); }
+      updateHandles(rit);
+      return;
+    }
     if (doorDrag !== null) {
       e.preventDefault();
       if (setDoorX(svgPt(e).x - doorDrag)) {
@@ -616,13 +808,73 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     if (dragEl) dragEl.setAttribute('transform', 'translate(' + ((it.x - drag.sx) * S) + ',' + ((it.z - drag.sz) * S) + ')');
   }
   function endDrag() {
-    var had = drag !== null || doorDrag !== null;
-    drag = null; doorDrag = null; dragEl = null;
+    var had = drag !== null || doorDrag !== null || resize !== null;
+    drag = null; doorDrag = null; dragEl = null; resize = null;
     if (had) renderAll();
   }
   window.addEventListener('pointermove', onMove, { passive: false });
   window.addEventListener('pointerup', endDrag);
   window.addEventListener('pointercancel', endDrag);
+
+  // Kopyala / yapıştır
+  var clip = null;
+  var IS_MAC = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent || '');
+  var KB = IS_MAC ? '⌘' : 'Ctrl+';
+  document.getElementById('kb-copy').textContent = KB + 'C';
+  document.getElementById('kb-paste').textContent = KB + 'V';
+  document.getElementById('btn-copy').title = KB + 'C';
+  document.getElementById('btn-paste').title = KB + 'V';
+  function clipNote(s) { document.getElementById('clipnote').textContent = s; }
+  function copySel() {
+    var it = selItem();
+    if (!it) return false;
+    clip = JSON.parse(JSON.stringify(it));
+    clipNote(it.name + ' kopyalandı. ' + KB + 'V ile yapıştır.');
+    document.getElementById('btn-paste').disabled = false;
+    return true;
+  }
+  function pasteClip() {
+    if (readOnly || !clip) return false;
+    var src = clip, it = JSON.parse(JSON.stringify(src));
+    it.id = nextId++;
+    var m = src.name.match(/^Kutu (\d+)$/);
+    if (src.like || m) { it.like = src.like || parseInt(m[1], 10); it.name = 'Kutu ' + it.id; }
+    items.push(it);
+    // Kopyayı kaynağın hemen yanına koy: önce uzun kenarı boyunca, sonra diğer yönlerde; boş yer yoksa biraz kaydır
+    var f = fp(src), alongX = f.w >= f.d;
+    var tries = alongX
+      ? [[f.w, 0], [-f.w, 0], [0, f.d], [0, -f.d]]
+      : [[0, f.d], [0, -f.d], [f.w, 0], [-f.w, 0]];
+    var placed = false;
+    for (var i = 0; i < tries.length && !placed; i++) {
+      it.x = Math.round((src.x + tries[i][0]) * 100) / 100;
+      it.z = Math.round((src.z + tries[i][1]) * 100) / 100;
+      var st = status(it);
+      if (st === 'ok' || st === 'door') placed = true;
+    }
+    if (!placed) { it.x = Math.round((src.x + 0.1) * 100) / 100; it.z = Math.round((src.z + 0.1) * 100) / 100; }
+    selId = it.id;
+    clip = JSON.parse(JSON.stringify(it));   // tekrar yapıştırınca sıranın devamına koyar
+    clipNote(it.name + (it.like ? ' (Kutu ' + it.like + ' gibi)' : '') + ' eklendi' + (placed ? '.' : ', yanında boş yer yoktu, üst üste bindi: sürükleyip yerleştir.'));
+    renderAll();
+    return true;
+  }
+  document.getElementById('btn-copy').addEventListener('click', copySel);
+  document.getElementById('btn-paste').addEventListener('click', pasteClip);
+  document.addEventListener('keydown', function (e) {
+    if (readOnly || gameOn) return;
+    if (!(e.metaKey || e.ctrlKey) || e.altKey || e.shiftKey) return;
+    var tg = e.target && e.target.tagName;
+    if (tg === 'INPUT' || tg === 'TEXTAREA' || tg === 'SELECT' || (e.target && e.target.isContentEditable)) return;
+    var k = (e.key || '').toLowerCase();
+    if (k === 'c') {
+      var sel = window.getSelection && window.getSelection();
+      if (sel && !sel.isCollapsed && String(sel).trim()) return;   // sayfada metin seçiliyse normal kopyala
+      if (copySel()) e.preventDefault();
+    } else if (k === 'v') {
+      if (pasteClip()) e.preventDefault();
+    }
+  });
 
   // Klavye
   svg.addEventListener('keydown', function (e) {
@@ -658,6 +910,38 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     it.z = Math.round(z) / 100;
     renderAll();
   }
+  function onSize() {
+    if (readOnly) return;
+    var it = selItem();
+    if (!it) return;
+    var w = parseFloat(document.getElementById('sz-w').value);
+    var d = parseFloat(document.getElementById('sz-d').value);
+    var h = parseFloat(document.getElementById('sz-h').value);
+    var m2 = document.getElementById('msg2');
+    if (!(w >= 5 && d >= 5 && h >= 1)) { m2.textContent = 'En ve derinlik en az 5 cm, yükseklik en az 1 cm olmalı.'; fillSize(it); return; }
+    if (w > 1000 || d > 1000 || h > 400) { m2.textContent = 'Ölçü çok büyük görünüyor. Cm olarak girdiğinden emin ol.'; fillSize(it); return; }
+    m2.textContent = '';
+    it.w = Math.round(w) / 100;
+    it.d = Math.round(d) / 100;
+    it.h = Math.round(h);
+    renderAll();
+  }
+  function onShelf() {
+    if (readOnly) return;
+    var it = selItem();
+    if (!it) return;
+    var side = document.getElementById('sh-side').value;
+    var d = parseFloat(document.getElementById('sh-d').value);
+    var m2 = document.getElementById('msg2');
+    if (!(d >= 5 && d <= 100)) { m2.textContent = 'Raf derinliği 5 ile 100 cm arasında olmalı.'; d = (it.shelf && it.shelf.d ? it.shelf.d : SHELF_D) * 100; }
+    else m2.textContent = '';
+    it.shelf = { side: side, d: Math.round(d) / 100 };
+    renderAll();
+  }
+  ['sz-w', 'sz-d', 'sz-h'].forEach(function (id) { document.getElementById(id).addEventListener('change', onSize); });
+  document.getElementById('sh-side').addEventListener('change', onShelf);
+  document.getElementById('sh-d').addEventListener('change', onShelf);
+
   document.getElementById('pos-x').addEventListener('change', onPos);
   document.getElementById('pos-z').addEventListener('change', onPos);
 
@@ -678,16 +962,17 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
   var doors3 = [], entranceDoor3 = null, boxParent = null;
   var is3D = false, renderer3 = null, scene3 = null, cam3 = null, group3 = null, loop3Running = false, ceiling3 = null;
   var H3 = 3.6, T3 = 0.15, DOOR_H3 = 2.1;
-  var orbit = { theta: 0.55, phi: 0.9, r: 15, ty: 1.2, tx: 3.75, tz: 3.65 };
-  var target3 = new THREE.Vector3(3.75, 1.2, 3.65);
+  var orbit = { theta: 0.45, phi: 0.5, r: 10, ty: 0.6, tx: 3.75, tz: 3.65 };
+  var target3 = new THREE.Vector3(3.75, 0.6, 3.65);
   var VIEWS3 = {
-    top: { theta: 0.55, phi: 0.9, r: 15, ty: 1.2 },
+    top: { theta: 0.45, phi: 0.5, r: 10, ty: 0.6 },
     door: { theta: 0.37, phi: 1.53, r: 3.2, ty: 1.55 },
     counter: { theta: 3.14, phi: 1.5, r: 1.9, ty: 1.5 },
-    fridges: { theta: 1.19, phi: 1.52, r: 2.15, ty: 1.3 },
-    depot: { theta: -1.3, phi: 1.52, r: 2.3, ty: 1.3 },
+    fridges: { theta: -1.5708, phi: 1.5, r: 3.0, ty: 1.3, tx: 6.75, tz: 4.8 },
+    depot: { theta: 3.1416, phi: 1.38, r: 3.4, ty: 1.1, tx: 2.0, tz: 6.35 },
+    pcs: { theta: 1.5708, phi: 1.47, r: 3.0, ty: 1.35, tx: 0.3, tz: 4.05 },
     kasa: { theta: -0.15, phi: 1.37, r: 2.1, ty: 1.15, tx: 5.3, tz: 2.2 },
-    passage: { theta: 0.41, phi: 1.4, r: 2.45, ty: 1.2, tx: 1.65, tz: 1.4 }
+    passage: { theta: 0.3, phi: 1.4, r: 2.6, ty: 1.2, tx: 1.33, tz: 1.4 }
   };
   var M3 = null, KINDS = null;
 
@@ -828,7 +1113,7 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
         : new THREE.MeshStandardMaterial({ color: c, roughness: 0.12, transparent: true, opacity: o, depthWrite: o > 0.7 }));
     }
     function metal(c) { return share(new THREE.MeshStandardMaterial({ color: c, roughness: 0.28, metalness: 0.75 })); }
-    function cyl(r, h, rt) { return share(new THREE.CylinderGeometry(rt === undefined ? r : rt, r, h, 14)); }
+    function cyl(r, h, rt) { return share(new THREE.CylinderGeometry(rt === undefined ? r : rt, r, h, 9, 1, false)); }   // 9 kenar: uzaktan yuvarlak görünür, çok daha hafif
     function box(w, h, d) { return share(new THREE.BoxGeometry(w, h, d)); }
     function p(geo, m, y) { return { geo: geo, mat: m, y: y }; }
     var clear = mat(0xe3f1f2, 0.5), amber = mat(0xa9561e, 0.88), dark = mat(0x2a1414, 0.95), rose = mat(0xe79aa8, 0.65),
@@ -929,12 +1214,14 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     var st = document.getElementById('stage3');
     renderer3 = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     var small = Math.min(screen.width || 9999, screen.height || 9999) < 700;   // telefonlarda daha hafif ayar
-    renderer3.setPixelRatio(Math.min(window.devicePixelRatio || 1, small ? 1.5 : 2));
+    perf3.cap = Math.min(window.devicePixelRatio || 1, small ? 1.25 : 1.5); perf3.pr = perf3.cap;
+    renderer3.setPixelRatio(perf3.pr);
     renderer3.outputEncoding = THREE.sRGBEncoding;
     renderer3.toneMapping = THREE.ACESFilmicToneMapping;
     renderer3.toneMappingExposure = 0.9;
     renderer3.shadowMap.enabled = true;
     renderer3.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer3.shadowMap.autoUpdate = false;   // sahne sabit: gölge haritası sadece değişince yeniden çizilir
     st.appendChild(renderer3.domElement);
     scene3 = new THREE.Scene();
     cam3 = new THREE.PerspectiveCamera(48, 1, 0.05, 100);
@@ -953,7 +1240,7 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     } catch (e) {}
 
     // Işık: tavan panellerinin genel aydınlığı + yumuşak gölge veren üst ışık
-    scene3.add(new THREE.HemisphereLight(0xffffff, 0x9c968a, 0.32));
+    scene3.add(new THREE.HemisphereLight(0xffffff, 0x9c968a, 0.46));
     var key = new THREE.DirectionalLight(0xfffaf0, 0.5);
     key.position.set(5.5, 9, 5.5);
     key.target.position.set(3.75, 0, 3.65);
@@ -973,10 +1260,6 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     panels.forEach(function (q, i) {
       var pnl = new THREE.Mesh(new THREE.PlaneGeometry(0.58, 0.58), M.panelLight);
       pnl.rotation.x = Math.PI / 2; pnl.position.set(q[0], H3 - 0.005, q[1]); ceiling3.add(pnl);
-      if (i === 2 || i === 4 || i === 6 || i === 1) {
-        var pl = new THREE.PointLight(0xfff6ea, 0.3, 6, 2);
-        pl.position.set(q[0], H3 - 0.3, q[1]); scene3.add(pl);
-      }
     });
     [[0.5, 6.8], [7.0, 1.7]].forEach(function (q) {
       var base = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.03, 20), M.white);
@@ -1065,6 +1348,7 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
 
     group3 = new THREE.Group();
     scene3.add(group3);
+    buildGun3();
 
     // Kuşbakışı: sürükle = döndür, tekerlek / iki parmak = yakınlaş.
     // Gezinti: sürükle = etrafa bak, dokunmatikte ekranın sol tarafı = yürüme kolu. Kısa dokunuş/tık = kapı aç/kapat.
@@ -1073,6 +1357,7 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     el.addEventListener('pointerdown', function (e) {
       if (gameOn && gamePaused) return;
       if (gameOn && !COARSE3 && e.pointerType === 'mouse' && !isLocked3() && !lockFailed) { lockPointer3(); return; }
+      if (gameOn && !COARSE3 && isLocked3()) { if (e.button === 0) fire3(); return; }
       pts[e.pointerId] = { x: e.clientX, y: e.clientY };
       try { el.setPointerCapture(e.pointerId); } catch (err) {}
       lastDist = 0;
@@ -1126,7 +1411,7 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
       if (gez.joy && gez.joy.id === e.pointerId) { gez.joy = null; hideJoy3(); }
       if (down && down.id === e.pointerId) {
         if (e.type === 'pointerup' && down.moved < 8 && Date.now() - down.t < 450) {
-          if (isLocked3()) { var rcc = el.getBoundingClientRect(); interact3(rcc.left + rcc.width / 2, rcc.top + rcc.height / 2); }
+          if (gameOn && !COARSE3) fire3();      // fare kilitlenemediyse: kısa tık = ateş
           else interact3(e.clientX, e.clientY);
         }
         down = null;
@@ -1151,16 +1436,19 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     renderer3.setSize(w, h, false);
     cam3.aspect = w / h;
     cam3.updateProjectionMatrix();
+    if (gunCam) { gunCam.aspect = w / h; gunCam.updateProjectionMatrix(); }
   }
 
   // ---- Parçalar ----
 
   // Market buzdolabı (Kutu 1-3): siyah gövde, LED çerçeveli cam kapılar, aydınlık iç, alt ızgara, üstte ışıklı pano
   var LED3 = { 1: 0xffc21a, 2: 0x2f6bff, 3: 0x22e07a };
+  function isFridge(it, num) { return (num >= 1 && num <= 3) || /buzdolab|meşrubat/i.test(it.name); }
+  function isSoftFridge(it) { return /meşrubat/i.test(it.name); }
   function fridge3(it, num) {
     var M = makeMaterials(), r = rectOf(it), h = it.h / 100, f = frame(r);
     var L = f.uB - f.uA, D = f.D, GR = 0.22, SIGN = Math.min(0.32, h * 0.15), top = h - SIGN;
-    var led = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: LED3[num] || 0xffc21a, emissiveIntensity: 1.4, toneMapped: false });
+    var led = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: isSoftFridge(it) ? 0xff3b30 : (LED3[num] || 0xffc21a), emissiveIntensity: 1.4, toneMapped: false });
     f.slab(f.uA, f.uB, 0, h, -D, -D + 0.04, M.black);
     f.slab(f.uA, f.uA + 0.04, 0, h, -D, 0, M.black);
     f.slab(f.uB - 0.04, f.uB, 0, h, -D, 0, M.black);
@@ -1198,7 +1486,9 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
       [['raki', 'vodka'], ['biraSise'], ['maviKutu'], ['yesilKutu', 'biraKutu'], ['biraSise']],
       [['kola1l'], ['yesilKutu'], ['biraSise'], ['kirmiziKutu', 'maviKutu'], ['yesilKutu']]
     ];
-    var plan = plans[((num || 1) - 1) % plans.length];
+    // Meşrubat dolabı: sadece alkolsüz içecekler
+    var soft = [['kola1l'], ['kolaKutu', 'portakalKutu', 'limonKutu'], ['maviKutu', 'kirmiziKutu'], ['portakalKutu', 'limonKutu', 'kolaKutu'], ['kola1l']];
+    var plan = isSoftFridge(it) ? soft : plans[((num || 1) - 1) % plans.length];
     var K = kinds(), buckets = {}, rows = [];
     for (var dv = 0.1; dv < Math.min(D - 0.12, 0.45); dv += 0.1) rows.push(dv);
     plan.forEach(function (ks, li) {
@@ -1219,8 +1509,24 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
   // Alkol reyonu (Kutu 4-13 ve Kutu 21): laminat raflar, her kutu sınırında alüminyum dikme, 5 kat şişe (iki sıra),
   // raf önlerinde fiyat etiketleri, en üstte şarap sırası ve hediye kutuları.
   // Kutu 12-13 hizasında arka odaya geçiş: üstte tek sıra raf, altta iki kanatlı kapı.
-  var PASSAGE3 = [12, 13];
-  function isShelfNum(num) { return (num >= 4 && num <= 13) || num === 21; }
+  var PASSAGE3 = []; // Raflarda arka oda geçişi yok (kapının yeri değişti)
+  // Kutunun 3D tipi: adındaki numara; kopyalanmış kutuda kaynağın numarası (like)
+  function kindNum(it) { return it.like ? it.like : parseInt((it.name.match(/^Kutu (\d+)$/) || [])[1], 10); }
+  function isShelfNum(num) { return (num >= 4 && num <= 13) || num === 21 || (num >= 27 && num <= 30); }
+  // Birbirine değen ve aynı yöne dönük raf kutularını ayrı dolaplar olarak grupla (ana sıra, sol duvar, sağ duvar...)
+  function alcoholRuns(list) {
+    var parent = list.map(function (_, i) { return i; });
+    function find(i) { while (parent[i] !== i) { parent[i] = parent[parent[i]]; i = parent[i]; } return i; }
+    function touch(a, b) {
+      var p = rectOf(a), q = rectOf(b), e = 0.02;
+      if (!!a.rot !== !!b.rot) return false;
+      return p.x0 <= q.x1 + e && q.x0 <= p.x1 + e && p.z0 <= q.z1 + e && q.z0 <= p.z1 + e;
+    }
+    for (var i = 0; i < list.length; i++) for (var j = i + 1; j < list.length; j++) if (touch(list[i], list[j])) parent[find(i)] = find(j);
+    var groups = {};
+    list.forEach(function (it, i) { var r = find(i); (groups[r] = groups[r] || []).push(it); });
+    return Object.keys(groups).map(function (k) { return groups[k]; });
+  }
   function alcohol3(list) {
     var M = makeMaterials(), r = { x0: Infinity, x1: -Infinity, z0: Infinity, z1: -Infinity }, H = 0;
     list.forEach(function (it) {
@@ -1250,21 +1556,20 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     levels.concat([H]).forEach(function (y) { eachSeg(function (a, b) { f.slab(a, b, y - t, y, -D, 0, M.woodMat); }); });
     eachSeg(function (a, b) { f.slab(a, b, 0, 0.06, -D, -0.01, M.grey); });
 
-    // Geçiş: kapı üstünde tek raf; altta alüminyum kasalı iki kanatlı kapı (arka panel hizasında)
+    // Geçiş: kapı üstünde tek raf; altta alüminyum kasalı tek kanatlı kapı (arka panel hizasında)
     if (pA !== null) {
       f.slab(pA, pB, DOOR_TOP, H, -D, -D + t, M.woodMat);
       f.slab(pA, pB, DOOR_TOP, DOOR_TOP + t, -D, 0, M.woodMat);
       f.slab(pA, pB, H - t, H, -D, 0, M.woodMat);
       f.slab(pA, pB, DOOR_TOP - 0.05, DOOR_TOP, -D, 0.01, M.alu);
-      var mid = (pA + pB) / 2;
-      [[pA + 0.03, mid - 0.004, mid - 0.065, mid - 0.045], [pB - 0.03, mid + 0.004, mid + 0.045, mid + 0.065]].forEach(function (lf) {
-        var hp = f.pos(lf[0], 0, -D + 0.025), fq = f.pos(lf[1], 0, -D + 0.025), oq = f.pos(lf[0], 0, -D - 0.975);
-        var pv = pivot3(hp[0], hp[2], fq[0], fq[2], oq[0] - hp[0], oq[2] - hp[2], 95, 'passage');
-        inPivot(pv, function () {
-          f.slab(lf[0], lf[1], 0.01, DOOR_TOP - 0.05, -D + 0.005, -D + 0.045, M.doorLeaf);
-          f.slab(lf[2], lf[3], 0.95, 1.2, -D + 0.045, -D + 0.075, M.alu);
-          f.slab(lf[2], lf[3], 0.95, 1.2, -D - 0.025, -D + 0.005, M.alu);
-        });
+      // Tek kanat: sol kenarından menteşeli, arka odaya doğru açılır; kulp sağ kenarda
+      var la = pA + 0.03, lb = pB - 0.03;
+      var hp = f.pos(la, 0, -D + 0.025), fq = f.pos(lb, 0, -D + 0.025), oq = f.pos(la, 0, -D - 0.975);
+      var pv = pivot3(hp[0], hp[2], fq[0], fq[2], oq[0] - hp[0], oq[2] - hp[2], 95, 'passage');
+      inPivot(pv, function () {
+        f.slab(la, lb, 0.01, DOOR_TOP - 0.05, -D + 0.005, -D + 0.045, M.doorLeaf);
+        f.slab(lb - 0.085, lb - 0.065, 0.95, 1.2, -D + 0.045, -D + 0.075, M.alu);
+        f.slab(lb - 0.085, lb - 0.065, 0.95, 1.2, -D - 0.025, -D + 0.005, M.alu);
       });
     }
 
@@ -1334,7 +1639,7 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     var longX = (r.x1 - r.x0) >= (r.z1 - r.z0);
     var ac = null, n = 0;
     items.forEach(function (o) {
-      var k = parseInt((o.name.match(/^Kutu (\d+)$/) || [])[1], 10);
+      var k = kindNum(o);
       if (k >= 4 && k <= 13) { var q = rectOf(o); ac = ac || { x: 0, z: 0 }; ac.x += (q.x0 + q.x1) / 2; ac.z += (q.z0 + q.z1) / 2; n++; }
     });
     var cx = (r.x0 + r.x1) / 2, cz = (r.z0 + r.z1) / 2;
@@ -1371,6 +1676,7 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     var sv = -D - 0.3;
     var c0 = f.pos(ku, 0, sv), c1 = f.pos(ku, 0, sv + 1);
     var fig = cashier3();
+    fig.userData.noHit = true;
     fig.position.set(c0[0], 0, c0[2]);
     fig.rotation.y = Math.atan2(c1[0] - c0[0], c1[2] - c0[2]);
     group3.add(fig);
@@ -1442,18 +1748,48 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     });
   }
 
+  // Bilgisayar tablası (Kutu 26): altı boş, duvardan çıkan tabla (sarı ön kenar), 3 hepsi-bir-arada bilgisayar ve mouse
+  function isPcShelf(it, num) { return num === 26 || /bilgisayar/i.test(it.name); }
+  function pcShelf3(it) {
+    var M = makeMaterials(), r = rectOf(it), h = it.h / 100, f = frame(r), D = f.D, L = f.uB - f.uA, T = 0.025;
+    // Duvara asılı tabla, altında sadece duvara vidalı gri konsollar
+    f.slab(f.uA, f.uB, h - 0.04, h, -D, 0, M.woodMat);
+    f.slab(f.uA, f.uB, h - 0.045, h + 0.002, 0, 0.012, M.yellow);
+    var nb = Math.max(2, Math.round(L / 1) + 1);
+    for (var k = 0; k < nb; k++) {
+      var ud = f.uA + 0.25 + (L - 0.5) * k / (nb - 1);
+      f.slab(ud - 0.01, ud + 0.01, h - 0.26, h - 0.04, -D, -D + Math.min(0.22, D * 0.75), M.grey);
+    }
+    var mv = -D * 0.62;
+    [1, 3, 5].forEach(function (k2) {
+      var uc = f.uA + L * k2 / 6;
+      f.slab(uc - 0.11, uc + 0.11, h, h + 0.012, mv - 0.08, mv + 0.06, M.alu);
+      f.slab(uc - 0.025, uc + 0.025, h, h + 0.14, mv - 0.035, mv - 0.015, M.alu);
+      f.slab(uc - 0.3, uc + 0.3, h + 0.11, h + 0.47, mv - 0.015, mv + 0.02, M.black);
+      f.slab(uc - 0.28, uc + 0.28, h + 0.13, h + 0.455, mv + 0.02, mv + 0.024, M.screen, false);
+      f.slab(uc + 0.2, uc + 0.26, h, h + 0.032, -0.08, 0.0, M.black);
+    });
+  }
+
   // Depo (gardrop): kapalı gövde; dükkana bakan yüzde laminat raf ünitesi (lila ön kenarlar),
   // üstte askılarda jelibon / kuruyemiş paketleri, altta çikolata ve kahve kutuları
   function depot3(it) {
-    var M = makeMaterials(), r = rectOf(it), h = it.h / 100, f = frame(r), SD = SHELF_D;
+    var M = makeMaterials(), r = rectOf(it), h = it.h / 100;
     box3(r.x0, r.x1, 0, h, r.z0, r.z1, M.white);
-    var m0 = 0.04, top = Math.min(2.1, h - 0.1), uA = f.uA + m0, uB = f.uB - m0;
+  }
+  // Dışa raf ünitesi: hangi kutuda, hangi yüzde ve kaç cm derinlikte istenirse
+  function snackShelf3(it) {
+    var sh = shelfOf(it);
+    if (!sh) return;
+    var M = makeMaterials(), r = rectOf(it), h = it.h / 100, f = frame(r, sh.front), SD = sh.d, k = SD / 0.3;
+    var m0 = 0.04, top = Math.max(0.45, Math.min(2.1, h - 0.1)), uA = f.uA + m0, uB = f.uB - m0;
+    if (uB - uA < 0.25) return;
     f.slab(uA, uA + 0.025, 0, top + 0.04, 0, SD, M.woodMat);
     f.slab(uB - 0.025, uB, 0, top + 0.04, 0, SD, M.woodMat);
     f.slab(uA, uB, 0, top + 0.04, 0, 0.015, M.woodMat);
     f.slab(uA, uB, top, top + 0.04, 0, SD, M.woodMat);
     f.slab(uA, uB, top + 0.005, top + 0.045, SD - 0.012, SD + 0.004, M.lilac);
-    var shelfY = [0.1, 0.42, 0.74, 1.06];
+    var shelfY = [0.1, 0.42, 0.74, 1.06].filter(function (y) { return y < top - 0.12; });
     shelfY.forEach(function (y) {
       f.slab(uA, uB, y - 0.022, y, 0, SD, M.woodMat);
       f.slab(uA, uB, y - 0.04, y + 0.004, SD - 0.012, SD + 0.004, M.lilac);
@@ -1463,12 +1799,13 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     var nuts = mats([0xb08a5a, 0x8c6a43, 0xc9a66b], 0.6);
     var hooks = [];
     [1.95, 1.64, 1.34].forEach(function (hy, ri) {
+      if (hy > top - 0.04) return;
       var n = 0;
       for (var u = uA + 0.12; u + 0.07 < uB - 0.03; u += 0.16, n++) {
         hooks.push(f.pos(u, hy, SD * 0.4));
         var set = ri === 0 ? jeli : ri === 1 ? nuts : (n % 2 ? nuts : jeli);
         var pk = set[n % set.length];
-        [0.07, 0.13, 0.19].forEach(function (v) { pk.p.push(f.pos(u, hy - 0.1, v)); });
+        [0.07, 0.13, 0.19].forEach(function (v) { pk.p.push(f.pos(u, hy - 0.1, v * k)); });
       }
     });
     instBoxes(f.geo(0.006, 0.006, SD * 0.8), M.alu, hooks);
@@ -1481,10 +1818,10 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
       for (var u = uA + 0.1; u + 0.08 < uB - 0.03; u += 0.17, n++) {
         var bx = boxes[(n * 3 + si) % boxes.length];
         bx.p.push(f.pos(u, y + 0.04, SD * 0.5));
-        if (si < 3) bx.p.push(f.pos(u, y + 0.12, SD * 0.5));
+        if (si < 3 && y + 0.17 < top) bx.p.push(f.pos(u, y + 0.12, SD * 0.5));
       }
     });
-    var boxGeo = f.geo(0.15, 0.08, 0.22);
+    var boxGeo = f.geo(0.15, 0.08, Math.min(0.22, SD * 0.8));
     boxes.forEach(function (g) { instBoxes(boxGeo, g.m, g.p); });
   }
 
@@ -1514,15 +1851,20 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     clearGroup3();
     var alc = [];
     items.forEach(function (it) {
-      var num = parseInt((it.name.match(/^Kutu (\d+)$/) || [])[1], 10);
+      var num = kindNum(it);
+      if (isPcShelf(it, num)) { pcShelf3(it); return; }
       if (isShelfNum(num)) { if (status(it) === 'out') generic3(it); else alc.push(it); return; }
-      if (num >= 1 && num <= 3) { fridge3(it, num); return; }
+      if (isFridge(it, num)) { fridge3(it, num); return; }
       if (/iddaa/i.test(it.name)) { iddaa3(it); return; }
       if (isDepot(it)) { depot3(it); return; }
       if (it.name === 'tezgah') { counter3(it); return; }
       generic3(it);
     });
-    if (alc.length) alcohol3(alc);
+    items.forEach(snackShelf3);
+    if (alc.length) alcoholRuns(alc).forEach(alcohol3);
+    mergeStatic3();
+    walkDirty3 = true;
+    renderer3.shadowMap.needsUpdate = true;
   }
 
   function loop3() {
@@ -1530,9 +1872,10 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     var now = performance.now(), dt = Math.min(0.05, (now - (gez.last || now)) / 1000);
     gez.last = now;
     animateDoors3(dt);
+    var moving = false;
     if (gez.on) {
-      if (!gamePaused) updateWalk(dt);
-      cam3.position.set(gez.x, EYE3, gez.z);
+      if (!gamePaused) { moving = updateWalk(dt); stepJump3(dt); }
+      cam3.position.set(gez.x, EYE3 + gez.y, gez.z);
       cam3.rotation.order = 'YXZ';
       cam3.rotation.set(gez.pitch, gez.yaw, 0);
     } else {
@@ -1547,11 +1890,19 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     var cp = cam3.position;
     ceiling3.visible = gameOn || (cp.y < H3 - 0.05 && cp.x > 0 && cp.x < 7.5 && cp.z > 0 && cp.z < 7.3);
     renderer3.render(scene3, cam3);
+    if (gameOn && gunScene) {
+      updateGun3(dt, moving);
+      renderer3.autoClear = false;
+      renderer3.clearDepth();
+      renderer3.render(gunScene, gunCam);
+      renderer3.autoClear = true;
+      adaptRes3(dt);
+    }
     requestAnimationFrame(loop3);
   }
 
   // ---- Gezinti modu: birinci şahıs gezme, kapı ve dolap açma ----
-  var gez = { on: false, x: 3.4, z: 6.7, yaw: 0, pitch: -0.05, keys: {}, joy: null, last: 0, started: false };
+  var gez = { on: false, x: 3.4, z: 6.7, y: 0, vy: 0, yaw: 0, pitch: -0.05, keys: {}, joy: null, last: 0, started: false };
   var EYE3 = 1.62, PR3 = 0.22;
 
   // Menteşeli parça: menteşe noktasında bir grup; içindeki parçalar dünya koordinatıyla eklenir.
@@ -1569,6 +1920,7 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
   function inPivot(g, fn) { var prev = boxParent; boxParent = g; try { fn(); } finally { boxParent = prev; } }
 
   function toggleDoor3(g) {
+    walkDirty3 = true;
     var open = !g.userData.open;
     if (g.userData.kind === 'passage') {
       doors3.forEach(function (d) { if (d.userData.kind === 'passage') d.userData.open = open; });
@@ -1580,8 +1932,10 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     var k = Math.min(1, dt * 7);
     doors3.forEach(function (d) {
       var u = d.userData, target = u.open ? u.max : 0;
+      if (Math.abs(target - u.angle) < 0.0005) return;
       u.angle += (target - u.angle) * k;
       d.rotation.y = u.angle;
+      renderer3.shadowMap.needsUpdate = true;   // kapı hareket ederken gölgeler güncellensin
     });
   }
 
@@ -1611,11 +1965,17 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
 
   // Çarpışma: duvarlar, vitrin camı, kapı (kapalıyken), kutular (raf alanları dahil)
   function walkRects() {
+    if (!walkDirty3) return walkCache3;
+    walkDirty3 = false;
+    walkCache3 = computeWalkRects3();
+    return walkCache3;
+  }
+  function computeWalkRects3() {
     var out = [], passageOpen = doors3.some(function (d) { return d.userData.kind === 'passage' && d.userData.open; });
     var entranceOpen = entranceDoor3 && entranceDoor3.userData.open;
     var shelfMinX = Infinity;
     items.forEach(function (it) {
-      var num = parseInt((it.name.match(/^Kutu (\d+)$/) || [])[1], 10);
+      var num = kindNum(it);
       if (isShelfNum(num) && status(it) !== 'out') {
         var q = rectOf(it);
         if (q.z0 <= 1.25) shelfMinX = Math.min(shelfMinX, q.x0);
@@ -1661,7 +2021,7 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     gez.yaw += turn * dt * 1.8;
     var len = Math.hypot(f, s);
     if (len > 1) { f /= len; s /= len; }
-    if (!len) return;
+    if (!len) return false;
     var sp = 1.5 * dt;
     var fx = -Math.sin(gez.yaw), fz = -Math.cos(gez.yaw), rx = Math.cos(gez.yaw), rz = -Math.sin(gez.yaw);
     var dx = (fx * f + rx * s) * sp, dz = (fz * f + rz * s) * sp;
@@ -1669,6 +2029,186 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     if (!walkBlocked(gez.x + dx, gez.z + dz, rects)) { gez.x += dx; gez.z += dz; }
     else if (!walkBlocked(gez.x + dx, gez.z, rects)) gez.x += dx;
     else if (!walkBlocked(gez.x, gez.z + dz, rects)) gez.z += dz;
+    return true;
+  }
+
+  // ---- Oyun eklentileri: zıplama, tabanca (ses, namlu alevi, geri tepme, mermi izi) ve performans ----
+  var gunScene = null, gunCam = null, gun3 = null, flash3 = null, impact3 = null;
+  var recoil3 = 0, flashT3 = 0, impactT3 = 0, bob3 = 0, audio3 = null;
+  var decals3 = [], decalGeo3 = null, decalMat3 = null;
+  var walkDirty3 = true, walkCache3 = [];
+  var perf3 = { ema: 1 / 60, pr: 1, cap: 1, cool: 0 };
+
+  // Tabanca ayrı bir sahnede çizilir: duvara yaklaşınca içine girmez
+  function buildGun3() {
+    gunScene = new THREE.Scene();
+    gunCam = new THREE.PerspectiveCamera(60, 1, 0.01, 10);
+    gunScene.add(new THREE.HemisphereLight(0xffffff, 0x6b6660, 0.9));
+    var dl = new THREE.DirectionalLight(0xffffff, 0.8); dl.position.set(1, 2, 1); gunScene.add(dl);
+    gunScene.environment = scene3.environment;
+    var poly = new THREE.MeshStandardMaterial({ color: 0x1b1c1f, roughness: 0.55, metalness: 0.2 });
+    var steel = new THREE.MeshStandardMaterial({ color: 0x4a4f57, roughness: 0.28, metalness: 0.85, envMapIntensity: 1.2 });
+    gun3 = new THREE.Group();
+    function part(w, h, d, x, y, z, m, rx) {
+      var o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m);
+      o.position.set(x, y, z); if (rx) o.rotation.x = rx; gun3.add(o); return o;
+    }
+    part(0.034, 0.036, 0.19, 0, 0.02, -0.02, steel);          // kayar parça
+    part(0.031, 0.024, 0.165, 0, -0.01, -0.005, poly);        // gövde
+    part(0.03, 0.105, 0.045, 0, -0.07, 0.06, poly, -0.28);    // kabza
+    part(0.006, 0.03, 0.035, 0, -0.03, 0.005, poly);          // tetik korkuluğu
+    part(0.006, 0.008, 0.01, 0, 0.042, -0.105, steel);        // arpacık
+    part(0.016, 0.008, 0.01, 0, 0.042, 0.07, steel);          // gez
+    var barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.007, 0.007, 0.02, 12), steel);
+    barrel.rotation.x = Math.PI / 2; barrel.position.set(0, 0.02, -0.12); gun3.add(barrel);
+    // Namlu alevi: iki çapraz düzlem, kısa süre görünür
+    var fm = new THREE.MeshBasicMaterial({ color: 0xffd27a, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, toneMapped: false });
+    flash3 = new THREE.Group();
+    var p1 = new THREE.Mesh(new THREE.PlaneGeometry(0.09, 0.09), fm), p2 = p1.clone();
+    p2.rotation.y = Math.PI / 2;
+    var p3 = new THREE.Mesh(new THREE.CircleGeometry(0.03, 10), fm);
+    flash3.add(p1); flash3.add(p2); flash3.add(p3);
+    flash3.position.set(0, 0.02, -0.16);
+    flash3.visible = false;
+    gun3.add(flash3);
+    gun3.position.set(0.16, -0.15, -0.42);
+    gun3.rotation.y = -0.05;
+    gunScene.add(gun3);
+    // Mermi izi ve vuruş parıltısı
+    decalGeo3 = new THREE.CircleGeometry(0.028, 12);
+    decalMat3 = new THREE.MeshBasicMaterial({ color: 0x151515, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4 });
+    impact3 = new THREE.Mesh(new THREE.CircleGeometry(0.06, 10), fm);
+    impact3.visible = false;
+    impact3.raycast = function () {};
+    scene3.add(impact3);
+  }
+
+  // Ses: tarayıcıda üretilen kısa patlama + boğuk vuruş + kovan sesi (dosya indirilmez)
+  function shotSound3() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      audio3 = audio3 || new AC();
+      if (audio3.state === 'suspended') audio3.resume();
+      var ctx = audio3, t = ctx.currentTime;
+      var len = Math.floor(ctx.sampleRate * 0.3), buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+      for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3);
+      var src = ctx.createBufferSource(); src.buffer = buf;
+      var lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.setValueAtTime(6000, t); lp.frequency.exponentialRampToValueAtTime(400, t + 0.25);
+      var g = ctx.createGain(); g.gain.setValueAtTime(0.9, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+      src.connect(lp); lp.connect(g); g.connect(ctx.destination); src.start(t);
+      var o = ctx.createOscillator(); o.type = 'sine';
+      o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(40, t + 0.15);
+      var g2 = ctx.createGain(); g2.gain.setValueAtTime(0.8, t); g2.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+      o.connect(g2); g2.connect(ctx.destination); o.start(t); o.stop(t + 0.2);
+      var c = ctx.createOscillator(); c.type = 'triangle'; c.frequency.setValueAtTime(3200, t + 0.38);
+      var g3 = ctx.createGain(); g3.gain.setValueAtTime(0.0001, t); g3.gain.setValueAtTime(0.12, t + 0.38); g3.gain.exponentialRampToValueAtTime(0.001, t + 0.46);
+      c.connect(g3); g3.connect(ctx.destination); c.start(t + 0.38); c.stop(t + 0.5);
+    } catch (err) {}
+  }
+
+  function noHit3(o) { while (o) { if (o.userData && o.userData.noHit) return true; o = o.parent; } return false; }
+  function fire3() {
+    if (!gameOn || gamePaused || !gun3) return;
+    shotSound3();
+    recoil3 = 1; flashT3 = 0.05;
+    flash3.visible = true; flash3.rotation.z = Math.random() * Math.PI;
+    ray3 = ray3 || new THREE.Raycaster();
+    ray3.setFromCamera(new THREE.Vector2(0, 0), cam3);
+    var hits = ray3.intersectObjects(scene3.children, true);
+    for (var i = 0; i < hits.length; i++) {
+      var h = hits[i], o = h.object;
+      if (!visibleChain(o) || o === impact3 || decals3.indexOf(o) >= 0) continue;
+      if (noHit3(o)) return;                 // figür: iz bırakma
+      if (!h.face) return;
+      var n = h.face.normal.clone().transformDirection(o.matrixWorld);
+      if (n.dot(ray3.ray.direction) > 0) n.negate();
+      var dcl = new THREE.Mesh(decalGeo3, decalMat3);
+      dcl.position.copy(h.point).addScaledVector(n, 0.003);
+      dcl.lookAt(h.point.clone().add(n));
+      dcl.raycast = function () {};
+      dcl.renderOrder = 5;   // yüzeyden sonra çizilsin, üstünde görünsün
+      o.attach(dcl);
+      decals3.push(dcl);
+      if (decals3.length > 60) { var old = decals3.shift(); if (old.parent) old.parent.remove(old); }
+      impact3.position.copy(h.point).addScaledVector(n, 0.01);
+      impact3.lookAt(h.point.clone().add(n));
+      impact3.visible = true; impactT3 = 0.07;
+      return;
+    }
+  }
+  function jump3() {
+    if (!gameOn || gamePaused) return;
+    if (gez.y <= 0.0001) gez.vy = 3.4;      // ~60 cm zıplama
+  }
+  function stepJump3(dt) {
+    if (gez.y > 0 || gez.vy > 0) {
+      gez.vy -= 9.8 * dt;
+      gez.y += gez.vy * dt;
+      if (gez.y <= 0) { gez.y = 0; gez.vy = 0; }
+    }
+  }
+  function updateGun3(dt, moving) {
+    if (!gun3) return;
+    recoil3 = Math.max(0, recoil3 - dt * 9);
+    bob3 += dt * (moving ? 9 : 0);
+    var by = moving && gez.y === 0 ? Math.abs(Math.sin(bob3)) * 0.008 : 0, bx = moving ? Math.sin(bob3 * 0.5) * 0.006 : 0;
+    gun3.position.set(0.16 + bx, -0.15 + by + recoil3 * 0.012, -0.42 + recoil3 * 0.045);
+    gun3.rotation.x = recoil3 * 0.22;
+    if (flashT3 > 0) { flashT3 -= dt; if (flashT3 <= 0) flash3.visible = false; }
+    if (impactT3 > 0) { impactT3 -= dt; if (impactT3 <= 0) impact3.visible = false; }
+  }
+
+  // Aynı malzemeyi kullanan sabit parçaları tek nesnede birleştir (çizim çağrısı sayısını büyük ölçüde azaltır)
+  function mergeStatic3() {
+    var byMat = {};
+    group3.children.slice().forEach(function (m) {
+      if (!m.isMesh || m.isInstancedMesh || !m.geometry || !m.geometry.index || !m.geometry.attributes.uv) return;
+      var k = m.material.uuid + (m.castShadow ? 's' : 'n');
+      (byMat[k] = byMat[k] || []).push(m);
+    });
+    var v = new THREE.Vector3(), nm = new THREE.Matrix3();
+    Object.keys(byMat).forEach(function (k) {
+      var list = byMat[k];
+      if (list.length < 2) return;
+      var pos = [], nor = [], uv = [], idx = [], off = 0;
+      list.forEach(function (m) {
+        m.updateMatrix();
+        var g = m.geometry, mt = m.matrix, p = g.attributes.position, n = g.attributes.normal, u = g.attributes.uv;
+        nm.getNormalMatrix(mt);
+        for (var i = 0; i < p.count; i++) {
+          v.fromBufferAttribute(p, i).applyMatrix4(mt); pos.push(v.x, v.y, v.z);
+          v.fromBufferAttribute(n, i).applyMatrix3(nm).normalize(); nor.push(v.x, v.y, v.z);
+          uv.push(u.getX(i), u.getY(i));
+        }
+        for (var j = 0; j < g.index.count; j++) idx.push(g.index.getX(j) + off);
+        off += p.count;
+      });
+      var geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+      geo.setAttribute('normal', new THREE.Float32BufferAttribute(nor, 3));
+      geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+      geo.setIndex(idx);
+      geo.computeBoundingSphere();
+      var mesh = new THREE.Mesh(geo, list[0].material);
+      mesh.castShadow = list[0].castShadow; mesh.receiveShadow = true;
+      list.forEach(function (m) { group3.remove(m); m.geometry.dispose(); });
+      group3.add(mesh);
+    });
+  }
+
+  // Kare hızı düşükse çözünürlüğü biraz azalt, iyiyse geri artır
+  function adaptRes3(dt) {
+    if (!renderer3) return;
+    perf3.ema = perf3.ema * 0.95 + dt * 0.05;
+    perf3.cool -= dt;
+    if (perf3.cool > 0) return;
+    if (perf3.ema > 1 / 40 && perf3.pr > 0.7) { perf3.pr = Math.max(0.7, perf3.pr - 0.15); perf3.cool = 1.5; renderer3.setPixelRatio(perf3.pr); resize3(); }
+    else if (perf3.ema < 1 / 57 && perf3.pr < perf3.cap) { perf3.pr = Math.min(perf3.cap, perf3.pr + 0.1); perf3.cool = 3; renderer3.setPixelRatio(perf3.pr); resize3(); }
+  }
+  function setPerfCap3(cap) {
+    perf3.cap = cap; perf3.pr = cap; perf3.ema = 1 / 60; perf3.cool = 1;
+    if (renderer3) { renderer3.setPixelRatio(cap); resize3(); }
   }
 
   // ---- Oyun modu: tam ekran, dükkanın dışından başlar ----
@@ -1726,10 +2266,10 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     var hint = document.getElementById('hint3');
     if (!hint) return;
     hint.textContent = COARSE3
-      ? 'Sol 1/3: yürü (dokun ve sürükle) · Kalan alan: etrafa bak · Kapıya ya da dolaba dokun: aç / kapat · Sağ üstteki düğme: menü'
+      ? 'Sol 1/3: yürü · Kalan alan: bak · Kapıya / dolaba dokun: aç-kapat · Sağ alttaki düğmeler: ateş ve zıpla · II: menü'
       : (lockFailed
-        ? 'W A S D ya da oklar: yürü · Sürükle: etrafa bak · Kapıya ya da dolaba tıkla (veya E): aç / kapat · ESC: menü'
-        : 'Fare oyunda: etrafa bak · W A S D ya da oklar: yürü · Tık ya da E: ortadaki kapıyı / dolabı aç-kapat · ESC: menü');
+        ? 'W A S D: yürü · Sürükle: bak · Tık: ateş · Boşluk: zıpla · E: ortadaki kapı / dolap aç-kapat · ESC: menü'
+        : 'Fare oyunda: bak · W A S D: yürü · Sol tık: ateş · Boşluk: zıpla · E: ortadaki kapı / dolap aç-kapat · ESC: menü');
     hint.classList.remove('fade');
     clearTimeout(updateHint3.t);
     updateHint3.t = setTimeout(function () { hint.classList.add('fade'); }, 9000);
@@ -1758,7 +2298,8 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     document.getElementById('menu3').hidden = true;
     render3D();
     // Dışarıdan, kapının önündeki kaldırımdan başla; yüzün dükkana dönük
-    gez.x = (DOOR.x0 + DOOR.x1) / 2; gez.z = 8.4; gez.yaw = 0; gez.pitch = -0.04; gez.started = true;
+    gez.x = (DOOR.x0 + DOOR.x1) / 2; gez.z = 8.4; gez.y = 0; gez.vy = 0; gez.yaw = 0; gez.pitch = -0.04; gez.started = true;
+    setPerfCap3(Math.min(window.devicePixelRatio || 1, COARSE3 ? 1.25 : 1.5));
     startWalk();
     requestFs3(g);
     lockPointer3();
@@ -1774,6 +2315,7 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     var g = document.getElementById('game3');
     document.getElementById('stage3').appendChild(renderer3.domElement);
     g.hidden = true;
+    setPerfCap3(Math.min(window.devicePixelRatio || 1, 1.5));
     document.getElementById('menu3').hidden = true;
     resize3();
     if (is3D) render3D();
@@ -1797,20 +2339,27 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     var k = (e.key || '').toLowerCase();
     if (k === 'escape') { if (!isLocked3()) { if (gamePaused) resumeGame3(); else showMenu3(); } return; }
     if (gamePaused) return;
-    if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'e', ' '].indexOf(k) >= 0) e.preventDefault();
-    if ((k === 'e' || k === ' ') && !gez.keys[k]) {
+    if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'e', 'f', ' '].indexOf(k) >= 0) e.preventDefault();
+    if (k === 'e' && !gez.keys[k]) {
       var rc = renderer3.domElement.getBoundingClientRect();
       interact3(rc.left + rc.width / 2, rc.top + rc.height / 2);
     }
+    if (k === ' ' && !gez.keys[k]) jump3();
+    if (k === 'f' && !gez.keys[k]) fire3();
     gez.keys[k] = true;
   });
   window.addEventListener('keyup', function (e) { gez.keys[(e.key || '').toLowerCase()] = false; });
   window.addEventListener('blur', function () { gez.keys = {}; });
 
-  document.getElementById('v-game').addEventListener('click', enterGame3);
   document.getElementById('resume3').addEventListener('click', resumeGame3);
   document.getElementById('quit3').addEventListener('click', exitGame3);
   document.getElementById('pause3').addEventListener('click', function (e) { e.stopPropagation(); showMenu3(); });
+  ['fire3', 'jump3'].forEach(function (id) {
+    document.getElementById(id).addEventListener('pointerdown', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      if (id === 'fire3') fire3(); else jump3();
+    });
+  });
 
 
   function setView3Pressed(name) {
@@ -1877,10 +2426,13 @@ ul.list button[aria-pressed="true"] { border-color: var(--accent); box-shadow: i
     }
   }
 
+  // keremuysal.dev kopyası: plan sayfanın içine gömülü, sadece görüntüleme
   load();
-  renderAll();
   setReadOnly('Dükkanın son yerleşim planı. 3D görünümü açıp içinde dolaşabilirsin.');
+  renderAll();
 })();
 </script>
+
+
 
 </body></html>
