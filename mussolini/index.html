@@ -169,7 +169,7 @@ section.dimbg { background: #0E0C0B; animation: bgdim 4200ms ease both; animatio
 
 /* ---------- works cited ---------- */
 .wc { display: flex; flex-direction: column; gap: 12px; }
-.wc-i { font-size: 24px; line-height: 1.38; padding-left: 48px; }
+.wc-i { font-size: 24px; line-height: 1.38; padding-left: 48px; text-indent: -48px; }
 
 /* ---------- manifesto mapping ---------- */
 .map4 { display: flex; flex-direction: column; gap: 0px; }
@@ -179,6 +179,27 @@ section.dimbg { background: #0E0C0B; animation: bgdim 4200ms ease both; animatio
 .m4.d1 { transition-delay: 150ms; }
 .m4.d2 { transition-delay: 300ms; }
 .m4.d3 { transition-delay: 450ms; }
+
+/* ---------- source links ---------- */
+.links { display: flex; flex-direction: column; gap: 0px; }
+.lk { display: grid; grid-template-columns: 620px 1fr; gap: 32px; align-items: baseline; border-top: 2px solid #B8AE9C; padding: 14px 0px 14px 0px; }
+.lk-t { font-size: 28px; line-height: 1.3; font-weight: 600; color: var(--ink); }
+.lk-u { font-size: 28px; line-height: 1.3; }
+.lk-u a { color: var(--red); text-decoration: underline; }
+
+/* ---------- questions ---------- */
+.qa-spot { position: absolute; left: 1210px; top: 20px; width: 600px; height: 720px; opacity: 1; animation: qaspot 21s ease-in-out both; }
+@keyframes qaspot { 0%, 58% { opacity: 1; } 70%, 82% { opacity: 0.2; } 93%, 100% { opacity: 1; } }
+.qa-sil { position: absolute; left: 1300px; top: 100px; width: 420px; height: 562px; object-fit: contain; opacity: 0; animation: qasil 13.4s linear both; }
+@keyframes qasil { 0%, 99.5% { opacity: 1; } 100% { opacity: 0; } }
+.qa-parl { position: absolute; left: 1160px; top: 130px; width: 700px; height: 630px; opacity: 1; transform: translateY(0px); animation: qaparl 20s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes qaparl { 0%, 88% { opacity: 0; transform: translateY(70px); } 100% { opacity: 1; transform: translateY(0px); } }
+.qa-pole { position: absolute; left: 1507px; top: 22px; width: 6px; height: 110px; background: #8C8176; border-radius: 3px; transform-origin: center bottom; opacity: 1; transform: scaleY(1); animation: qapole 21s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes qapole { 0%, 95.2% { opacity: 0; transform: scaleY(0); } 95.5% { opacity: 1; } 100% { opacity: 1; transform: scaleY(1); } }
+.qa-flag { position: absolute; left: 1513px; top: 22px; width: 150px; height: 116px; transform-origin: left center; opacity: 0.85; transform: scaleX(1); animation: qaflag 21.8s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes qaflag { 0%, 96.3% { opacity: 0; transform: scaleX(0); } 100% { opacity: 0.85; transform: scaleX(1); } }
+.qa-balc { position: absolute; left: 1210px; top: 590px; width: 600px; height: 170px; opacity: 0; animation: qabalc 19s ease both; }
+@keyframes qabalc { 0%, 92% { opacity: 1; } 100% { opacity: 0; } }
 
 /* ===== player ===== */
 html, body { margin: 0; height: 100%; background: #0E0C0B; overflow: hidden; }
@@ -195,7 +216,7 @@ body { font-family: 'Public Sans', Arial, sans-serif; -webkit-font-smoothing: an
 /* the cover's map is meant to stay faint: end its fade-in at the resting opacity */
 @keyframes mapfaint { from { opacity: 0; } to { opacity: 0.14; } }
 #stage .cover-map { animation-name: mapfaint; }
-#stage .embed iframe { display: block; width: 100%; height: 100%; border: 0; background: transparent; }
+#stage .embed iframe { display: block; width: 100%; height: 100%; border: 0; background: transparent; pointer-events: none; }
 
 #hud { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; gap: 16px;
   padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
@@ -251,7 +272,7 @@ body { font-family: 'Public Sans', Arial, sans-serif; -webkit-font-smoothing: an
 <div class="step rise" style="--i:4"><p class="step-y">1914</p><p class="step-t">Breaks with the Socialists over the war: leaves <i>Avanti!</i>, is expelled from the party and takes over <i>Il Popolo d’Italia</i></p></div>
 </div>
 <div class="spacer"></div>
-<p class="src">Britannica, “Benito Mussolini”</p>
+<p class="src">Foot and Hibbert</p>
 <aside>~25 s. Short: context only. One idea: he started on the left, as a Socialist journalist, and in 1914 he turned around. What stayed constant was not an idea but the man. Frame it as the first hint of the thesis: loyalty would go to a person, not to a set of beliefs.</aside>
 </section>
 <section id="rome" class="stone" data-transition="fade">
@@ -501,7 +522,7 @@ requestAnimationFrame(frame);
 </div>
 <div class="spacer"></div>
 <p class="lead rise" style="--i:8">One vote in his own Grand Council, and within a day the man who was “always right” was under arrest.</p>
-<p class="src">Britannica, “Benito Mussolini”, “Giacomo Matteotti”</p>
+<p class="src">Foot and Hibbert; Britannica, “Giacomo Matteotti”</p>
 <aside>~20 s. Do not read the boxes. The two red years carry the story: 1925, the dictatorship begins; 1943, it ends. Put the weight on 1943: his own Grand Council voted against him and the king had him arrested. Twenty years of “always right” ended without a fight; the obedience turned out to be thinner than the slogans claimed. That supports Forster’s sentence and is the bridge to the conclusion. One spoken sentence for 1943–45: rescued by the Germans, Mussolini headed a puppet state in the north until the end.</aside>
 </section>
 <section id="close" class="char" data-transition="fade">
@@ -515,16 +536,120 @@ requestAnimationFrame(frame);
 </div>
 <div class="spacer"></div>
 <p class="lead fragment" data-fragment-index="5">The man on the balcony needed a crowd. A crowd is still made of single people.</p>
-<aside>~35 s. Restate the thesis through the four points, one click each: the first three are what the regime did, the fourth is what it could not do. End on Forster: the hope that individuality survives even the most total regime. Fifth click: the closing line appears on screen as you say it: “The man on the balcony needed a crowd. Forster reminds us that a crowd is still made of single people.” Pause, thank the class, and ask for questions yourself; then move to Works Cited for the Q&amp;A. Total target: about 7:20.</aside>
+<aside>~35 s. Restate the thesis through the four points, one click each: the first three are what the regime did, the fourth is what it could not do. End on Forster: the hope that individuality survives even the most total regime. Fifth click: the closing line appears on screen as you say it: “The man on the balcony needed a crowd. Forster reminds us that a crowd is still made of single people.” Pause, thank the class, and ask for questions yourself; then click to the Questions slide and leave it up for the Q&amp;A. Total target: about 7:20.</aside>
+</section>
+<section id="qa" class="char" data-transition="fade">
+<div class="embed" style="position:absolute; left:0px; top:0px; width:1920px; height:1080px;" data-srcdoc="&lt;style&gt;html,body{margin:0;background:transparent;overflow:hidden}canvas{display:block;width:1920px;height:1080px}&lt;/style&gt;&lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;&lt;script&gt;
+(()=&gt;{
+const W=1920,H=1080,cv=document.getElementById(&#x27;c&#x27;),dp=Math.min(1.5,window.devicePixelRatio||1);
+cv.width=W*dp;cv.height=H*dp;const g=cv.getContext(&#x27;2d&#x27;);g.scale(dp,dp);
+let sd=11;const rnd=()=&gt;(sd=sd*16807%2147483647)/2147483647;
+const END=25.5,cl=v=&gt;v&lt;0?0:v&gt;1?1:v,ez=u=&gt;u&lt;.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
+const GOLD=[233,196,106],ROW=[[94,86,80],[70,64,59],[46,41,38]];
+const mix=(a,b,k)=&gt;&#x27;rgb(&#x27;+a.map((v,i)=&gt;Math.round(v+(b[i]-v)*k))+&#x27;)&#x27;;
+/* the crowd: three ranks seen from behind, facing the balcony */
+const F=[];
+for(let r=0;r&lt;3;r++){const y=800+r*72,o=r%2?32:0;for(let x=44+o;x&lt;W-24;x+=64)F.push({x,y,r,t:3+rnd()*8,dx:(rnd()-.5)*230,dy:(rnd()-.5)*44,bt:20.6+rnd()*1.4,jx:(rnd()-.5)*22,jy:(rnd()-.5)*12});}
+function fig(x,y,col,glow){g.save();g.translate(x,y);g.fillStyle=col;
+if(glow&gt;0){g.shadowColor=&#x27;rgba(233,196,106,&#x27;+(.8*glow)+&#x27;)&#x27;;g.shadowBlur=16;}
+g.beginPath();g.arc(0,21,13,0,7);g.fill();g.beginPath();g.moveTo(-24,72);g.quadraticCurveTo(-24,37,0,37);g.quadraticCurveTo(24,37,24,72);g.closePath();g.fill();g.restore();}
+/* the slogan on the wall, letter by letter, fitted to the space left of the balcony */
+const TXT=&#x27;MUSSOLINI HA SEMPRE RAGIONE&#x27;,X0=128,Y0=168,FONT=&#x27; Impact, &quot;Arial Narrow&quot;, &quot;Helvetica Neue&quot;, sans-serif&#x27;;
+g.font=&#x27;700 74px&#x27;+FONT;let tw=0;for(const ch of TXT)tw+=g.measureText(ch).width+6;
+const FS=Math.min(74,Math.floor(74*1040/tw));g.font=&#x27;700 &#x27;+FS+&#x27;px&#x27;+FONT;
+const L=[];let x=X0,n=0;
+for(const ch of TXT){const w=g.measureText(ch).width+6;if(ch!==&#x27; &#x27;){const fl=[];for(let k=0;k&lt;7;k++)fl.push([rnd()*w,-rnd()*FS*.8,.6+rnd()*.8,2+rnd()*4]);L.push({ch,x,w,t:2.5+rnd()*8.5,q:n%3===1,fl});n++;}x+=w;}
+let t0=null;
+function frame(now){
+if(t0===null)t0=now;const t=(now-t0)/1000;
+g.clearRect(0,0,W,H);
+g.fillStyle=&#x27;rgba(237,230,214,0.035)&#x27;;g.fillRect(0,64,x+80,138);
+g.textBaseline=&#x27;alphabetic&#x27;;g.font=&#x27;700 &#x27;+FS+&#x27;px&#x27;+FONT;
+for(const l of L){
+ const la=1-cl((t-l.t)/1.4);
+ if(la&gt;0){g.fillStyle=&#x27;rgba(168,35,28,&#x27;+(.62*la)+&#x27;)&#x27;;g.fillText(l.ch,l.x,Y0);}
+ const v=cl((t-l.t)/2.6);
+ if(v&gt;0&amp;&amp;v&lt;1){for(const f of l.fl){g.fillStyle=&#x27;rgba(168,35,28,&#x27;+(.55*(1-v))+&#x27;)&#x27;;g.fillRect(l.x+f[0],Y0+f[1]+300*f[2]*v*v,f[3],f[3]);}}
+ if(l.q){const qa=ez(cl((t-l.t-1)/1.6));if(qa&gt;0){g.fillStyle=&#x27;rgba(201,162,74,&#x27;+(.8*qa)+&#x27;)&#x27;;g.fillText(&#x27;?&#x27;,l.x,Y0);}}
+}
+/* once: grey ranks turn gold and step out; after the flag goes up they gather again, as individuals */
+const P=F.map(f=&gt;{const a=ez(cl((t-f.t)/1.2)),out=ez(cl((t-f.t-.5)/4)),bk=ez(cl((t-f.bt)/2.6));
+ return{x:f.x+f.dx*out*(1-bk)+f.jx*bk,y:f.y+f.dy*out*(1-bk)+f.jy*bk,r:f.r,a};}).sort((p,q)=&gt;p.y-q.y);
+for(const p of P)fig(p.x,p.y,mix(ROW[p.r],GOLD,p.a),p.a);
+if(t&lt;END)requestAnimationFrame(frame);}
+requestAnimationFrame(frame);
+})();
+&lt;/script&gt;"></div>
+<svg class="qa-spot" aria-label="Spotlight on the balcony" width="600" height="720" viewBox="0 0 600 720" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="qsp" cx="300" cy="300" r="320" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#EDE6D6" stop-opacity="0.55"/><stop offset="0.6" stop-color="#EDE6D6" stop-opacity="0.14"/><stop offset="1" stop-color="#EDE6D6" stop-opacity="0"/></radialGradient></defs><ellipse cx="300" cy="320" rx="300" ry="360" fill="url(#qsp)"/></svg>
+<svg class="qa-parl" aria-label="Palazzo Montecitorio, seat of the Italian Chamber of Deputies" width="700" height="630" viewBox="0 0 700 630" xmlns="http://www.w3.org/2000/svg"><rect x="322" y="0" width="56" height="52" fill="#433B37"/><path d="M336 52 V26 A14 14 0 0 1 364 26 V52 Z" fill="#1A1716"/><rect x="290" y="50" width="120" height="92" fill="#433B37"/><circle cx="350" cy="96" r="26" fill="#201B19" stroke="#57504A" stroke-width="3"/><path d="M350 96 V78 M350 96 H364" stroke="#57504A" stroke-width="3" stroke-linecap="round"/><rect x="220" y="140" width="260" height="42" fill="#57504A"/><rect x="0" y="180" width="700" height="450" fill="#3A3330"/><rect x="220" y="180" width="260" height="450" fill="#433B37"/><rect x="-8" y="172" width="716" height="12" fill="#57504A"/><rect x="0" y="330" width="700" height="8" fill="#57504A"/><rect x="0" y="472" width="700" height="8" fill="#57504A"/><rect x="26" y="206" width="36" height="96" fill="#201B19"/><rect x="21" y="197" width="46" height="5" fill="#57504A"/><rect x="92" y="206" width="36" height="96" fill="#201B19"/><rect x="87" y="197" width="46" height="5" fill="#57504A"/><rect x="158" y="206" width="36" height="96" fill="#201B19"/><rect x="153" y="197" width="46" height="5" fill="#57504A"/><rect x="252" y="206" width="36" height="96" fill="#201B19"/><rect x="247" y="197" width="46" height="5" fill="#57504A"/><rect x="328" y="206" width="44" height="96" fill="#201B19"/><rect x="323" y="197" width="54" height="5" fill="#57504A"/><rect x="412" y="206" width="36" height="96" fill="#201B19"/><rect x="407" y="197" width="46" height="5" fill="#57504A"/><rect x="506" y="206" width="36" height="96" fill="#201B19"/><rect x="501" y="197" width="46" height="5" fill="#57504A"/><rect x="572" y="206" width="36" height="96" fill="#201B19"/><rect x="567" y="197" width="46" height="5" fill="#57504A"/><rect x="638" y="206" width="36" height="96" fill="#201B19"/><rect x="633" y="197" width="46" height="5" fill="#57504A"/><rect x="26" y="352" width="36" height="92" fill="#201B19"/><rect x="21" y="343" width="46" height="5" fill="#57504A"/><rect x="92" y="352" width="36" height="92" fill="#201B19"/><rect x="87" y="343" width="46" height="5" fill="#57504A"/><rect x="158" y="352" width="36" height="92" fill="#201B19"/><rect x="153" y="343" width="46" height="5" fill="#57504A"/><rect x="252" y="352" width="36" height="92" fill="#201B19"/><rect x="247" y="343" width="46" height="5" fill="#57504A"/><rect x="328" y="352" width="44" height="92" fill="#201B19"/><rect x="323" y="343" width="54" height="5" fill="#57504A"/><rect x="412" y="352" width="36" height="92" fill="#201B19"/><rect x="407" y="343" width="46" height="5" fill="#57504A"/><rect x="506" y="352" width="36" height="92" fill="#201B19"/><rect x="501" y="343" width="46" height="5" fill="#57504A"/><rect x="572" y="352" width="36" height="92" fill="#201B19"/><rect x="567" y="343" width="46" height="5" fill="#57504A"/><rect x="638" y="352" width="36" height="92" fill="#201B19"/><rect x="633" y="343" width="46" height="5" fill="#57504A"/><rect x="26" y="500" width="36" height="84" fill="#201B19"/><rect x="92" y="500" width="36" height="84" fill="#201B19"/><rect x="158" y="500" width="36" height="84" fill="#201B19"/><path d="M248 630 V522 A22 22 0 0 1 292 522 V630 Z" fill="#201B19"/><path d="M328 630 V522 A22 22 0 0 1 372 522 V630 Z" fill="#201B19"/><path d="M408 630 V522 A22 22 0 0 1 452 522 V630 Z" fill="#201B19"/><rect x="506" y="500" width="36" height="84" fill="#201B19"/><rect x="572" y="500" width="36" height="84" fill="#201B19"/><rect x="638" y="500" width="36" height="84" fill="#201B19"/></svg>
+<div class="qa-pole"></div>
+<svg class="qa-flag" aria-label="The flag of the Italian Republic flying over the parliament" width="150" height="116" viewBox="0 0 150 116" xmlns="http://www.w3.org/2000/svg"><path fill="#62806B" d="M0.0 8.0 L12.5 8.3 L25.0 8.8 L37.5 9.1 L50.0 8.5 L50.0 108.5 L37.5 109.1 L25.0 108.8 L12.5 108.3 L0.0 108.0 Z"><animate attributeName="d" values="M0.0 8.0 L12.5 8.3 L25.0 8.8 L37.5 9.1 L50.0 8.5 L50.0 108.5 L37.5 109.1 L25.0 108.8 L12.5 108.3 L0.0 108.0 Z;M0.0 8.0 L12.5 7.6 L25.0 7.5 L37.5 8.1 L50.0 9.2 L50.0 109.2 L37.5 108.1 L25.0 107.5 L12.5 107.6 L0.0 108.0 Z;M0.0 8.0 L12.5 8.1 L25.0 7.7 L37.5 6.9 L50.0 6.4 L50.0 106.4 L37.5 106.9 L25.0 107.7 L12.5 108.1 L0.0 108.0 Z;M0.0 8.0 L12.5 8.3 L25.0 8.8 L37.5 9.1 L50.0 8.5 L50.0 108.5 L37.5 109.1 L25.0 108.8 L12.5 108.3 L0.0 108.0 Z" dur="2.6s" repeatCount="indefinite"/></path><path fill="#CFC9BC" d="M50.0 8.5 L62.5 7.1 L75.0 5.7 L87.5 5.2 L100.0 6.2 L100.0 106.2 L87.5 105.2 L75.0 105.7 L62.5 107.1 L50.0 108.5 Z"><animate attributeName="d" values="M50.0 8.5 L62.5 7.1 L75.0 5.7 L87.5 5.2 L100.0 6.2 L100.0 106.2 L87.5 105.2 L75.0 105.7 L62.5 107.1 L50.0 108.5 Z;M50.0 9.2 L62.5 10.1 L75.0 10.0 L87.5 8.7 L100.0 6.5 L100.0 106.5 L87.5 108.7 L75.0 110.0 L62.5 110.1 L50.0 109.2 Z;M50.0 6.4 L62.5 6.8 L75.0 8.2 L87.5 10.1 L100.0 11.3 L100.0 111.3 L87.5 110.1 L75.0 108.2 L62.5 106.8 L50.0 106.4 Z;M50.0 8.5 L62.5 7.1 L75.0 5.7 L87.5 5.2 L100.0 6.2 L100.0 106.2 L87.5 105.2 L75.0 105.7 L62.5 107.1 L50.0 108.5 Z" dur="2.6s" repeatCount="indefinite"/></path><path fill="#94524F" d="M100.0 6.2 L112.5 8.5 L125.0 11.1 L137.5 12.6 L150.0 11.8 L150.0 111.8 L137.5 112.6 L125.0 111.1 L112.5 108.5 L100.0 106.2 Z"><animate attributeName="d" values="M100.0 6.2 L112.5 8.5 L125.0 11.1 L137.5 12.6 L150.0 11.8 L150.0 111.8 L137.5 112.6 L125.0 111.1 L112.5 108.5 L100.0 106.2 Z;M100.0 6.5 L112.5 4.5 L125.0 4.1 L137.5 5.7 L150.0 8.9 L150.0 108.9 L137.5 105.7 L125.0 104.1 L112.5 104.5 L100.0 106.5 Z;M100.0 11.3 L112.5 10.9 L125.0 8.8 L137.5 5.7 L150.0 3.3 L150.0 103.3 L137.5 105.7 L125.0 108.8 L112.5 110.9 L100.0 111.3 Z;M100.0 6.2 L112.5 8.5 L125.0 11.1 L137.5 12.6 L150.0 11.8 L150.0 111.8 L137.5 112.6 L125.0 111.1 L112.5 108.5 L100.0 106.2 Z" dur="2.6s" repeatCount="indefinite"/></path></svg>
+<img class="qa-sil" src="portrait.png" onerror="this.remove()" alt="Stylised portrait of Mussolini standing on a balcony">
+<div class="embed" style="position:absolute; left:1032px; top:40px; width:760px; height:720px;" data-srcdoc="&lt;style&gt;html,body{margin:0;background:transparent;overflow:hidden}canvas{display:block;width:760px;height:720px}&lt;/style&gt;&lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;&lt;script&gt;
+(()=&gt;{
+const W=760,H=720,cv=document.getElementById(&#x27;c&#x27;),dp=Math.min(2,window.devicePixelRatio||1);
+cv.width=W*dp;cv.height=H*dp;const g=cv.getContext(&#x27;2d&#x27;);g.scale(dp,dp);
+const mk=document.createElement(&#x27;canvas&#x27;);mk.width=W*dp;mk.height=H*dp;const m=mk.getContext(&#x27;2d&#x27;);m.scale(dp,dp);
+const IX=268,IY=60,IW=420,IH=562,CX=IX+205,CY=IY+235,T0=11.4,TB=13.7,TE=16.8,GR=900;
+let sd=5;const rnd=()=&gt;(sd=sd*16807%2147483647)/2147483647,cl=v=&gt;v&lt;0?0:v&gt;1?1:v;
+const im=new Image();im.src=&#x27;data:image/webp;base64,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&#x27;;
+/* glass: jagged rays from the impact point, crossed by rings */
+const NR=15,RR=[0,34,82,150,240,360,520],V=[],A=[];
+for(let k=0;k&lt;NR;k++)A.push((k+.15+rnd()*.7)/NR*6.2832);
+for(let k=0;k&lt;NR;k++){V.push([]);for(let j=0;j&lt;RR.length;j++){const r=RR[j]*(j?.82+rnd()*.36:0),a=A[k]+(j?(rnd()-.5)*.16:0);V[k].push([CX+Math.cos(a)*r,CY+Math.sin(a)*r]);}}
+const S=[];
+for(let k=0;k&lt;NR;k++){const k2=(k+1)%NR;for(let j=0;j&lt;RR.length-1;j++){
+ const p=j?[V[k][j],V[k2][j],V[k2][j+1],V[k][j+1]]:[V[k][0],V[k2][1],V[k][1]];
+ let cx=0,cy=0;for(const q of p){cx+=q[0];cy+=q[1];}cx/=p.length;cy/=p.length;
+ const dx=cx-CX,dy=cy-CY,l=Math.hypot(dx,dy)||1,sp=90+rnd()*160;
+ S.push({p,cx,cy,vx:dx/l*sp+(rnd()-.5)*70,vy:dy/l*sp*.5-90-rnd()*120,w:(rnd()-.5)*5,d:j*.045+rnd()*.1});}}
+function path(c,p){c.beginPath();c.moveTo(p[0][0],p[0][1]);for(let i=1;i&lt;p.length;i++)c.lineTo(p[i][0],p[i][1]);c.closePath();}
+function seg(c,a,b,f){c.moveTo(a[0],a[1]);c.lineTo(a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f);}
+let t0=null;
+function frame(now){
+ if(t0===null)t0=now;const t=(now-t0)/1000;
+ g.clearRect(0,0,W,H);
+ if(im.complete&amp;&amp;im.naturalWidth&amp;&amp;t&gt;=T0){
+  if(t&lt;TB){
+   if(t&gt;13.1)g.drawImage(im,IX,IY,IW,IH);
+   /* cracks spread, then rings join them; drawn only where the figure is */
+   m.globalCompositeOperation=&#x27;source-over&#x27;;m.clearRect(0,0,W,H);m.beginPath();
+   const pr=cl((t-T0)/.7)*(RR.length-1);
+   for(let k=0;k&lt;NR;k++)for(let j=0;j&lt;RR.length-1;j++){const f=cl(pr-j);if(f&gt;0)seg(m,V[k][j],V[k][j+1],f);}
+   for(let j=1;j&lt;RR.length-1;j++){const f=cl((t-T0-.45-j*.16)/.35);if(f&gt;0)for(let k=0;k&lt;NR;k++)seg(m,V[k][j],V[(k+1)%NR][j],f);}
+   m.strokeStyle=&#x27;rgba(14,12,11,.7)&#x27;;m.lineWidth=3;m.stroke();
+   m.strokeStyle=&#x27;rgba(244,240,230,.9)&#x27;;m.lineWidth=1.4;m.stroke();
+   m.globalCompositeOperation=&#x27;destination-in&#x27;;m.drawImage(im,IX,IY,IW,IH);
+   g.drawImage(mk,0,0,W,H);
+   const gl=1-cl((t-T0)/.35);if(gl&gt;0){const r=g.createRadialGradient(CX,CY,0,CX,CY,70);r.addColorStop(0,&#x27;rgba(244,240,230,&#x27;+(.6*gl)+&#x27;)&#x27;);r.addColorStop(1,&#x27;rgba(244,240,230,0)&#x27;);g.fillStyle=r;g.fillRect(CX-70,CY-70,140,140);}
+  }else if(t&lt;TE){
+   /* the pane gives way: shards fly out and fall */
+   for(const s of S){const u=Math.max(0,t-TB-s.d),a=1-cl((u-.9)/1);if(a&lt;=0)continue;
+    g.save();g.globalAlpha=a;g.translate(s.cx+s.vx*u,s.cy+s.vy*u+.5*GR*u*u);g.rotate(s.w*u);g.translate(-s.cx,-s.cy);
+    path(g,s.p);g.save();g.clip();g.drawImage(im,IX,IY,IW,IH);g.restore();
+    g.restore();}
+  }else{return;}
+ }
+ requestAnimationFrame(frame);}
+requestAnimationFrame(frame);
+})();
+&lt;/script&gt;"></div>
+<svg class="qa-balc" aria-label="Stone balcony" width="600" height="170" viewBox="0 0 600 170" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="600" height="24" fill="#3B3430"/><rect x="0" y="0" width="600" height="4" fill="#5E5650"/><g fill="#2A2522"><rect x="18" y="24" width="24" height="104" rx="9"/><rect x="66" y="24" width="24" height="104" rx="9"/><rect x="114" y="24" width="24" height="104" rx="9"/><rect x="162" y="24" width="24" height="104" rx="9"/><rect x="210" y="24" width="24" height="104" rx="9"/><rect x="258" y="24" width="24" height="104" rx="9"/><rect x="306" y="24" width="24" height="104" rx="9"/><rect x="354" y="24" width="24" height="104" rx="9"/><rect x="402" y="24" width="24" height="104" rx="9"/><rect x="450" y="24" width="24" height="104" rx="9"/><rect x="498" y="24" width="24" height="104" rx="9"/><rect x="546" y="24" width="24" height="104" rx="9"/></g><rect x="0" y="128" width="600" height="20" fill="#3B3430"/><rect x="0" y="148" width="600" height="22" fill="#221E1C"/></svg>
+<div class="spacer"></div>
+<p class="eyebrow rise" style="--i:0">Q &amp; A</p>
+<h1 class="rise" style="--i:1">Questions?</h1>
+<div class="spacer"></div>
+<div style="height:200px;"></div>
+<aside>Q&amp;A slide. It plays once, in about 25 seconds, and then holds: the slogan on the wall flakes away into question marks; the grey crowd turns gold, steps out of the ranks and stands still; the portrait on the balcony cracks like a pane of glass and shatters; in its place the Italian parliament rises (Palazzo Montecitorio, seat of the Chamber of Deputies), with the flag of today’s Republic waving over it; the crowd gathers again in front of it. If asked: today’s flag, without the Savoy arms, is the flag of the Republic founded by the 1946 referendum, so the scene stands for what came after Fascism, not for 1945 itself. If the instructor asks about sources, click once for Works Cited and once more for the links.</aside>
 </section>
 <section id="works">
 <h2>Works Cited</h2>
 <div class="wc">
 <p class="wc-i">American Humanist Association. <i>Humanist Manifesto II</i>. 1973.</p>
-<p class="wc-i">Britannica, The Editors of Encyclopaedia. “Benito Mussolini.” <i>Encyclopædia Britannica</i>, www.britannica.com/biography/Benito-Mussolini.</p>
-<p class="wc-i">---. “Giacomo Matteotti.” <i>Encyclopædia Britannica</i>, www.britannica.com/biography/Giacomo-Matteotti.</p>
-<p class="wc-i">---. “March on Rome.” <i>Encyclopædia Britannica</i>, www.britannica.com/event/March-on-Rome.</p>
+<p class="wc-i">Britannica, The Editors of Encyclopaedia. “Giacomo Matteotti.” <i>Encyclopædia Britannica</i>, 6 June 2026, www.britannica.com/biography/Giacomo-Matteotti. Accessed 15 Nov. 2026.</p>
+<p class="wc-i">Britannica, The Editors of Encyclopaedia. “March on Rome.” <i>Encyclopædia Britannica</i>, 29 Oct. 2026, www.britannica.com/event/March-on-Rome. Accessed 15 Nov. 2026.</p>
 <p class="wc-i">Clark, Martin, et al. “Fascist Party.” <i>Encyclopædia Britannica</i>, www.britannica.com/topic/Fascist-Party.</p>
+<p class="wc-i">Foot, John, and Christopher Hibbert. “Benito Mussolini.” <i>Encyclopædia Britannica</i>, 26 Sept. 2026, www.britannica.com/biography/Benito-Mussolini. Accessed 15 Nov. 2026.</p>
 <p class="wc-i">Forster, E. M. “What I Believe.” 1939. Course text.</p>
 <p class="wc-i">Fromm, Erich. “Humanistic Ethics.” <i>Man for Himself</i>, 1947. Abridged course text.</p>
 <p class="wc-i">“Italy: The Fascist Era.” <i>Encyclopædia Britannica</i>, www.britannica.com/place/Italy/The-Fascist-era.</p>
@@ -533,6 +658,22 @@ requestAnimationFrame(frame);
 <p class="wc-i">“Stylised Portrait of Mussolini in a Peaked Cap and Uniform.” <i>Gemini</i>, Hydrogen 4 model, Google, 13 Nov. 2026, gemini.google.com.</p>
 </div>
 <aside>Leave on screen during Q&amp;A. The Manifesto is cited with the American Humanist Association as author. The cover portrait was generated with Gemini on 13 November 2026.</aside>
+</section>
+<section id="links" class="stone" data-transition="fade">
+<p class="eyebrow rise" style="--i:0">Sources online</p>
+<h2 class="rise" style="--i:1">Read them yourself</h2>
+<div class="links rise" style="--i:2">
+<div class="lk"><p class="lk-t">Britannica · Benito Mussolini</p><p class="lk-u"><a target="_blank" rel="noopener" href="https://www.britannica.com/biography/Benito-Mussolini">britannica.com/biography/Benito-Mussolini</a></p></div>
+<div class="lk"><p class="lk-t">Britannica · Giacomo Matteotti</p><p class="lk-u"><a target="_blank" rel="noopener" href="https://www.britannica.com/biography/Giacomo-Matteotti">britannica.com/biography/Giacomo-Matteotti</a></p></div>
+<div class="lk"><p class="lk-t">Britannica · March on Rome</p><p class="lk-u"><a target="_blank" rel="noopener" href="https://www.britannica.com/event/March-on-Rome">britannica.com/event/March-on-Rome</a></p></div>
+<div class="lk"><p class="lk-t">Britannica · Fascist Party</p><p class="lk-u"><a target="_blank" rel="noopener" href="https://www.britannica.com/topic/Fascist-Party">britannica.com/topic/Fascist-Party</a></p></div>
+<div class="lk"><p class="lk-t">Britannica · Italy: The Fascist era</p><p class="lk-u"><a target="_blank" rel="noopener" href="https://www.britannica.com/place/Italy/The-Fascist-era">britannica.com/place/Italy/The-Fascist-era</a></p></div>
+<div class="lk"><p class="lk-t">The Doctrine of Fascism</p><p class="lk-u"><a target="_blank" rel="noopener" href="https://www.gutenberg.org/ebooks/14058">gutenberg.org/ebooks/14058</a></p></div>
+<div class="lk"><p class="lk-t">Humanist Manifesto II</p><p class="lk-u"><a target="_blank" rel="noopener" href="https://americanhumanist.org/?p=372">americanhumanist.org/?p=372</a></p></div>
+</div>
+<div class="spacer"></div>
+<p class="note rise" style="--i:3">Forster and Fromm: ENG 101 course texts · Koon: print book, ISBN 978-0-8078-1652-3</p>
+<aside>Optional slide after Works Cited: every source that can be read online, as clickable links. Forster and Fromm are course texts and Koon is a print book, so they have no link.</aside>
 </section>
 </main>
 <div id="notes" role="note"></div>
