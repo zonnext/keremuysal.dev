@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Man on the Balcony — Kerem Uysal</title>
+<meta name="description" content="Mussolini, the cult of the leader and the erasure of the individual. An animated talk for ENG 101 at Bilkent University, by Kerem Uysal.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Public+Sans:wght@400;600&display=swap">
+<style>
+/* ===== deck styles (identical to the original deck) ===== */
+:root {
+  --char: #1A1716;
+  --char2: #2A2522;
+  --stone: #D8CFBE;
+  --cream: #EDE6D6;
+  --ink: #1A1716;
+  --muted: #4B4540;
+  --mutedd: #C9C0AE;
+  --red: #A8231C;
+  --ochre: #C9A24A;
+}
+
+section {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Public Sans', Arial, sans-serif;
+  padding: 128px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+section.char { background: var(--char); color: var(--cream); }
+section.stone { background: var(--stone); }
+
+h1 { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 128px; font-weight: 700; line-height: 1.0; text-transform: uppercase; }
+h2 { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 76px; font-weight: 600; line-height: 1.08; text-transform: uppercase; }
+
+.eyebrow { font-size: 26px; font-weight: 600; letter-spacing: 5px; text-transform: uppercase; color: var(--red); }
+.char .eyebrow { color: var(--ochre); }
+.lead { font-size: 38px; line-height: 1.38; color: var(--muted); }
+.char .lead { color: var(--mutedd); }
+.note { font-size: 28px; line-height: 1.42; color: var(--muted); }
+.char .note { color: var(--mutedd); }
+.src { font-size: 24px; color: var(--muted); }
+.char .src { color: var(--mutedd); }
+.quote { font-size: 40px; line-height: 1.32; font-style: italic; }
+.spacer { flex: 1; }
+.col { width: 760px; display: flex; flex-direction: column; gap: 28px; }
+
+/* ---------- motion ---------- */
+@keyframes rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0px); } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes lightup { 0% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes silrise { 0% { opacity: 0; transform: translateY(60px) scale(1.05); } 100% { opacity: 1; transform: translateY(0px) scale(1); } }
+@keyframes mapin { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: scale(1); } }
+.rise { --i: 0; animation: rise 800ms cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--i) * 160ms); }
+.fragment { opacity: 0; transform: translateY(18px); transition: opacity 450ms ease, transform 450ms ease; }
+.fragment.visible { opacity: 1; transform: translateY(0px); }
+.fragment.current-fragment { opacity: 1; }
+
+/* ---------- cover ---------- */
+.cover-map { position: absolute; left: 980px; top: 53px; width: 825px; height: 974px; opacity: 0.14; animation: fade 2000ms ease both; }
+.cover-spot { position: absolute; left: 1000px; top: 90px; width: 800px; height: 940px; animation: lightup 1600ms ease both; animation-delay: 300ms; }
+.cover-sil { position: absolute; left: 1049px; top: 140px; width: 702px; height: 940px; object-fit: contain; animation: silrise 1800ms cubic-bezier(.2,.7,.2,1) both; animation-delay: 900ms; }
+.cover-bar { width: 200px; border-top: 10px solid var(--red); }
+
+/* ---------- map slides ---------- */
+.map { position: absolute; left: 967px; top: 53px; width: 825px; height: 974px; }
+.map-in { animation: mapin 1400ms cubic-bezier(.2,.7,.2,1) both; }
+.overlay { position: absolute; left: 967px; top: 53px; width: 825px; height: 974px; }
+.maplabel { position: absolute; font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 30px; font-weight: 600; text-transform: uppercase; color: var(--red); white-space: nowrap; }
+.maplabel.ink { color: var(--ink); }
+.step { display: flex; flex-direction: column; gap: 6px; border-left: 6px solid var(--red); padding-left: 24px; }
+.step-y { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 34px; font-weight: 600; color: var(--red); }
+.step-t { font-size: 28px; line-height: 1.4; }
+
+/* ---------- thesis ---------- */
+.statement { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 64px; font-weight: 500; line-height: 1.22; color: var(--ink); }
+.redbar { width: 240px; border-top: 12px solid var(--red); }
+
+.char .statement { color: var(--cream); }
+.hl { color: var(--red); }
+.char .hl { color: var(--ochre); }
+@keyframes barin { from { opacity: 0; transform: scaleX(0); } to { opacity: 1; transform: scaleX(1); } }
+.barin { transform-origin: left center; animation: barin 900ms cubic-bezier(.2,.7,.2,1) both; }
+
+/* ---------- slogans ---------- */
+.note b { color: var(--red); font-weight: 600; }
+.slogans { display: flex; flex-direction: column; gap: 8px; }
+.slogan { display: flex; flex-direction: row; align-items: baseline; gap: 40px; }
+.sl-w { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 160px; font-weight: 700; line-height: 1.0; letter-spacing: 4px; color: var(--ink); }
+.sl-w.red { color: var(--red); }
+.sl-t { font-size: 34px; color: var(--muted); }
+.slogan.fragment { opacity: 0; transform: scale(1.25); transition: opacity 350ms ease, transform 350ms cubic-bezier(.2,.7,.2,1); }
+.slogan.fragment.visible { opacity: 1; transform: scale(1); }
+
+/* ---------- doctrine flip ---------- */
+.flipzone { position: relative; width: 640px; height: 560px; }
+.box-state { position: absolute; left: 0px; top: 0px; width: 640px; height: 250px; box-sizing: border-box; background: var(--char); color: var(--cream); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 96px; font-weight: 700; letter-spacing: 6px; animation: stateup 1800ms cubic-bezier(.65,0,.35,1) both; animation-delay: 1200ms; }
+.box-ind { position: absolute; left: 160px; top: 330px; width: 320px; height: 150px; box-sizing: border-box; background: var(--cream); color: var(--ink); border: 4px solid var(--ink); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 44px; font-weight: 600; letter-spacing: 3px; animation: inddown 1800ms cubic-bezier(.65,0,.35,1) both; animation-delay: 1200ms; }
+.flip-arrow { position: absolute; left: 290px; top: 262px; width: 60px; height: 56px; background: var(--red); }
+@keyframes stateup { 0% { transform: translateY(330px) scale(0.6); background-color: #6E6660; } 100% { transform: translateY(0px) scale(1); background-color: #1A1716; } }
+@keyframes inddown { 0% { transform: translateY(-330px) scale(1.6); } 100% { transform: translateY(0px) scale(1); } }
+.row2 { display: flex; flex-direction: row; gap: 96px; align-items: flex-start; }
+.qblock { display: flex; flex-direction: column; gap: 12px; border-left: 8px solid var(--red); padding-left: 32px; }
+.char .qblock { border-left: 8px solid var(--ochre); }
+
+/* ---------- cult ---------- */
+.cult-quote { font-size: 34px; }
+section.dimbg { background: #0E0C0B; animation: bgdim 4200ms ease both; animation-delay: 1400ms; }
+@keyframes bgdim { from { background-color: #2A2522; } to { background-color: #0E0C0B; } }
+.cult-title { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 96px; font-weight: 700; line-height: 1.0; color: var(--red); text-transform: uppercase; }
+.crowd { display: flex; flex-direction: column; gap: 0px; }
+.crowd-row { animation: rise 900ms cubic-bezier(.2,.7,.2,1) both; }
+
+/* ---------- dissolve stage ---------- */
+.dis-row { display: flex; flex-direction: row; gap: 64px; align-items: flex-start; }
+.dis-text { width: 600px; display: flex; flex-direction: column; gap: 32px; }
+.stage { position: relative; width: 1032px; height: 840px; display: flex; flex-direction: column; }
+.sub { position: relative; width: 1032px; height: 420px; }
+.sol { position: absolute; filter: saturate(0) brightness(0.62); animation: muster 6000ms linear both; animation-delay: 600ms; }
+@keyframes muster {
+  0% { opacity: 0; transform: translate(var(--dx), var(--dy)); filter: saturate(1) brightness(1); }
+  30% { opacity: 1; transform: translate(var(--dx), var(--dy)); filter: saturate(1) brightness(1); }
+  50% { opacity: 1; transform: translate(var(--dx), var(--dy)); filter: saturate(1) brightness(1); }
+  85% { opacity: 1; transform: translate(0px, 0px); filter: saturate(0) brightness(0.62); }
+  100% { opacity: 1; transform: translate(0px, 0px); filter: saturate(0) brightness(0.62); }
+}
+.indiv { position: absolute; left: 0px; top: 0px; width: 1032px; height: 840px; opacity: 0; animation: dissolve 6000ms linear both; animation-delay: 600ms; }
+@keyframes dissolve { 0% { opacity: 1; } 35% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 0; } }
+.lone { position: absolute; left: 1370px; top: 346px; width: 52px; height: 112px; border-radius: 26px; box-shadow: 0px 0px 44px #C9A24A; }
+.late { animation: rise 900ms cubic-bezier(.2,.7,.2,1) both; animation-delay: 5600ms; }
+
+/* ---------- cards ---------- */
+.cards3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; }
+.card { background: var(--stone); border-top: 8px solid var(--red); border-radius: 6px; padding: 32px; display: flex; flex-direction: column; gap: 14px; }
+.card-k { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 34px; font-weight: 600; text-transform: uppercase; color: var(--red); line-height: 1.15; }
+.card-t { font-size: 28px; line-height: 1.45; color: var(--ink); }
+
+/* ---------- timeline ---------- */
+.tl { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 0px; }
+.tl-item { border-top: 8px solid var(--ink); padding: 20px 20px 0px 0px; display: flex; flex-direction: column; gap: 8px; }
+.tl-item.key { border-top: 8px solid var(--red); }
+.tl-y { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 44px; font-weight: 700; color: var(--ink); }
+.tl-item.key .tl-y { color: var(--red); }
+.tl-t { font-size: 28px; line-height: 1.4; }
+
+/* ---------- lights out ---------- */
+.lamps { display: flex; flex-direction: row; gap: 0px; justify-content: space-between; }
+.lamp { --i: 0; width: 28px; height: 28px; border-radius: 14px; background: #3A332E; box-shadow: 0px 0px 0px #000000; animation: lampout 1200ms ease both; animation-delay: calc(600ms + var(--i) * 220ms); }
+@keyframes lampout { 0% { background-color: #F3D27A; box-shadow: 0px 0px 30px #F3D27A; } 100% { background-color: #3A332E; box-shadow: 0px 0px 0px #000000; } }
+.dimmer { position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; background: #0B0908; opacity: 0.45; animation: dim 4200ms ease both; animation-delay: 1200ms; }
+@keyframes dim { from { opacity: 0; } to { opacity: 0.45; } }
+.loreto-date { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 96px; font-weight: 700; line-height: 1.0; color: var(--cream); text-transform: uppercase; }
+
+/* ---------- closing ---------- */
+.takeaways { display: flex; flex-direction: column; gap: 24px; }
+.tk { display: flex; flex-direction: row; gap: 32px; align-items: center; }
+.tk-n { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 80px; font-weight: 700; color: var(--red); width: 70px; }
+.tk-t { font-size: 38px; line-height: 1.35; }
+.pill { align-self: flex-start; background: var(--red); color: var(--cream); font-size: 32px; font-weight: 600; padding: 16px 36px; border-radius: 40px; }
+
+.char .tk-n { color: var(--ochre); }
+.tk.turn .tk-t { font-weight: 600; }
+
+/* ---------- works cited ---------- */
+.wc { display: flex; flex-direction: column; gap: 12px; }
+.wc-i { font-size: 24px; line-height: 1.38; padding-left: 48px; }
+
+/* ---------- manifesto mapping ---------- */
+.map4 { display: flex; flex-direction: column; gap: 0px; }
+.m4 { display: grid; grid-template-columns: 460px 1fr; gap: 32px; align-items: baseline; border-top: 2px solid #B8AE9C; padding: 12px 0px 12px 0px; }
+.m4-v { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 32px; font-weight: 600; text-transform: uppercase; color: var(--red); }
+.m4-e { font-size: 30px; line-height: 1.35; color: var(--ink); }
+.m4.d1 { transition-delay: 150ms; }
+.m4.d2 { transition-delay: 300ms; }
+.m4.d3 { transition-delay: 450ms; }
+
+/* ===== player ===== */
+html, body { margin: 0; height: 100%; background: #0E0C0B; overflow: hidden; }
+body { font-family: 'Public Sans', Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+#stage { position: fixed; left: 50%; top: 50%; width: 1920px; height: 1080px; overflow: hidden; background: #1A1716;
+  transform: translate(-50%, -50%) scale(var(--s, 1)); transform-origin: center center; cursor: default; user-select: none; -webkit-user-select: none; }
+#stage > section { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; display: none; z-index: 1; }
+#stage > section.on { display: flex; }
+#stage > section.leaving { z-index: 2; opacity: 0; transition: opacity 420ms ease; pointer-events: none; }
+#stage :is(h1, h2, h3, p, ul, ol, figure) { margin: 0; }
+#stage aside { display: none; }
+#stage x-shape { display: block; }
+#stage x-shape[kind="arrow-up"] { clip-path: polygon(50% 0%, 100% 55%, 70% 55%, 70% 100%, 30% 100%, 30% 55%, 0% 55%); }
+/* the cover's map is meant to stay faint: end its fade-in at the resting opacity */
+@keyframes mapfaint { from { opacity: 0; } to { opacity: 0.14; } }
+#stage .cover-map { animation-name: mapfaint; }
+#stage .embed iframe { display: block; width: 100%; height: 100%; border: 0; background: transparent; }
+
+#hud { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  font-size: 13px; letter-spacing: .04em; color: #C9C0AE; background: linear-gradient(to top, rgba(14,12,11,.85), rgba(14,12,11,0));
+  opacity: 0; transition: opacity 300ms ease; pointer-events: none; }
+#hud.show { opacity: 1; pointer-events: auto; }
+#hud a { color: #EDE6D6; text-decoration: none; border-bottom: 1px solid rgba(237,230,214,.35); }
+#hud a:hover { border-bottom-color: #C9A24A; color: #C9A24A; }
+#hud .left, #hud .right { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+#hud button { font: inherit; letter-spacing: inherit; color: #EDE6D6; background: rgba(237,230,214,.1); border: 1px solid rgba(237,230,214,.25); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+#hud button:hover { border-color: #C9A24A; color: #C9A24A; }
+#hud :focus-visible { outline: 2px solid #C9A24A; outline-offset: 3px; }
+#count { font-variant-numeric: tabular-nums; }
+#notes { position: fixed; left: 50%; bottom: 56px; z-index: 9; width: min(900px, calc(100vw - 32px)); transform: translateX(-50%);
+  background: rgba(26,23,22,.94); color: #EDE6D6; border: 1px solid #4B4540; border-left: 4px solid #A8231C; border-radius: 6px;
+  padding: 14px 18px; font-size: 15px; line-height: 1.5; display: none; }
+#notes.show { display: block; }
+@media (max-width: 640px) { #hud .keys { display: none; } }
+</style>
+</head>
+<body>
+<main id="stage" aria-live="polite">
+<section id="cover" class="char" data-transition="fade">
+<svg class="cover-map" aria-label="Faint outline of Italy in the 1920s" width="825" height="974" viewBox="0 0 825 974" xmlns="http://www.w3.org/2000/svg"><path fill="#EDE6D6" d="M368 942 L374 944 L375 950 L368 948 L368 942ZM126 737 L134 740 L130 749 L126 743 L126 737ZM223 610 L213 631 L217 654 L211 714 L207 731 L202 734 L187 726 L179 728 L173 724 L171 742 L161 754 L145 753 L142 750 L130 727 L129 702 L132 695 L132 680 L133 678 L138 680 L139 670 L135 665 L129 663 L129 652 L133 643 L133 629 L129 623 L125 610 L114 596 L114 585 L117 572 L126 578 L140 578 L157 569 L169 554 L176 551 L180 547 L181 542 L185 541 L188 546 L200 550 L205 559 L211 563 L206 570 L215 581 L223 605 L223 610ZM120 555 L123 553 L125 555 L119 565 L115 564 L120 555ZM259 404 L246 406 L244 402 L245 399 L261 398 L263 395 L266 399 L265 408 L259 404ZM589 863 L582 886 L582 894 L590 906 L586 909 L594 919 L595 927 L585 938 L582 948 L582 957 L567 953 L560 955 L541 947 L532 931 L517 919 L501 919 L464 896 L451 885 L434 876 L415 874 L408 867 L401 854 L409 832 L417 827 L422 821 L433 834 L443 830 L443 825 L450 820 L463 821 L465 826 L493 839 L511 834 L527 836 L541 833 L561 822 L583 823 L609 811 L618 813 L589 863ZM70 111 L87 116 L101 108 L110 95 L107 86 L127 69 L130 69 L132 87 L145 99 L157 102 L154 110 L166 125 L171 123 L172 120 L169 108 L186 83 L187 66 L190 64 L198 65 L205 81 L212 82 L232 76 L240 88 L242 88 L247 86 L239 65 L242 55 L250 53 L255 58 L266 59 L266 53 L264 49 L267 30 L283 32 L293 39 L304 38 L313 24 L321 20 L357 20 L383 11 L386 13 L381 20 L382 24 L398 45 L451 57 L487 62 L486 66 L490 68 L507 105 L527 127 L539 166 L538 171 L528 169 L523 186 L505 215 L501 216 L498 215 L482 190 L474 156 L493 143 L482 130 L477 130 L471 136 L454 130 L442 142 L423 151 L406 158 L401 158 L408 151 L396 155 L390 160 L387 178 L391 181 L399 197 L407 203 L403 214 L398 219 L391 215 L389 226 L393 252 L399 271 L419 292 L433 298 L460 320 L478 330 L494 366 L508 411 L520 427 L544 451 L566 468 L586 479 L602 481 L640 479 L654 483 L655 490 L653 495 L637 508 L636 518 L643 525 L680 543 L717 559 L742 579 L775 596 L780 604 L800 621 L809 635 L810 646 L804 664 L801 671 L792 669 L783 661 L769 630 L742 627 L727 619 L722 609 L712 608 L705 614 L688 643 L678 668 L678 678 L683 688 L698 694 L718 712 L718 734 L722 746 L717 753 L707 752 L694 756 L684 764 L680 772 L681 792 L679 800 L661 814 L646 843 L624 843 L619 834 L618 821 L622 813 L631 810 L636 793 L634 781 L638 776 L641 772 L656 768 L657 752 L650 744 L644 714 L632 689 L622 656 L614 650 L595 649 L571 633 L570 627 L574 621 L564 598 L559 594 L530 601 L538 589 L528 581 L510 581 L511 576 L498 552 L489 543 L485 541 L477 543 L456 538 L446 542 L442 540 L429 527 L415 521 L377 479 L359 466 L347 447 L324 435 L314 438 L311 435 L317 432 L316 425 L300 406 L291 400 L285 388 L271 385 L272 364 L267 348 L258 335 L253 305 L249 296 L240 289 L218 282 L189 262 L153 253 L139 260 L102 302 L67 312 L66 304 L80 284 L77 276 L55 279 L32 266 L27 261 L25 256 L27 252 L23 245 L31 230 L36 226 L33 216 L16 207 L9 194 L9 189 L13 187 L23 188 L39 178 L44 164 L35 155 L26 139 L21 136 L19 129 L35 116 L43 120 L70 111ZM531 185 L534 198 L531 217 L528 206 L530 198 L527 187 L531 185Z"/></svg>
+<svg class="cover-spot" aria-label="Spotlight" width="800" height="940" viewBox="0 0 800 940" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="sp" cx="420" cy="360" r="430" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#EDE6D6" stop-opacity="0.7"/><stop offset="0.55" stop-color="#EDE6D6" stop-opacity="0.2"/><stop offset="1" stop-color="#EDE6D6" stop-opacity="0"/></radialGradient></defs><ellipse cx="420" cy="380" rx="420" ry="470" fill="url(#sp)"/></svg>
+<img class="cover-sil" src="portrait.png" onerror="this.remove()" alt="Stylised portrait of Mussolini in a peaked cap and uniform, chin raised, lit from behind">
+<div class="spacer"></div>
+<div class="col">
+<p class="eyebrow rise" style="--i:2">ENG 101 · Oral Presentation</p>
+<h1 class="rise" style="--i:3">The man on the balcony</h1>
+<div class="cover-bar barin" style="animation-delay:640ms;"></div>
+<p class="lead rise" style="--i:5">Mussolini, the cult of the leader and the erasure of the individual</p>
+</div>
+<div class="spacer"></div>
+<p class="src rise" style="--i:6">Kerem Uysal · Section 103</p>
+<aside>~30 s. Let the spotlight and the figure appear before you speak. Opening line idea: “For twenty years, Italians were told that one man on a balcony was always right.” Then say the thesis straight away, in your own words: under Mussolini, the individual existed for the State, and the cult of the leader replaced conscience with obedience. The thesis slide will repeat it; the class should not hear it for the first time there.</aside>
+</section>
+<section id="predappio" class="stone" data-transition="magic">
+<svg id="italymap" class="map map-in" aria-label="Map of Italy in the 1920s, including Istria" width="825" height="974" viewBox="0 0 825 974" xmlns="http://www.w3.org/2000/svg"><path fill="#C4B9A4" d="M-20 936 L-12 924 L-1 920 L5 928 L29 935 L44 933 L50 931 L48 920 L63 923 L95 941 L157 928 L179 911 L216 897 L226 900 L222 909 L225 916 L230 912 L228 905 L250 909 L250 925 L259 941 L257 948 L265 953 L275 939 L288 935 L301 923 L308 922 L313 940 L302 952 L291 974 L272 990 L269 1001 L-20 1001 L-20 936ZM198 476 L196 498 L182 529 L156 511 L161 500 L150 495 L151 480 L143 477 L149 469 L149 465 L140 453 L147 447 L140 441 L150 423 L178 407 L190 408 L191 387 L194 381 L197 380 L200 384 L200 413 L205 423 L207 459 L198 476ZM20 133 L44 164 L39 178 L23 188 L9 189 L16 207 L33 216 L36 226 L23 245 L27 261 L55 279 L77 276 L80 284 L66 304 L67 312 L46 322 L15 348 L5 364 L-20 373 L-20 -27 L839 -27 L839 451 L820 439 L821 433 L813 434 L766 401 L713 381 L725 380 L759 396 L704 347 L669 333 L641 335 L639 323 L609 299 L587 276 L583 268 L607 266 L593 256 L568 227 L568 203 L565 193 L544 173 L533 169 L538 171 L539 166 L527 127 L507 105 L490 68 L486 66 L487 62 L398 45 L382 24 L381 20 L385 11 L357 20 L321 20 L313 24 L304 38 L267 30 L264 49 L266 59 L255 58 L250 53 L242 55 L239 65 L247 86 L242 88 L232 76 L205 81 L198 65 L190 64 L187 66 L186 83 L169 108 L171 123 L166 125 L154 110 L157 102 L145 99 L132 87 L131 70 L127 69 L108 85 L110 95 L101 108 L92 114 L87 116 L70 111 L43 120 L35 116 L21 126 L20 133ZM566 276 L588 298 L588 301 L584 300 L566 276ZM557 228 L568 236 L591 259 L586 263 L569 247 L557 228ZM558 214 L563 222 L565 226 L553 221 L554 214 L558 214ZM539 203 L540 231 L540 235 L531 217 L534 198 L539 203ZM546 180 L557 194 L562 202 L554 204 L538 193 L546 180ZM733 401 L751 403 L760 409 L733 401ZM723 390 L692 390 L687 383 L716 385 L723 390ZM690 366 L714 369 L723 371 L688 371 L668 363 L687 363 L690 366ZM703 354 L685 358 L671 353 L673 347 L703 354Z"/><path fill="#3B3430" d="M368 942 L374 944 L375 950 L368 948 L368 942ZM126 737 L134 740 L130 749 L126 743 L126 737ZM223 610 L213 631 L217 654 L211 714 L207 731 L202 734 L187 726 L179 728 L173 724 L171 742 L161 754 L145 753 L142 750 L130 727 L129 702 L132 695 L132 680 L133 678 L138 680 L139 670 L135 665 L129 663 L129 652 L133 643 L133 629 L129 623 L125 610 L114 596 L114 585 L117 572 L126 578 L140 578 L157 569 L169 554 L176 551 L180 547 L181 542 L185 541 L188 546 L200 550 L205 559 L211 563 L206 570 L215 581 L223 605 L223 610ZM120 555 L123 553 L125 555 L119 565 L115 564 L120 555ZM259 404 L246 406 L244 402 L245 399 L261 398 L263 395 L266 399 L265 408 L259 404ZM589 863 L582 886 L582 894 L590 906 L586 909 L594 919 L595 927 L585 938 L582 948 L582 957 L567 953 L560 955 L541 947 L532 931 L517 919 L501 919 L464 896 L451 885 L434 876 L415 874 L408 867 L401 854 L409 832 L417 827 L422 821 L433 834 L443 830 L443 825 L450 820 L463 821 L465 826 L493 839 L511 834 L527 836 L541 833 L561 822 L583 823 L609 811 L618 813 L589 863ZM70 111 L87 116 L101 108 L110 95 L107 86 L127 69 L130 69 L132 87 L145 99 L157 102 L154 110 L166 125 L171 123 L172 120 L169 108 L186 83 L187 66 L190 64 L198 65 L205 81 L212 82 L232 76 L240 88 L242 88 L247 86 L239 65 L242 55 L250 53 L255 58 L266 59 L266 53 L264 49 L267 30 L283 32 L293 39 L304 38 L313 24 L321 20 L357 20 L383 11 L386 13 L381 20 L382 24 L398 45 L451 57 L487 62 L486 66 L490 68 L507 105 L527 127 L539 166 L538 171 L528 169 L523 186 L505 215 L501 216 L498 215 L482 190 L474 156 L493 143 L482 130 L477 130 L471 136 L454 130 L442 142 L423 151 L406 158 L401 158 L408 151 L396 155 L390 160 L387 178 L391 181 L399 197 L407 203 L403 214 L398 219 L391 215 L389 226 L393 252 L399 271 L419 292 L433 298 L460 320 L478 330 L494 366 L508 411 L520 427 L544 451 L566 468 L586 479 L602 481 L640 479 L654 483 L655 490 L653 495 L637 508 L636 518 L643 525 L680 543 L717 559 L742 579 L775 596 L780 604 L800 621 L809 635 L810 646 L804 664 L801 671 L792 669 L783 661 L769 630 L742 627 L727 619 L722 609 L712 608 L705 614 L688 643 L678 668 L678 678 L683 688 L698 694 L718 712 L718 734 L722 746 L717 753 L707 752 L694 756 L684 764 L680 772 L681 792 L679 800 L661 814 L646 843 L624 843 L619 834 L618 821 L622 813 L631 810 L636 793 L634 781 L638 776 L641 772 L656 768 L657 752 L650 744 L644 714 L632 689 L622 656 L614 650 L595 649 L571 633 L570 627 L574 621 L564 598 L559 594 L530 601 L538 589 L528 581 L510 581 L511 576 L498 552 L489 543 L485 541 L477 543 L456 538 L446 542 L442 540 L429 527 L415 521 L377 479 L359 466 L347 447 L324 435 L314 438 L311 435 L317 432 L316 425 L300 406 L291 400 L285 388 L271 385 L272 364 L267 348 L258 335 L253 305 L249 296 L240 289 L218 282 L189 262 L153 253 L139 260 L102 302 L67 312 L66 304 L80 284 L77 276 L55 279 L32 266 L27 261 L25 256 L27 252 L23 245 L31 230 L36 226 L33 216 L16 207 L9 194 L9 189 L13 187 L23 188 L39 178 L44 164 L35 155 L26 139 L21 136 L19 129 L35 116 L43 120 L70 111ZM531 185 L534 198 L531 217 L528 206 L530 198 L527 187 L531 185Z"/></svg>
+<svg class="overlay rise" style="--i:5" aria-label="Pulsing marker at Predappio" width="825" height="974" viewBox="0 0 825 974" xmlns="http://www.w3.org/2000/svg">
+<circle cx="371" cy="282" r="12" fill="#A8231C" stroke="#EDE6D6" stroke-width="4"/>
+<circle cx="371" cy="282" r="14" fill="none" stroke="#EDE6D6" stroke-width="4" opacity="0.8">
+<animate attributeName="r" values="14;48" dur="1.8s" begin="0s" repeatCount="indefinite"/>
+<animate attributeName="opacity" values="0.8;0" dur="1.8s" begin="0s" repeatCount="indefinite"/>
+</circle>
+</svg>
+<p class="maplabel rise" style="--i:6; left:1362px; top:296px; background:#1A1716; color:#EDE6D6; padding:4px 12px; border-radius:4px;">Predappio</p>
+<p class="eyebrow rise" style="--i:0">Predappio, Romagna · 1883</p>
+<h2 class="rise" style="--i:1; width:760px;">From socialist to nationalist</h2>
+<div class="col">
+<div class="step rise" style="--i:2"><p class="step-y">29 July 1883</p><p class="step-t">Born in Predappio, a small town in Romagna</p></div>
+<div class="step rise" style="--i:3"><p class="step-y">1912</p><p class="step-t">Editor of the Socialist daily <i>Avanti!</i></p></div>
+<div class="step rise" style="--i:4"><p class="step-y">1914</p><p class="step-t">Breaks with the Socialists over the First World War, founds <i>Il Popolo d’Italia</i>, and is expelled from the party</p></div>
+</div>
+<div class="spacer"></div>
+<p class="src">Britannica, “Benito Mussolini”</p>
+<aside>~25 s. Short: context only. One idea: he started on the left, as a Socialist journalist, and in 1914 he turned around. What stayed constant was not an idea but the man. Frame it as the first hint of the thesis: loyalty would go to a person, not to a set of beliefs.</aside>
+</section>
+<section id="rome" class="stone" data-transition="fade">
+<svg id="italymap" class="map" aria-label="Map of Italy in the 1920s, including Istria" width="825" height="974" viewBox="0 0 825 974" xmlns="http://www.w3.org/2000/svg"><path fill="#C4B9A4" d="M-20 936 L-12 924 L-1 920 L5 928 L29 935 L44 933 L50 931 L48 920 L63 923 L95 941 L157 928 L179 911 L216 897 L226 900 L222 909 L225 916 L230 912 L228 905 L250 909 L250 925 L259 941 L257 948 L265 953 L275 939 L288 935 L301 923 L308 922 L313 940 L302 952 L291 974 L272 990 L269 1001 L-20 1001 L-20 936ZM198 476 L196 498 L182 529 L156 511 L161 500 L150 495 L151 480 L143 477 L149 469 L149 465 L140 453 L147 447 L140 441 L150 423 L178 407 L190 408 L191 387 L194 381 L197 380 L200 384 L200 413 L205 423 L207 459 L198 476ZM20 133 L44 164 L39 178 L23 188 L9 189 L16 207 L33 216 L36 226 L23 245 L27 261 L55 279 L77 276 L80 284 L66 304 L67 312 L46 322 L15 348 L5 364 L-20 373 L-20 -27 L839 -27 L839 451 L820 439 L821 433 L813 434 L766 401 L713 381 L725 380 L759 396 L704 347 L669 333 L641 335 L639 323 L609 299 L587 276 L583 268 L607 266 L593 256 L568 227 L568 203 L565 193 L544 173 L533 169 L538 171 L539 166 L527 127 L507 105 L490 68 L486 66 L487 62 L398 45 L382 24 L381 20 L385 11 L357 20 L321 20 L313 24 L304 38 L267 30 L264 49 L266 59 L255 58 L250 53 L242 55 L239 65 L247 86 L242 88 L232 76 L205 81 L198 65 L190 64 L187 66 L186 83 L169 108 L171 123 L166 125 L154 110 L157 102 L145 99 L132 87 L131 70 L127 69 L108 85 L110 95 L101 108 L92 114 L87 116 L70 111 L43 120 L35 116 L21 126 L20 133ZM566 276 L588 298 L588 301 L584 300 L566 276ZM557 228 L568 236 L591 259 L586 263 L569 247 L557 228ZM558 214 L563 222 L565 226 L553 221 L554 214 L558 214ZM539 203 L540 231 L540 235 L531 217 L534 198 L539 203ZM546 180 L557 194 L562 202 L554 204 L538 193 L546 180ZM733 401 L751 403 L760 409 L733 401ZM723 390 L692 390 L687 383 L716 385 L723 390ZM690 366 L714 369 L723 371 L688 371 L668 363 L687 363 L690 366ZM703 354 L685 358 L671 353 L673 347 L703 354Z"/><path fill="#3B3430" d="M368 942 L374 944 L375 950 L368 948 L368 942ZM126 737 L134 740 L130 749 L126 743 L126 737ZM223 610 L213 631 L217 654 L211 714 L207 731 L202 734 L187 726 L179 728 L173 724 L171 742 L161 754 L145 753 L142 750 L130 727 L129 702 L132 695 L132 680 L133 678 L138 680 L139 670 L135 665 L129 663 L129 652 L133 643 L133 629 L129 623 L125 610 L114 596 L114 585 L117 572 L126 578 L140 578 L157 569 L169 554 L176 551 L180 547 L181 542 L185 541 L188 546 L200 550 L205 559 L211 563 L206 570 L215 581 L223 605 L223 610ZM120 555 L123 553 L125 555 L119 565 L115 564 L120 555ZM259 404 L246 406 L244 402 L245 399 L261 398 L263 395 L266 399 L265 408 L259 404ZM589 863 L582 886 L582 894 L590 906 L586 909 L594 919 L595 927 L585 938 L582 948 L582 957 L567 953 L560 955 L541 947 L532 931 L517 919 L501 919 L464 896 L451 885 L434 876 L415 874 L408 867 L401 854 L409 832 L417 827 L422 821 L433 834 L443 830 L443 825 L450 820 L463 821 L465 826 L493 839 L511 834 L527 836 L541 833 L561 822 L583 823 L609 811 L618 813 L589 863ZM70 111 L87 116 L101 108 L110 95 L107 86 L127 69 L130 69 L132 87 L145 99 L157 102 L154 110 L166 125 L171 123 L172 120 L169 108 L186 83 L187 66 L190 64 L198 65 L205 81 L212 82 L232 76 L240 88 L242 88 L247 86 L239 65 L242 55 L250 53 L255 58 L266 59 L266 53 L264 49 L267 30 L283 32 L293 39 L304 38 L313 24 L321 20 L357 20 L383 11 L386 13 L381 20 L382 24 L398 45 L451 57 L487 62 L486 66 L490 68 L507 105 L527 127 L539 166 L538 171 L528 169 L523 186 L505 215 L501 216 L498 215 L482 190 L474 156 L493 143 L482 130 L477 130 L471 136 L454 130 L442 142 L423 151 L406 158 L401 158 L408 151 L396 155 L390 160 L387 178 L391 181 L399 197 L407 203 L403 214 L398 219 L391 215 L389 226 L393 252 L399 271 L419 292 L433 298 L460 320 L478 330 L494 366 L508 411 L520 427 L544 451 L566 468 L586 479 L602 481 L640 479 L654 483 L655 490 L653 495 L637 508 L636 518 L643 525 L680 543 L717 559 L742 579 L775 596 L780 604 L800 621 L809 635 L810 646 L804 664 L801 671 L792 669 L783 661 L769 630 L742 627 L727 619 L722 609 L712 608 L705 614 L688 643 L678 668 L678 678 L683 688 L698 694 L718 712 L718 734 L722 746 L717 753 L707 752 L694 756 L684 764 L680 772 L681 792 L679 800 L661 814 L646 843 L624 843 L619 834 L618 821 L622 813 L631 810 L636 793 L634 781 L638 776 L641 772 L656 768 L657 752 L650 744 L644 714 L632 689 L622 656 L614 650 L595 649 L571 633 L570 627 L574 621 L564 598 L559 594 L530 601 L538 589 L528 581 L510 581 L511 576 L498 552 L489 543 L485 541 L477 543 L456 538 L446 542 L442 540 L429 527 L415 521 L377 479 L359 466 L347 447 L324 435 L314 438 L311 435 L317 432 L316 425 L300 406 L291 400 L285 388 L271 385 L272 364 L267 348 L258 335 L253 305 L249 296 L240 289 L218 282 L189 262 L153 253 L139 260 L102 302 L67 312 L66 304 L80 284 L77 276 L55 279 L32 266 L27 261 L25 256 L27 252 L23 245 L31 230 L36 226 L33 216 L16 207 L9 194 L9 189 L13 187 L23 188 L39 178 L44 164 L35 155 L26 139 L21 136 L19 129 L35 116 L43 120 L70 111ZM531 185 L534 198 L531 217 L528 206 L530 198 L527 187 L531 185Z"/><circle cx="371" cy="282" r="10" fill="#A8231C" stroke="#EDE6D6" stroke-width="3"/></svg>
+<div class="overlay fragment" data-fragment-index="1">
+<svg aria-label="Route from Predappio to Milan, where the fighting leagues were founded in 1919" width="825" height="974" viewBox="0 0 825 974" xmlns="http://www.w3.org/2000/svg">
+<path d="M371 282 Q300 175 182 158" fill="none" stroke="#EDE6D6" stroke-width="5" stroke-dasharray="14 12" stroke-linecap="round"/>
+<circle cx="182" cy="158" r="13" fill="#A8231C" stroke="#EDE6D6" stroke-width="4"/>
+<circle cx="371" cy="282" r="7" fill="#C9A24A"><animateMotion path="M0 0 Q-71 -107 -189 -124" dur="3.6s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.8;1" dur="3.6s" begin="0s" repeatCount="indefinite"/></circle>
+</svg>
+</div>
+<p class="maplabel fragment" data-fragment-index="1" style="left:1060px; top:96px; background:#1A1716; color:#EDE6D6; padding:4px 12px; border-radius:4px;">Milan</p>
+<div class="overlay fragment" data-fragment-index="2">
+<svg aria-label="Fascist squads converging on Rome from several directions in October 1922" width="825" height="974" viewBox="0 0 825 974" xmlns="http://www.w3.org/2000/svg">
+<g fill="none" stroke="#A8231C" stroke-width="4" stroke-dasharray="8 10" opacity="0.8">
+<path d="M300 395 L406 482"/><path d="M395 380 L406 482"/><path d="M500 400 L406 482"/><path d="M525 578 L406 482"/>
+</g>
+<g fill="#E0614F">
+<circle cx="300" cy="395" r="7" opacity="0"><animateMotion path="M0 0 L106 87" dur="2.8s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.8;1" dur="2.8s" begin="0s" repeatCount="indefinite"/></circle>
+<circle cx="300" cy="395" r="7" opacity="0"><animateMotion path="M0 0 L106 87" dur="2.8s" begin="1.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.8;1" dur="2.8s" begin="1.4s" repeatCount="indefinite"/></circle>
+<circle cx="395" cy="380" r="7" opacity="0"><animateMotion path="M0 0 L11 102" dur="2.8s" begin="0.3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.8;1" dur="2.8s" begin="0.3s" repeatCount="indefinite"/></circle>
+<circle cx="395" cy="380" r="7" opacity="0"><animateMotion path="M0 0 L11 102" dur="2.8s" begin="1.7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.8;1" dur="2.8s" begin="1.7s" repeatCount="indefinite"/></circle>
+<circle cx="500" cy="400" r="7" opacity="0"><animateMotion path="M0 0 L-94 82" dur="2.8s" begin="0.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.8;1" dur="2.8s" begin="0.5s" repeatCount="indefinite"/></circle>
+<circle cx="500" cy="400" r="7" opacity="0"><animateMotion path="M0 0 L-94 82" dur="2.8s" begin="1.9s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.8;1" dur="2.8s" begin="1.9s" repeatCount="indefinite"/></circle>
+<circle cx="525" cy="578" r="7" opacity="0"><animateMotion path="M0 0 L-119 -96" dur="2.8s" begin="0.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.8;1" dur="2.8s" begin="0.2s" repeatCount="indefinite"/></circle>
+<circle cx="525" cy="578" r="7" opacity="0"><animateMotion path="M0 0 L-119 -96" dur="2.8s" begin="1.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.8;1" dur="2.8s" begin="1.6s" repeatCount="indefinite"/></circle>
+</g>
+<circle cx="406" cy="482" r="18" fill="#A8231C" stroke="#EDE6D6" stroke-width="5"/>
+</svg>
+</div>
+<p class="maplabel fragment" data-fragment-index="2" style="left:1400px; top:560px; background:#A8231C; color:#EDE6D6; padding:4px 12px; border-radius:4px;">Rome</p>
+<div class="overlay fragment" data-fragment-index="3">
+<svg aria-label="Mussolini’s train journey from Milan to Rome on 30 October 1922" width="825" height="974" viewBox="0 0 825 974" xmlns="http://www.w3.org/2000/svg">
+<path d="M182 158 Q240 360 406 482" fill="none" stroke="#C9A24A" stroke-width="6" stroke-dasharray="4 10" stroke-linecap="round"/>
+<circle cx="186" cy="126" r="5" fill="#EDE6D6" opacity="0.5"><animateMotion path="M0 0 Q58 202 224 324" dur="5.4s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.5;0.5;0" keyTimes="0;0.2;0.8;1" dur="5.4s" begin="0s" repeatCount="indefinite"/></circle>
+<circle cx="193" cy="133" r="4" fill="#EDE6D6" opacity="0.8"><animateMotion path="M0 0 Q58 202 224 324" dur="5.4s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.8;0.8;0" keyTimes="0;0.2;0.8;1" dur="5.4s" begin="0s" repeatCount="indefinite"/></circle>
+<rect x="162" y="140" width="14" height="20" rx="2" fill="#C9A24A"><animateMotion path="M0 0 Q58 202 224 324" dur="5.4s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.8;1" dur="5.4s" begin="0s" repeatCount="indefinite"/></rect>
+<rect x="175" y="148" width="24" height="12" rx="3" fill="#C9A24A"><animateMotion path="M0 0 Q58 202 224 324" dur="5.4s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.8;1" dur="5.4s" begin="0s" repeatCount="indefinite"/></rect>
+<rect x="190" y="140" width="5" height="9" rx="1" fill="#C9A24A"><animateMotion path="M0 0 Q58 202 224 324" dur="5.4s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.8;1" dur="5.4s" begin="0s" repeatCount="indefinite"/></rect>
+<rect x="165" y="144" width="8" height="6" rx="1" fill="#1A1716"><animateMotion path="M0 0 Q58 202 224 324" dur="5.4s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.8;1" dur="5.4s" begin="0s" repeatCount="indefinite"/></rect>
+<rect x="160" y="159" width="42" height="3" fill="#1A1716"><animateMotion path="M0 0 Q58 202 224 324" dur="5.4s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.8;1" dur="5.4s" begin="0s" repeatCount="indefinite"/></rect>
+<circle cx="168" cy="164" r="5" fill="#1A1716" stroke="#C9A24A" stroke-width="2"><animateMotion path="M0 0 Q58 202 224 324" dur="5.4s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.8;1" dur="5.4s" begin="0s" repeatCount="indefinite"/></circle>
+<circle cx="181" cy="164" r="5" fill="#1A1716" stroke="#C9A24A" stroke-width="2"><animateMotion path="M0 0 Q58 202 224 324" dur="5.4s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.8;1" dur="5.4s" begin="0s" repeatCount="indefinite"/></circle>
+<circle cx="194" cy="164" r="5" fill="#1A1716" stroke="#C9A24A" stroke-width="2"><animateMotion path="M0 0 Q58 202 224 324" dur="5.4s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.8;1" dur="5.4s" begin="0s" repeatCount="indefinite"/></circle>
+</svg>
+</div>
+<p class="eyebrow rise" style="--i:0">1919–1922</p>
+<h2 class="rise" style="--i:1; width:760px;">The road to Rome</h2>
+<div class="col">
+<div class="step fragment" data-fragment-index="1"><p class="step-y">March 1919 · Milan</p><p class="step-t">Founds the <i>fasci di combattimento</i>, the “fighting leagues”</p></div>
+<div class="step fragment" data-fragment-index="2"><p class="step-y">Late October 1922</p><p class="step-t">About 25,000 Fascist squad members converge on Rome; the king refuses to declare martial law</p></div>
+<div class="step fragment" data-fragment-index="3"><p class="step-y">29–30 October 1922</p><p class="step-t">The king asks Mussolini to form a government. He arrives from Milan by train: the leader of the march never marched</p></div>
+</div>
+<div class="spacer"></div>
+<p class="src">Britannica, “Italy: The Fascist Era”; “March on Rome”</p>
+<aside>~40 s. Three clicks. (1) Milan 1919: the fighting leagues are founded. (2) The March on Rome: about 25,000 men; the king refuses martial law. (3) The irony to say out loud: the leader of the “march” did not march; he waited in Milan and came by train after he had already been invited to govern. The myth was bigger than the march. That is the first sign of the cult.</aside>
+</section>
+<section id="thesis" class="char" data-transition="fade">
+<div class="spacer"></div>
+<div class="redbar barin"></div>
+<p class="eyebrow rise" style="--i:1">Thesis</p>
+<p class="statement rise" style="--i:2">Mussolini’s regime turned the humanist order upside down: <span class="hl">the individual existed for the State</span>, and the cult of the leader <span class="hl">replaced personal conscience with obedience</span>.</p>
+<div class="spacer"></div>
+<aside>~25 s. You already said it on the cover; now say it once more, slowly, as the frame for the talk. The two highlighted halves are the plan: (1) the individual under the State (doctrine), (2) conscience replaced by obedience to one man (cult). The next slides prove each half; Forster and the Manifesto explain why it is anti-humanist.</aside>
+</section>
+<section id="slogans" class="stone" data-transition="fade">
+<p class="eyebrow rise" style="--i:0">The regime’s motto</p>
+<div class="spacer"></div>
+<div class="slogans">
+<div class="slogan fragment"><p class="sl-w">Credere.</p><p class="sl-t">Believe.</p></div>
+<div class="slogan fragment"><p class="sl-w">Obbedire.</p><p class="sl-t">Obey.</p></div>
+<div class="slogan fragment"><p class="sl-w red">Combattere.</p><p class="sl-t">Fight.</p></div>
+</div>
+<div class="spacer"></div>
+<p class="note fragment">Missing: <b>to think, to question, to choose.</b></p>
+<p class="src">Koon, <i>Believe, Obey, Fight</i></p>
+<aside>~35 s. One click per word; pause after each. This motto was the regime’s summary of the ideal citizen, and the title of Tracy Koon’s study of Fascist youth education. Before the last click, ask the class: “Which verbs are missing?” Wait three seconds, then click: the answer appears. Keep it short; the next slides prove it with the regime’s own doctrine.</aside>
+</section>
+<section id="doctrine" data-transition="fade">
+<p class="eyebrow rise" style="--i:0">The Doctrine of Fascism, 1932</p>
+<h2 class="rise" style="--i:1">The State above the person</h2>
+<div class="row2">
+<div class="flipzone">
+<x-shape kind="arrow-up" class="flip-arrow"></x-shape>
+<div class="box-state">STATE</div>
+<div class="box-ind">INDIVIDUAL</div>
+</div>
+<div class="col" style="width:928px;">
+<div class="qblock rise" style="--i:3">
+<p class="quote">“Anti-individualistic, the Fascist conception is for the State; it is for the individual only in so far as he coincides with the State”</p>
+<p class="src">Mussolini, sec. 7</p>
+</div>
+<div class="qblock fragment">
+<p class="quote">“No individuals nor groups (political parties, associations, labour unions, classes) outside the State.”</p>
+<p class="src">Mussolini, sec. 8</p>
+</div>
+</div>
+</div>
+<aside>~50 s. Watch the boxes: the State rises and grows, the individual shrinks underneath. That is the whole doctrine in one movement. Quote 1: the individual matters only when he “coincides” with the State. Click for quote 2: nothing, not even a union or a party, may exist outside the State. Translation by I. S. Munro (1933).</aside>
+</section>
+<section id="cult" class="stone" data-transition="fade">
+<p class="eyebrow rise" style="--i:0">The cult of the Duce</p>
+<p class="cult-title rise" style="--i:1">Mussolini ha sempre ragione</p>
+<p class="note rise" style="--i:2">“Mussolini is always right”: painted on walls and murals (Britannica, “Fascist Party”)</p>
+<div class="crowd">
+<svg class="crowd-row" style="animation-delay:600ms;" aria-label="A row of identical figures seen from behind" width="1664" height="90" viewBox="0 0 1664 90" xmlns="http://www.w3.org/2000/svg"><defs><g id="pa"><circle cx="0" cy="26" r="16"/><path d="M-30 90 Q-30 46 0 46 Q30 46 30 90 Z"/></g></defs><g fill="#8C8176"><use href="#pa" x="34"/><use href="#pa" x="104"/><use href="#pa" x="174"/><use href="#pa" x="244"/><use href="#pa" x="314"/><use href="#pa" x="384"/><use href="#pa" x="454"/><use href="#pa" x="524"/><use href="#pa" x="594"/><use href="#pa" x="664"/><use href="#pa" x="734"/><use href="#pa" x="804"/><use href="#pa" x="874"/><use href="#pa" x="944"/><use href="#pa" x="1014"/><use href="#pa" x="1084"/><use href="#pa" x="1154"/><use href="#pa" x="1224"/><use href="#pa" x="1294"/><use href="#pa" x="1364"/><use href="#pa" x="1434"/><use href="#pa" x="1504"/><use href="#pa" x="1574"/><use href="#pa" x="1630"/></g></svg>
+<svg class="crowd-row" style="animation-delay:1000ms;" aria-label="A second row of identical figures" width="1664" height="90" viewBox="0 0 1664 90" xmlns="http://www.w3.org/2000/svg"><defs><g id="pb"><circle cx="0" cy="26" r="16"/><path d="M-30 90 Q-30 46 0 46 Q30 46 30 90 Z"/></g></defs><g fill="#5E5650"><use href="#pb" x="69"/><use href="#pb" x="139"/><use href="#pb" x="209"/><use href="#pb" x="279"/><use href="#pb" x="349"/><use href="#pb" x="419"/><use href="#pb" x="489"/><use href="#pb" x="559"/><use href="#pb" x="629"/><use href="#pb" x="699"/><use href="#pb" x="769"/><use href="#pb" x="839"/><use href="#pb" x="909"/><use href="#pb" x="979"/><use href="#pb" x="1049"/><use href="#pb" x="1119"/><use href="#pb" x="1189"/><use href="#pb" x="1259"/><use href="#pb" x="1329"/><use href="#pb" x="1399"/><use href="#pb" x="1469"/><use href="#pb" x="1539"/><use href="#pb" x="1609"/></g></svg>
+<svg class="crowd-row" style="animation-delay:1400ms;" aria-label="A third row of identical figures" width="1664" height="90" viewBox="0 0 1664 90" xmlns="http://www.w3.org/2000/svg"><defs><g id="pc"><circle cx="0" cy="26" r="16"/><path d="M-30 90 Q-30 46 0 46 Q30 46 30 90 Z"/></g></defs><g fill="#2A2522"><use href="#pc" x="34"/><use href="#pc" x="104"/><use href="#pc" x="174"/><use href="#pc" x="244"/><use href="#pc" x="314"/><use href="#pc" x="384"/><use href="#pc" x="454"/><use href="#pc" x="524"/><use href="#pc" x="594"/><use href="#pc" x="664"/><use href="#pc" x="734"/><use href="#pc" x="804"/><use href="#pc" x="874"/><use href="#pc" x="944"/><use href="#pc" x="1014"/><use href="#pc" x="1084"/><use href="#pc" x="1154"/><use href="#pc" x="1224"/><use href="#pc" x="1294"/><use href="#pc" x="1364"/><use href="#pc" x="1434"/><use href="#pc" x="1504"/><use href="#pc" x="1574"/><use href="#pc" x="1630"/></g></svg>
+</div>
+<div class="qblock fragment">
+<p class="quote cult-quote">Fromm: authoritarian ethics rests on “awe of the authority and on the subject’s feeling of weakness and dependence; … its decisions cannot and must not be questioned” (1).</p>
+<p class="quote cult-quote">Rational authority, by contrast, “requires constant scrutiny and criticism” (1).</p>
+</div>
+<aside>~50 s. The slogan says it all: if one man is always right, nobody else needs to think. The crowd rows arrive one behind another: the same faceless figures, all looking the same way. Click: Fromm’s description of irrational authority fits exactly: awe, weakness, and a ban on questioning. Then the contrast line: rational authority requires scrutiny; a slogan that says “always right” forbids exactly that.</aside>
+</section>
+<section id="dissolve" class="char" data-transition="fade" style="padding:112px 128px 112px 128px;">
+<div class="dis-row" style="gap:32px;">
+<div class="dis-text">
+<p class="eyebrow rise" style="--i:0">E. M. Forster · 1938</p>
+<h2 class="rise" style="--i:1">The individual dissolved</h2>
+<div class="qblock late">
+<p class="quote">“I distrust Great Men. They produce a desert of uniformity around them and often a pool of blood too”</p>
+<p class="src">Forster 2</p>
+</div>
+<div class="qblock fragment" data-fragment-index="1">
+<p class="quote">“The dictator-hero can grind down his citizens till they are all alike, but he cannot melt them into a single man.”</p>
+<p class="src">Forster 3</p>
+</div>
+</div>
+<div style="width:1032px; height:840px;"></div>
+</div>
+<div class="embed" style="position:absolute; left:760px; top:112px; width:1032px; height:840px;" data-srcdoc="&lt;style&gt;html,body{margin:0;background:transparent;overflow:hidden}canvas{display:block;width:1032px;height:840px}&lt;/style&gt;&lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;&lt;script&gt;
+(()=&gt;{
+const W=1032,H=840,cv=document.getElementById(&#x27;c&#x27;),dpr=Math.min(2,window.devicePixelRatio||1);
+cv.width=W*dpr;cv.height=H*dpr;const g=cv.getContext(&#x27;2d&#x27;);g.scale(dpr,dpr);
+let sd=7;const rnd=()=&gt;{sd=(sd*16807)%2147483647;return sd/2147483647;};
+const GOLD=[201,162,74],GREY=[111,108,96];
+function mk(){const c=document.createElement(&#x27;canvas&#x27;);c.width=W;c.height=H;return c;}
+function smooth(c,p){const n=p.length,m=i=&gt;[(p[i][0]+p[(i+1)%n][0])/2,(p[i][1]+p[(i+1)%n][1])/2];let s=m(n-1);c.moveTo(s[0],s[1]);for(let i=0;i&lt;n;i++){const e=m(i);c.quadraticCurveTo(p[i][0],p[i][1],e[0],e[1]);}c.closePath();}
+const R=[[534,166],[540,190],[598,204],[630,224],[646,294],[654,394],[660,468],[654,502],[634,500],[626,420],[612,318],[602,300],[598,340],[592,430],[600,474],[594,560],[584,680],[580,790],[590,812],[532,814],[528,700],[522,566],[516,540]];
+const BODY=R.concat(R.slice(0,-1).reverse().map(p=&gt;[W-p[0],p[1]]));
+function fig(c){c.beginPath();smooth(c,BODY);c.fill();c.beginPath();c.ellipse(516,112,54,62,0,0,7);c.fill();}
+function sol(c,x,y){c.save();c.translate(x,y);c.beginPath();
+c.rect(33,2,4,62);c.rect(34,-8,2,11);
+c.moveTo(5,13);c.ellipse(20,13,15,10,0,Math.PI,0);c.rect(3,12,34,4);
+c.moveTo(27.5,23);c.arc(20,23,7.5,0,7);c.rect(17,28,6,5);
+c.moveTo(11,31);c.lineTo(29,31);c.quadraticCurveTo(34,32,34,38);c.lineTo(32,68);c.lineTo(8,68);c.lineTo(6,38);c.quadraticCurveTo(6,32,11,31);c.closePath();
+c.rect(10,66,8,29);c.rect(22,66,8,29);c.rect(8,93,11,7);c.rect(21,93,11,7);
+c.fill();c.restore();}
+const SL=[];for(let r=0;r&lt;4;r++)for(let k=0;k&lt;10;k++){if(r==1&amp;&amp;k==6)continue;SL.push([40+k*96,60+r*180,k]);}
+const fc=mk(),fx=fc.getContext(&#x27;2d&#x27;);fx.fillStyle=&#x27;#fff&#x27;;fig(fx);
+const sc=mk(),sx=sc.getContext(&#x27;2d&#x27;);sx.fillStyle=&#x27;#fff&#x27;;SL.forEach(s=&gt;sol(sx,s[0],s[1]));
+const gc=mk(),gx=gc.getContext(&#x27;2d&#x27;);gx.shadowColor=&#x27;rgba(233,196,106,.9)&#x27;;gx.shadowBlur=60;gx.fillStyle=&#x27;rgb(&#x27;+GOLD+&#x27;)&#x27;;fig(gx);gx.shadowBlur=0;fig(gx);
+const fin=mk(),fn=fin.getContext(&#x27;2d&#x27;);fn.fillStyle=&#x27;rgb(&#x27;+GREY+&#x27;)&#x27;;SL.forEach(s=&gt;sol(fn,s[0],s[1]));
+const ST=3;
+function samp(cx){const d=cx.getImageData(0,0,W,H).data,o=[];for(let y=0;y&lt;H;y+=ST)for(let x=0;x&lt;W;x+=ST)if(d[(y*W+x)*4+3]&gt;128)o.push([x,y]);return o;}
+const src=samp(fx),tgt=samp(sx);
+const N=src.length;
+// targets: order by column, then y
+const colOf=x=&gt;Math.max(0,Math.min(9,Math.floor((x-24)/96)));
+tgt.forEach(p=&gt;p.push(colOf(p[0])));tgt.sort((a,b)=&gt;a[2]-b[2]||a[1]-b[1]||a[0]-b[0]);
+const cnt=new Array(10).fill(0);tgt.forEach(p=&gt;cnt[p[2]]++);
+src.sort((a,b)=&gt;a[0]-b[0]);
+const ord=[];let a0=0;for(let k=0;k&lt;10;k++){const n=Math.round(N*cnt[k]/tgt.length),ch=src.slice(a0,k==9?N:a0+n);a0+=n;ch.sort((a,b)=&gt;a[1]-b[1]);ord.push(...ch);}
+// shards
+const K=48,seeds=[];for(let k=0;k&lt;K;k++){const p=src[Math.floor(rnd()*N)];seeds.push(p);}
+const C=[516,430];
+const sh=seeds.map(p=&gt;{let dx=p[0]-C[0],dy=p[1]-C[1],l=Math.hypot(dx,dy)||1;dx/=l;dy/=l;const sp=200+rnd()*320;return{cx:p[0],cy:p[1],ox:dx*(3+rnd()*4),oy:dy*(3+rnd()*4),vx:dx*sp+(rnd()-.5)*160,vy:dy*sp*.8+(rnd()-.5)*160-60,w:(rnd()-.5)*3.2};});
+const P=ord.map((p,i)=&gt;{let b=0,bd=1e9;for(let k=0;k&lt;K;k++){const d=(p[0]-seeds[k][0])**2+(p[1]-seeds[k][1])**2;if(d&lt;bd){bd=d;b=k;}}
+const t=tgt[Math.floor(i*tgt.length/N)],an=rnd()*6.283;
+return{hx:p[0],hy:p[1],s:sh[b],tx:t[0],ty:t[1],d:.12+.5*t[2]/9+.3*rnd(),du:1.3+.4*rnd(),nx:Math.cos(an),ny:Math.sin(an),nd:8+rnd()*28,arc:(rnd()-.5)*140};});
+const cl=v=&gt;v&lt;0?0:v&gt;1?1:v,eio=u=&gt;u&lt;.5?4*u*u*u:1-Math.pow(-2*u+2,3)/2,eo=u=&gt;1-Math.pow(1-u,3);
+const T0=.6,TC=2.3,TX=2.9,TT=3.3,END=6.6;
+const NB=8,bx=[];for(let b=0;b&lt;NB;b++){const f=b/(NB-1);bx.push(&#x27;rgb(&#x27;+GOLD.map((c,j)=&gt;Math.round(c+(GREY[j]-c)*f))+&#x27;)&#x27;);}
+const bk=[];for(let b=0;b&lt;NB;b++)bk.push([]);
+function draw(t){g.clearRect(0,0,W,H);
+if(t&lt;TC){const a=cl((t-T0)/0.9);g.globalAlpha=eo(a);g.drawImage(gc,0,0);g.globalAlpha=1;return;}
+const ga=1-cl((t-TC)/0.8);if(ga&gt;0){g.globalAlpha=ga*.5;g.drawImage(gc,0,0);g.globalAlpha=1;}
+for(let b=0;b&lt;NB;b++)bk[b].length=0;
+const cu=eo(cl((t-TC)/(TX-TC))),e=Math.max(0,t-TX),k=2.2,de=(1-Math.exp(-k*e))/k;
+const fa=t&gt;END-.6?cl((END-t)/.6):1;
+for(let i=0;i&lt;N;i++){const p=P[i],s=p.s;
+const th=s.w*de,co=Math.cos(th),si=Math.sin(th),rx=p.hx-s.cx,ry=p.hy-s.cy;
+const dust=e&gt;0?p.nd*(1-Math.exp(-1.8*e)):0;
+let x=s.cx+s.ox*cu+s.vx*de+rx*co-ry*si+p.nx*dust,y=s.cy+s.oy*cu+s.vy*de+rx*si+ry*co+p.ny*dust+40*e*e*.3;
+const u=cl((t-TT-p.d)/p.du),q=eio(u);
+if(q&gt;0){const dx=p.tx-x,dy=p.ty-y,L=Math.hypot(dx,dy)||1,ar=p.arc*Math.sin(Math.PI*q);x+=dx*q-dy/L*ar;y+=dy*q+dx/L*ar;}
+const cf=cl(.35*cl((t-TX)/.8)+.65*q);bk[Math.round(cf*(NB-1))].push(x,y);}
+const z=t&lt;TX?ST+.4:ST+.1;
+g.globalAlpha=fa;
+for(let b=0;b&lt;NB;b++){const a=bk[b];if(!a.length)continue;g.fillStyle=bx[b];for(let j=0;j&lt;a.length;j+=2)g.fillRect(a[j]-.2,a[j+1]-.2,z,z);}
+g.globalAlpha=1-fa;g.drawImage(fin,0,0);g.globalAlpha=1;}
+let t=0,last=0,run=false,done=-1;
+const m=null;
+function frame(now){if(m){draw(+m[1]);return;}
+if(run){const dt=last?Math.min(.05,(now-last)/1000):0;t+=dt;}last=now;
+if(t&lt;END+.1||done!==t){if(t&gt;=END+.1){g.clearRect(0,0,W,H);g.drawImage(fin,0,0);done=t;}else{draw(t);done=-1;}}
+requestAnimationFrame(frame);}
+function vis(v){if(v&amp;&amp;!run){t=0;run=true;}else if(!v&amp;&amp;run){run=false;t=0;}}
+if(&#x27;IntersectionObserver&#x27; in window){new IntersectionObserver(es=&gt;{const en=es[es.length-1];vis(en.isIntersecting&amp;&amp;en.intersectionRatio&gt;.3);},{threshold:[0,.3,.6,1]}).observe(cv);}else run=true;
+document.addEventListener(&#x27;visibilitychange&#x27;,()=&gt;{if(document.hidden)vis(false);});
+requestAnimationFrame(frame);
+})();
+&lt;/script&gt;"></div>
+<div class="lone fragment" data-fragment-index="1"><svg aria-label="One figure that remains different" width="40" height="100" viewBox="0 0 40 100" xmlns="http://www.w3.org/2000/svg" style="margin:6px;" fill="#E9C46A"><circle cx="20" cy="16" r="12"/><rect x="7" y="30" width="26" height="38" rx="8"/><rect x="9" y="66" width="9" height="34"/><rect x="22" y="66" width="9" height="34"/></svg></div>
+<aside>~60 s. The centrepiece. Stay silent for about six seconds: one golden figure, a person, cracks, shatters into dust, and the dust settles into identical grey soldiers lined up in ranks. Then read Forster’s first sentence: the “desert of uniformity”. Forster wrote this in 1938, in the age of Mussolini and Hitler. Click: one figure remains different, glowing in the empty place. Say the link to the thesis out loud: the thesis speaks of “erasure”, Forster says a dictator “cannot melt them into a single man”. One is the regime’s goal, the other is its limit. Transition: “Forster tells us what a dictator cannot do. The Manifesto tells us what no one should be allowed to try.”</aside>
+</section>
+<section id="manifesto" class="stone" data-transition="fade">
+<p class="eyebrow rise" style="--i:0">Humanist Manifesto II · 1973</p>
+<h2 class="rise" style="--i:1">The humanist answer</h2>
+<div class="qblock rise" style="--i:2">
+<p class="quote">“We reject all religious, ideological, or moral codes that denigrate the individual, suppress freedom, dull intellect, dehumanize personality.”</p>
+<p class="src"><i>Humanist Manifesto II</i>, Fifth principle</p>
+</div>
+<div class="spacer"></div>
+<div class="map4">
+<div class="m4 fragment" data-fragment-index="1"><p class="m4-v">Denigrate the individual</p><p class="m4-e">the Doctrine: only “in so far as he coincides with the State”</p></div>
+<div class="m4 d1 fragment" data-fragment-index="1"><p class="m4-v">Suppress freedom</p><p class="m4-e">no parties or unions outside the State</p></div>
+<div class="m4 d2 fragment" data-fragment-index="1"><p class="m4-v">Dull intellect</p><p class="m4-e">“Mussolini is always right”</p></div>
+<div class="m4 d3 fragment" data-fragment-index="1"><p class="m4-v">Dehumanize personality</p><p class="m4-e">the ranks of identical soldiers</p></div>
+</div>
+<aside>~35 s. Read the Fifth principle’s four verbs slowly. One click: the four verbs line up, one after another, with what we have already seen: the Doctrine, the ban on groups outside the State, “always right”, and the soldiers. The Manifesto was written in 1973, after the fact; it reads almost like a list of the regime’s methods, turned into prohibitions.</aside>
+</section>
+<section id="nuance" data-transition="fade">
+<p class="eyebrow rise" style="--i:0">Evaluation</p>
+<h2 class="rise" style="--i:1">Why did people follow him?</h2>
+<div class="cards3">
+<div class="card rise" style="--i:2"><p class="card-k">Fear of the left</p><p class="card-t">After the strikes of 1919–20, many saw the squads as protection against Socialism; police and army often looked away.</p></div>
+<div class="card rise" style="--i:3"><p class="card-k">Money and power</p><p class="card-t">Landowners and industrialists financed the squads that broke unions and cooperatives.</p></div>
+<div class="card rise" style="--i:4"><p class="card-k">The middle class</p><p class="card-t">Students, shopkeepers and clerks backed a movement that promised order.</p></div>
+</div>
+<div class="spacer"></div>
+<p class="lead fragment">Fascism was imposed, but it was also accepted: paid for by elites and welcomed by a middle class that wanted order.</p>
+<p class="src">Britannica, “Italy: The Fascist Era”</p>
+<aside>~35 s. This slide stops the talk from becoming a “villain story”. Do not read the cards one by one; name the three groups: those afraid of the left, the landowners and industrialists who paid, and a middle class that wanted order. Click: the uncomfortable lesson. Link back to Fromm in one sentence: the “feeling of weakness and dependence” helps explain why many handed over their judgment willingly. Transition: “Acceptance lasted as long as it seemed to work.”</aside>
+</section>
+<section id="timeline" class="stone" data-transition="fade">
+<p class="eyebrow rise" style="--i:0">1924–1945</p>
+<h2 class="rise" style="--i:1">From dictatorship to collapse</h2>
+<div class="spacer"></div>
+<div class="tl">
+<div class="tl-item rise" style="--i:2"><p class="tl-y">1924</p><p class="tl-t">Socialist leader Matteotti murdered by squadristi</p></div>
+<div class="tl-item key rise" style="--i:3"><p class="tl-y">1925</p><p class="tl-t">Claims responsibility in parliament; turns to dictatorship</p></div>
+<div class="tl-item rise" style="--i:4"><p class="tl-y">1940</p><p class="tl-t">Enters the Second World War</p></div>
+<div class="tl-item key rise" style="--i:5"><p class="tl-y">1943</p><p class="tl-t">Voted down by the Grand Council; arrested</p></div>
+<div class="tl-item rise" style="--i:6"><p class="tl-y">1945</p><p class="tl-t">Shot by partisans, 28 April</p></div>
+</div>
+<div class="spacer"></div>
+<p class="lead rise" style="--i:8">One vote in his own Grand Council, and within a day the man who was “always right” was under arrest.</p>
+<p class="src">Britannica, “Benito Mussolini”, “Giacomo Matteotti”</p>
+<aside>~20 s. Do not read the boxes. The two red years carry the story: 1925, the dictatorship begins; 1943, it ends. Put the weight on 1943: his own Grand Council voted against him and the king had him arrested. Twenty years of “always right” ended without a fight; the obedience turned out to be thinner than the slogans claimed. That supports Forster’s sentence and is the bridge to the conclusion. One spoken sentence for 1943–45: rescued by the Germans, Mussolini headed a puppet state in the north until the end.</aside>
+</section>
+<section id="close" class="char" data-transition="fade">
+<p class="eyebrow rise" style="--i:0">Conclusion</p>
+<h2 class="rise" style="--i:1">What the balcony did, and what it could not</h2>
+<div class="takeaways">
+<div class="tk fragment" data-fragment-index="1"><p class="tk-n">1</p><p class="tk-t">The doctrine put the State above the person.</p></div>
+<div class="tk fragment" data-fragment-index="2"><p class="tk-n">2</p><p class="tk-t">The cult replaced conscience with obedience (Fromm).</p></div>
+<div class="tk fragment" data-fragment-index="3"><p class="tk-n">3</p><p class="tk-t">It was accepted as well as imposed.</p></div>
+<div class="tk turn fragment" data-fragment-index="4"><p class="tk-n">4</p><p class="tk-t">Yet, as Forster says, a dictator “cannot melt them into a single man”.</p></div>
+</div>
+<div class="spacer"></div>
+<p class="lead fragment" data-fragment-index="5">The man on the balcony needed a crowd. A crowd is still made of single people.</p>
+<aside>~35 s. Restate the thesis through the four points, one click each: the first three are what the regime did, the fourth is what it could not do. End on Forster: the hope that individuality survives even the most total regime. Fifth click: the closing line appears on screen as you say it: “The man on the balcony needed a crowd. Forster reminds us that a crowd is still made of single people.” Pause, thank the class, and ask for questions yourself; then move to Works Cited for the Q&amp;A. Total target: about 7:20.</aside>
+</section>
+<section id="works">
+<h2>Works Cited</h2>
+<div class="wc">
+<p class="wc-i">Britannica, The Editors of Encyclopaedia. “Benito Mussolini.” <i>Encyclopædia Britannica</i>, www.britannica.com/biography/Benito-Mussolini.</p>
+<p class="wc-i">---. “Giacomo Matteotti.” <i>Encyclopædia Britannica</i>.</p>
+<p class="wc-i">---. “March on Rome.” <i>Encyclopædia Britannica</i>, www.britannica.com/event/March-on-Rome.</p>
+<p class="wc-i">Clark, Martin, et al. “Fascist Party.” <i>Encyclopædia Britannica</i>, www.britannica.com/topic/Fascist-Party.</p>
+<p class="wc-i">Forster, E. M. “What I Believe.” 1938. Course text.</p>
+<p class="wc-i">Fromm, Erich. “Humanistic Ethics.” <i>Man for Himself</i>, 1947. Abridged course text.</p>
+<p class="wc-i"><i>Humanist Manifesto II</i>. American Humanist Association, 1973.</p>
+<p class="wc-i">“Italy: The Fascist Era.” <i>Encyclopædia Britannica</i>.</p>
+<p class="wc-i">Koon, Tracy H. <i>Believe, Obey, Fight: Political Socialization of Youth in Fascist Italy, 1922–1943</i>. U of North Carolina P, 1985.</p>
+<p class="wc-i">Mussolini, Benito. “The Doctrine of Fascism.” Translated by I. S. Munro. <i>Readings on Fascism and National Socialism</i>, selected by members of the Department of Philosophy, University of Colorado, Alan Swallow. <i>Project Gutenberg</i>, www.gutenberg.org/ebooks/14058.</p></div>
+<aside>Leave on screen during Q&amp;A. Check the Manifesto entry format with the instructor.</aside>
+</section>
+</main>
+<div id="notes" role="note"></div>
+<nav id="hud" aria-label="Presentation controls">
+  <span class="left"><a href="/">← keremuysal.dev</a><a href="https://claude.ai/artifact/M34KLP5fSpqungtScTbkJa" target="_blank" rel="noopener">Original deck ↗</a></span>
+  <span class="right"><span class="keys">← → to move · F fullscreen · N notes</span><button id="fs" type="button">Fullscreen</button><span id="count"></span></span>
+</nav>
+<script>
+(() => {
+  const stage = document.getElementById('stage');
+  const slides = [...stage.querySelectorAll(':scope > section')];
+  const hud = document.getElementById('hud'), count = document.getElementById('count'), notes = document.getElementById('notes');
+  let cur = -1, step = 0, timer = 0, hudTimer = 0;
+
+  // each slide's click steps: fragments grouped by data-fragment-index, else one per element in document order
+  const groups = slides.map(s => {
+    const els = [...s.querySelectorAll('.fragment')];
+    const idx = new Map(), loose = [];
+    els.forEach(el => {
+      const v = el.getAttribute('data-fragment-index');
+      if (v === null) loose.push([el]); else { const k = +v; if (!idx.has(k)) idx.set(k, []); idx.get(k).push(el); }
+    });
+    return [...idx.keys()].sort((a, b) => a - b).map(k => idx.get(k)).concat(loose);
+  });
+
+  function fit() { stage.style.setProperty('--s', Math.min(innerWidth / 1920, innerHeight / 1080)); }
+
+  function paint() {
+    groups[cur].forEach((g, i) => g.forEach(el => {
+      el.classList.toggle('visible', i < step);
+      el.classList.toggle('current-fragment', i === step - 1);
+    }));
+    count.textContent = (cur + 1) + ' / ' + slides.length;
+    const a = slides[cur].querySelector('aside');
+    notes.textContent = a ? a.textContent : '';
+    try { history.replaceState(null, '', '#' + (cur + 1)); } catch (e) {}
+  }
+
+  function mount(s) {   // (re)start the sandboxed canvas scene from zero
+    s.querySelectorAll('.embed').forEach(box => {
+      box.textContent = '';
+      const f = document.createElement('iframe');
+      f.setAttribute('sandbox', 'allow-scripts');
+      f.setAttribute('title', 'Animation');
+      f.srcdoc = '<!doctype html><meta charset="utf-8">' + box.dataset.srcdoc;
+      box.appendChild(f);
+    });
+  }
+  function unmount(s) { s.querySelectorAll('.embed').forEach(box => { box.textContent = ''; }); }
+
+  function show(n, atEnd) {
+    n = Math.max(0, Math.min(slides.length - 1, n));
+    if (n === cur) return;
+    const old = cur >= 0 ? slides[cur] : null, next = slides[n];
+    // finish any transition still running
+    clearTimeout(timer);
+    slides.forEach(s => { if (s !== old) { s.classList.remove('on', 'leaving'); unmount(s); } });
+    if (old) {
+      const kind = (n > cur ? old : next).getAttribute('data-transition');
+      if (kind === 'magic') { old.classList.remove('on', 'leaving'); unmount(old); }
+      else {
+        old.classList.add('leaving');
+        timer = setTimeout(() => { old.classList.remove('on', 'leaving'); unmount(old); }, 440);
+      }
+    }
+    cur = n; step = atEnd ? groups[n].length : 0;
+    paint();
+    next.classList.remove('leaving');
+    next.classList.add('on');
+    mount(next);
+  }
+
+  function forward() { if (step < groups[cur].length) { step++; paint(); } else show(cur + 1, false); }
+  function back() { if (step > 0) { step--; paint(); } else show(cur - 1, true); }
+
+  function fullscreen() {
+    const d = document, el = d.documentElement;
+    if (d.fullscreenElement || d.webkitFullscreenElement) (d.exitFullscreen || d.webkitExitFullscreen).call(d);
+    else (el.requestFullscreen || el.webkitRequestFullscreen || (() => {})).call(el);
+  }
+  function wake() { hud.classList.add('show'); clearTimeout(hudTimer); hudTimer = setTimeout(() => hud.classList.remove('show'), 2600); }
+
+  addEventListener('keydown', e => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = e.key;
+    if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === ' ' || k === 'Enter') { e.preventDefault(); forward(); }
+    else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp' || k === 'Backspace') { e.preventDefault(); back(); }
+    else if (k === 'Home') show(0, false);
+    else if (k === 'End') show(slides.length - 1, false);
+    else if (k === 'f' || k === 'F') fullscreen();
+    else if (k === 'n' || k === 'N') notes.classList.toggle('show');
+  });
+  stage.addEventListener('click', e => {
+    if (e.target.closest('a')) return;
+    (e.clientX < innerWidth * 0.25 ? back : forward)();
+  });
+  document.getElementById('fs').addEventListener('click', fullscreen);
+  addEventListener('mousemove', wake); addEventListener('touchstart', wake, { passive: true });
+  hud.addEventListener('focusin', wake);
+  addEventListener('resize', fit);
+  addEventListener('hashchange', () => { const n = parseInt(location.hash.slice(1), 10); if (n) show(n - 1, false); });
+
+  fit();
+  show(Math.max(1, parseInt(location.hash.slice(1), 10) || 1) - 1, false);
+  wake();
+})();
+</script>
+</body>
+</html>
