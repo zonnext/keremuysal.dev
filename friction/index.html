@@ -194,6 +194,16 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 .seg button[aria-pressed="true"].b{background:rgba(95,227,196,.18)}
 .mats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .mats label{display:grid;gap:5px;min-width:0}
+.custom{display:grid;gap:10px;padding:14px;border-radius:var(--r-lg);background:var(--panel-2);border:1.5px dashed var(--line-2)}
+.custom-row{display:grid;grid-template-columns:auto minmax(0,1fr) 92px;gap:8px;align-items:center}
+.custom-row .tag{font-family:var(--f-display);font-weight:600;font-size:13px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#1d0d3a}
+.custom-row input{width:100%;min-width:0;background:var(--bg);color:var(--fg);border:1.5px solid var(--line-2);border-radius:999px;padding:9px 13px;font-family:var(--f-body);font-weight:600;font-size:14px}
+.custom-row input[type=number]{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:center;padding-inline:8px}
+.custom-row input:focus{outline:none;border-color:var(--accent)}
+.custom-row input[aria-invalid="true"]{border-color:var(--bad)}
+.custom[hidden],.custom-row[hidden]{display:none}
+.custom-hint{margin:0;font-size:13px;color:var(--dim)}
+.custom-hint b{color:var(--muted);font-weight:600}
 .angctl{display:grid;gap:10px;padding:14px;border-radius:var(--r-lg);background:var(--panel-2);border:1.5px solid rgba(183,140,255,.45);box-shadow:0 0 0 5px rgba(183,140,255,.06)}
 .angctl input[type=range]::-webkit-slider-runnable-track{background:linear-gradient(90deg,var(--accent) 0 var(--fill),var(--bg) var(--fill) 100%)}
 .nudge{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
@@ -399,6 +409,20 @@ footer .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:e
           <div class="mats">
             <label><span class="lbl">A material</span><select id="matA"></select></label>
             <label><span class="lbl">B material</span><select id="matB"></select></label>
+          </div>
+          <div class="custom" id="customBox" hidden>
+            <span class="lbl">Your own surface</span>
+            <div class="custom-row" id="customRowA">
+              <span class="tag" style="background:var(--sa)">A</span>
+              <input type="text" id="customNameA" maxlength="24" placeholder="Material name" aria-label="Surface A material name">
+              <input type="number" id="customMuA" min="0.05" max="1.6" step="0.01" inputmode="decimal" aria-label="Surface A friction coefficient μs">
+            </div>
+            <div class="custom-row" id="customRowB">
+              <span class="tag" style="background:var(--sb)">B</span>
+              <input type="text" id="customNameB" maxlength="24" placeholder="Material name" aria-label="Surface B material name">
+              <input type="number" id="customMuB" min="0.05" max="1.6" step="0.01" inputmode="decimal" aria-label="Surface B friction coefficient μs">
+            </div>
+            <p class="custom-hint" id="customHint">Enter μ<sub>s</sub> between 0.05 and 1.60. Measured an angle instead? μ<sub>s</sub> = tan θ<sub>c</sub>, so 25° gives 0.47.</p>
           </div>
           <div class="ctl">
             <span class="lbl">Total mass</span>
@@ -959,7 +983,14 @@ footer .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:e
     { id: 'felt', name: 'Felt', mu: 0.52 },
     { id: 'sand', name: 'Sandpaper P120', mu: 0.68 },
     { id: 'rubber', name: 'Rubber mat', mu: 0.85 },
+    { id: 'customA', name: 'Custom A', mu: 0.45, custom: 'A' },
+    { id: 'customB', name: 'Custom B', mu: 0.60, custom: 'B' },
   ];
+  try {
+    const saved = JSON.parse(localStorage.getItem('fl-custom') || 'null');
+    if (saved) ['A', 'B'].forEach(sf => { const m = MATS.find(x => x.custom === sf), v = saved[sf];
+      if (v && isFinite(v.mu) && v.mu >= 0.05 && v.mu <= 1.6) { m.mu = +v.mu; if (typeof v.name === 'string' && v.name.trim()) m.name = v.name.trim().slice(0, 24); } });
+  } catch (e) {}
   const MASSES = [0.20, 0.40, 0.60], MLBL = ['M1', 'M2', 'M3'];
   const mat = id => MATS.find(m => m.id === id);
   function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
@@ -1389,8 +1420,51 @@ footer .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:e
   }
 
   /* ---------- Wiring ---------- */
-  ['thMat', 'matA', 'matB'].forEach(id => { $(id).innerHTML = MATS.map(m => `<option value="${m.id}">${m.name} · μs ≈ ${m.mu.toFixed(2)}</option>`).join(''); });
+  const optLabel = m => m.custom ? `${m.name} · μs = ${m.mu.toFixed(2)} (yours)` : `${m.name} · μs ≈ ${m.mu.toFixed(2)}`;
+  function fillSelects() {
+    ['thMat', 'matA', 'matB'].forEach(id => {
+      const el = $(id), v = el.value;
+      el.innerHTML = MATS.filter(m => !m.custom).map(m => `<option value="${m.id}">${optLabel(m)}</option>`).join('')
+        + `<optgroup label="Your own surface">` + MATS.filter(m => m.custom).map(m => `<option value="${m.id}">${optLabel(m)}</option>`).join('') + `</optgroup>`;
+      if (v) el.value = v;
+    });
+  }
+  fillSelects();
   $('thMat').value = 'wood'; $('matA').value = state.mats.A; $('matB').value = state.mats.B;
+  function renderCustomBox() {
+    const useA = state.mats.A === 'customA' || state.mats.B === 'customA', useB = state.mats.A === 'customB' || state.mats.B === 'customB';
+    $('customBox').hidden = !(useA || useB);
+    $('customRowA').hidden = !useA; $('customRowB').hidden = !useB;
+    ['A', 'B'].forEach(sf => { const m = mat('custom' + sf);
+      if (document.activeElement !== $('customMu' + sf)) $('customMu' + sf).value = m.mu.toFixed(2);
+      if (document.activeElement !== $('customName' + sf)) $('customName' + sf).value = m.name; });
+  }
+  function saveCustom() {
+    try { localStorage.setItem('fl-custom', JSON.stringify({ A: { name: mat('customA').name, mu: mat('customA').mu }, B: { name: mat('customB').name, mu: mat('customB').mu } })); } catch (e) {}
+  }
+  // a new μs changes the surface, so trials taken with the old value are cleared (same rule as switching material)
+  function applyCustom(cs) {
+    const m = mat('custom' + cs), inp = $('customMu' + cs), v = parseFloat(String(inp.value).replace(',', '.'));
+    const ok = isFinite(v) && v >= 0.05 && v <= 1.6;
+    inp.setAttribute('aria-invalid', ok ? 'false' : 'true');
+    if (!ok) { $('customHint').innerHTML = `<b>μ<sub>s</sub> must be between 0.05 and 1.60.</b> The board only tilts to 60°, and tan 60° ≈ 1.73.`; return; }
+    $('customHint').innerHTML = `μ<sub>s</sub> = ${v.toFixed(2)} means the block should slip at θ<sub>c</sub> = arctan ${v.toFixed(2)} ≈ <b>${(Math.atan(v) * DEG).toFixed(1)}°</b>.`;
+    const name = $('customName' + cs).value.trim().slice(0, 24) || 'Custom ' + cs;
+    const changedMu = Math.abs(m.mu - v) > 1e-9;
+    if (!changedMu && name === m.name) return;
+    m.mu = v; m.name = name; saveCustom(); fillSelects();
+    ['A', 'B'].forEach(sf => { if (state.mats[sf] === m.id && changedMu) {
+      state.data[sf] = [[], [], []];
+      if (state.surf === sf) conditionChanged();
+      $('simNote').textContent = `Surface ${sf} now uses ${m.name} with μs = ${v.toFixed(2)}. Its old trials were cleared.`;
+    } });
+    renderCond(); renderLog(); renderResults(); drawTheory();
+  }
+  ['A', 'B'].forEach(cs => {
+    $('customMu' + cs).addEventListener('change', () => applyCustom(cs));
+    $('customMu' + cs).addEventListener('keydown', e => { if (e.key === 'Enter') applyCustom(cs); });
+    $('customName' + cs).addEventListener('change', () => applyCustom(cs));
+  });
   ['thTheta', 'thMass', 'thMat'].forEach(id => $(id).addEventListener('input', drawTheory));
   ['unTheta', 'unDelta'].forEach(id => $(id).addEventListener('input', drawUnc));
   function selectSurf(sf) { if (state.surf === sf) return; state.surf = sf; conditionChanged(); renderCond(); renderLog(); }
@@ -1401,8 +1475,10 @@ footer .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:e
     state.mats[sf] = e.target.value; state.data[sf] = [[], [], []];
     if (state.surf === sf) conditionChanged();
     $('simNote').textContent = `Surface ${sf} changed to ${mat(e.target.value).name}. Its old trials were cleared.`;
-    renderCond(); renderLog(); renderResults();
+    renderCond(); renderLog(); renderResults(); renderCustomBox();
+    if (mat(e.target.value).custom) setTimeout(() => $('customMu' + mat(e.target.value).custom).focus(), 50);
   }));
+  renderCustomBox();
   $('clearBtn').onclick = () => { state.data = { A: [[], [], []], B: [[], [], []] }; renderLog(); renderResults(); $('simNote').textContent = 'All trials cleared. Tilt the board to fill the sheet and chart.'; };
   $('sampleBtn').onclick = () => { loadSample(); renderLog(); renderResults(); $('simNote').textContent = 'Sample runs reloaded.'; };
   ['tgF', 'tgC'].forEach(id => $(id).addEventListener('change', drawSim));
